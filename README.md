@@ -43,6 +43,7 @@
 - 디자인 혹은 개발을 시작하기 전, 발생될 문제를 미리 확인하기 위해 각 페이지별로 세부적으로 어떤 정보가 어떻게 들어갈지(구성 방식, 콘텐츠, 기능 등) 구성합니다.
 - 파워 포인트, [Moqups](https://moqups.com/), [UXPin](https://www.uxpin.com/) 등을 활용하여 작성할 수 있습니다.
 
+https://miro.com/app/board/o9J_lE5n5Oc=/
 
 
 ## 6. 세부 일정
