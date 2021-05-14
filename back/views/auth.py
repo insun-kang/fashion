@@ -102,8 +102,8 @@ def login():
                 "id": queried.id,
                 "email": queried.email,
                 "nickname": queried.nickname,
-                "birth"=queried.birth,
-                "gender"=queried.gender
+                "birth":queried.birth,
+                "gender":queried.gender
 
             }
 
