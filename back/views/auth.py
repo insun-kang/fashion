@@ -18,6 +18,7 @@ bp = Blueprint('auth', __name__, url_prefix='/')
 
 
 @bp.route('/sign-up', methods=['POST'])
+@swag_from("swagger_config/random_letters.yml")
 def register():
     print("check")  # 확인용... 나중에 삭제할것
     if not request.is_json:
@@ -27,17 +28,8 @@ def register():
         print('check')
         body = literal_eval(request.get_json()['body'])
 
-
-        nickname = Column(String(64), primary_key=True, unique=True)
-        email = Column(String(64), unique=True)
-        name = Column(String(32), nullable=False)
-        pw = Column(String(64), nullable=False)
-        birth=Column(DATE, nullable=False)
-        gender = Column(String(32), nullable=False)
-        
-        
         email = body['email']
-        password = body['password']
+        pw = body['pw']
         name = body['name']
         nickname = body['nickname']
         birth = body['birth']
@@ -66,6 +58,8 @@ def register():
                     email=email,
                     name=name,
                     pw=hashpw,
+                    birth=birth,
+                    gender=gender,
                     date=datetime.now()
                 )
                 models.db.session.add(user)
@@ -78,7 +72,8 @@ def register():
                 return jsonify({'msg': '비밀번호는 하나이상의 특수문자가 들어가야합니다', 'status': 305})
 
 
-@bp.route('/', methods=['POST'])
+@bp.route('/sign-in', methods=['POST'])
+@swag_from("swagger_config/random_letters.yml")
 def login():
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 402
@@ -107,7 +102,9 @@ def login():
                 "id": queried.id,
                 "email": queried.email,
                 "nickname": queried.nickname,
-                "usertype": queried.usertype
+                "birth"=queried.birth,
+                "gender"=queried.gender
+
             }
 
             return jsonify({
@@ -121,6 +118,7 @@ def login():
 
 
 @bp.route("/refresh", methods=["POST"])
+@swag_from("swagger_config/random_letters.yml")
 @jwt_required(refresh=True)
 def refresh():
     identity = get_jwt_identity()
@@ -130,6 +128,7 @@ def refresh():
 
 # Only allow fresh JWTs to access this route with the `fresh=True` arguement.
 @bp.route("/protected", methods=["GET"])
+@swag_from("swagger_config/random_letters.yml")
 @jwt_required(fresh=True)
 def protected():
     return jsonify(foo="bar")
