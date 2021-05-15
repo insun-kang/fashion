@@ -1,55 +1,32 @@
 import React from 'react';
+import { Nav, Navbar } from 'react-bootstrap';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import {
-  Container,
-  List,
-  ListItem,
-  ListItemText,
-  makeStyles,
-} from '@material-ui/core';
-
-const useNavBarStyles = makeStyles({
-  navDisplayFlex: {
-    display: `flex`,
-    justifyContent: `space-between`,
-  },
-  linkText: {
-    textDecoration: `none`,
-    textTransform: `uppercase`,
-    color: `white`,
-  },
-});
 const navLinks = [
-  { title: '취향찾기', path: '#' },
-  { title: '키워드 검색', path: '#' },
-  { title: '옷장', path: '#' },
+  { title: '취향찾기', path: '/#' },
+  { title: '키워드 검색', path: '/#' },
+  { title: '옷장', path: '/#' },
 ];
 
-const NavBar = () => {
-  const classes = useNavBarStyles();
-
+const NavBarComponent = () => {
   return (
-    <AppBar position="static">
-      <Container>
-        <Toolbar>오늘옷데</Toolbar>
-        <List
-          component="nav"
-          aria-labelledby="main navigation"
-          className={classes.navDisplayFlex}
-        >
+    <Navbar bg="light" expand="lg">
+      <Navbar.Brand href="#">오늘옷데</Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto">
           {navLinks.map(({ title, path }) => (
-            <a href={path} key={title} className={classes.linkText}>
-              <ListItem button>
-                <ListItemText primary={title} />
-              </ListItem>
-            </a>
+            <Nav.Link href={path} key={title}>
+              {title}
+            </Nav.Link>
           ))}
-        </List>
-      </Container>
-    </AppBar>
+        </Nav>
+        <Nav className="justify-content-end">
+          <Nav.Link href="#">마이페이지</Nav.Link>
+          <Nav.Link href="#">로그아웃</Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   );
 };
 
-export default NavBar;
+export default NavBarComponent;
