@@ -1,11 +1,12 @@
 import './App.css';
-import { MainLayout } from './components/MainLayout';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import NavBar from './components/NavBar';
+import { CssBaseline } from '@material-ui/core';
 
 function App() {
   return (
     <div className="App">
-      <MainLayout />
+      <CssBaseline />
+      <NavBar />
     </div>
   );
 }
