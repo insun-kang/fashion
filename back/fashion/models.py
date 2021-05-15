@@ -14,6 +14,3 @@ class User(db.Model):  # usertable
     birth=Column(DATE, nullable=False)
     gender = Column(String(32), nullable=False)
     date = Column(DATE, nullable=False)
-
-    
-

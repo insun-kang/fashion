@@ -77,26 +77,27 @@ def register():
 
 
 @bp.route('/sign-in', methods=['POST'])
-# @swag_from("swagger_config/random_letters.yml")
+@swag_from("../swagger_config/register.yml")
 def login():
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 402
     else:
         print('check')
-        body = literal_eval(request.get_json()['body'])
-        print(body)
-        userEmail = body['userEmail']
-        userPassword = body['userPassword']
-        print(userEmail, userPassword)
-        if not userEmail:
+        # body = literal_eval(request.get_json()['body'])
+        body=request.get_json()
+
+        email = body['email']
+        pw = body['pw']
+
+        if not email:
             return jsonify({"msg": "아이디 치세요", 'status': 401})
 
-        elif not userPassword:
+        elif not pw:
             return jsonify({"msg": "비번 치세요", 'status': 401})
 
-        queried = models.User.query.filter_by(email=userEmail).first()
+        queried = models.User.query.filter_by(email=email).first()
         print('checkpw:', queried.pw)
-        if bcrypt.checkpw(userPassword.encode('utf-8'), queried.pw.encode('utf-8')):
+        if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             # Identity can be any data that is json serializable
             access_token = create_access_token(identity=queried.id)
             refresh_token = create_refresh_token(identity=queried.id)
@@ -107,7 +108,8 @@ def login():
                 "email": queried.email,
                 "nickname": queried.nickname,
                 "birth":queried.birth,
-                "gender":queried.gender
+                "gender":queried.gender,
+                "date":queried.date
 
             }
 
