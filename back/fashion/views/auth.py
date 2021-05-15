@@ -9,6 +9,9 @@ from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
 from ast import literal_eval
 
+# Flasgger
+from flasgger.utils import swag_from
+
 bp = Blueprint('auth', __name__, url_prefix='/')
 
 # # bp 테스트
@@ -18,7 +21,7 @@ bp = Blueprint('auth', __name__, url_prefix='/')
 
 
 @bp.route('/sign-up', methods=['POST'])
-# @swag_from("swagger_config/random_letters.yml")
+@swag_from("../swagger_config/register.yml")
 def register():
     if not request.is_json:
         print("check_no_jason")  # 확인용... 나중에 삭제할것
@@ -27,6 +30,7 @@ def register():
     else:
         print('check')
         # body = literal_eval(request.get_json()['body'])
+        body=request.get_json()
 
         email = body['email']
         pw = body['pw']
@@ -34,24 +38,24 @@ def register():
         nickname = body['nickname']
         birth = body['birth']
         gender = body['gender']
-        
 
-        print(email, password, name, nickname)  # 확인용....나중에 삭제할것
+
+        # print(email, password, name, nickname)  # 확인용....나중에 삭제할것
 
         emailcheck = models.User.query.filter_by(email=email).first()
         nicknamecheck = models.User.query.filter_by(
             nickname=nickname).first()
         print(emailcheck)
-        if not(name and email and password and nickname):
+        if not(name and email and pw and nickname):
             return jsonify({"msg": "빈칸 오류", 'status': 301})
         elif emailcheck is not None:
             return jsonify({"msg": "이미 가입된 이메일입니다.", 'status': 302})
         elif nicknamecheck is not None:
             return jsonify({"msg": "닉네임이 존재할때", 'status': 303})
         else:
-            if checkvalid.passwordCheck(password) == 1:
+            if checkvalid.passwordCheck(pw) == 1:
                 hashpw = bcrypt.hashpw(
-                    password.encode('utf-8'), bcrypt.gensalt())
+                    pw.encode('utf-8'), bcrypt.gensalt())
 
                 user = models.User(
                     nickname=nickname,
@@ -65,7 +69,7 @@ def register():
                 models.db.session.add(user)
                 models.db.session.commit()
                 return jsonify({"msg": "회원가입 성공", 'status': 300})
-            elif checkvalid.passwordCheck(password) == 2:
+            elif checkvalid.passwordCheck(pw) == 2:
 
                 return jsonify({'msg': '비밀번호 기준에 맞지 않습니다. 비밀번호는 8자이상, 숫자+영어+특수문자 조합으로 이루어집니다.', 'status': 304})
             else:
