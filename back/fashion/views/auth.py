@@ -21,7 +21,7 @@ bp = Blueprint('auth', __name__, url_prefix='/')
 
 
 @bp.route('/sign-up', methods=['POST'])
-@swag_from("../swagger_config/register.yml")
+@swag_from("../swagger_config/register.yml", validation=True)
 def register():
     if not request.is_json:
         print("check_no_jason")  # 확인용... 나중에 삭제할것

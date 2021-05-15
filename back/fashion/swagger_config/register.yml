@@ -36,3 +36,10 @@ definitions:
         type: string
       gender:
         type: string
+    example:
+      email: "sunink1@naver.com"
+      pw: "qwer!@6789"
+      name: "강인선"
+      nickname: "강인성"
+      birth: "19950310"
+      gender: "남"
