@@ -1,0 +1,45 @@
+summary: "회원가입"
+description: "회원가입 api"
+produces:
+- "application/json"
+parameters:
+  - in: body
+    name: user
+    description: 유저에 관한 정보
+    schema:
+      $ref: '#/definitions/User'
+responses:
+  200:
+    description: OK
+    schema:
+      type: string
+definitions:
+  User:
+    type: object
+    required:
+      - email
+      - pw
+      - name
+      - nickname
+      - birth
+      - gender
+    properties:
+      email:
+        type: string
+      pw:
+        type: string
+      name:
+        type: string
+      nickname:
+        type: string
+      birth:
+        type: string
+      gender:
+        type: string
+    example:
+      email: "sunink1@naver.com"
+      pw: "qwer!@6789"
+      name: "강인선"
+      nickname: "강인성"
+      birth: "19950310"
+      gender: "남"

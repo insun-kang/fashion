@@ -1,0 +1,36 @@
+# .gitmessage
+
+Docs: update Readme.md
+# 제목(subject)은 50자 이내로 작성해주세요
+
+- readmd.md 기획 파트 수정
+# 본문 내용은 72자 이내로 작성해주세요
+
+- See also: #1
+# 같이 볼만한 이슈나, url이 있으면 함께 적어주세요
+# <EX> Resolves: #123, See also: #456, #789
+
+# --- COMMIT END ---
+# Type can be
+# feat : 새로운 기능 추가
+# fix : 버그 수정
+# docs : 문서 수정
+# style : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
+# refactor : 코드 리펙토링
+# test : 테스트 코드, 리펙토링 테스트 코드 추가
+# chore : 빌드 업무 수정, 패키지 매니저 수정
+# ------------------
+# 기타 규칙
+#   Capitalize the subject line
+#     제목줄은 대문자로 시작한다.
+#   Use the imperative mood in the subject line
+#     제목줄은 명령어로 작성한다.
+#   Do not end the subject line with a period
+#     제목줄은 마침표로 끝내지 않는다.
+#   Separate subject from body with a blank line
+#     본문과 제목에는 빈줄을 넣어서 구분한다.
+#   Use the body to explain what and why vs. how
+#     본문에는 "어떻게" 보다는 "왜"와 "무엇을" 설명한다.
+#   Can use multiple lines with "-" for bullet points in body
+#     본문에 목록을 나타낼때는 "-"로 시작한다.
+# ------------------
