@@ -2,17 +2,35 @@ summary: "회원가입"
 description: "회원가입 api"
 produces:
 - "application/json"
-parameters:
-  - in: body
-    name: user
-    description: 유저에 관한 정보
-    schema:
-      $ref: '#/definitions/User'
+requestBody:
+        description: 유저에 관한 정보(email,pw,name,nickname,birth,gender)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/User'
+            examples:
+              case1:
+                summary: 강인선
+                value:
+                  email: "sunink1@naver.com"
+                  pw: "qwer!@6789"
+                  name: "강인선"
+                  nickname: "강인성"
+                  birth: "19950310"
+                  gender: "남"
+              case2:
+                summary: 김다인
+                value:
+                  email: "dainlinda@naver.com"
+                  pw: "dainlinda!@1234"
+                  name: "김다인"
+                  nickname: "익명이"
+                  birth: "19960325"
+                  gender: "여"
 responses:
   200:
     description: OK
-    schema:
-      type: string
 definitions:
   User:
     type: object
@@ -36,10 +54,3 @@ definitions:
         type: string
       gender:
         type: string
-    example:
-      email: "sunink1@naver.com"
-      pw: "qwer!@6789"
-      name: "강인선"
-      nickname: "강인성"
-      birth: "19950310"
-      gender: "남"
