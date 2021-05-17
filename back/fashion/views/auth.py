@@ -77,7 +77,7 @@ def register():
 
 
 @bp.route('/sign-in', methods=['POST'])
-@swag_from("../swagger_config/register.yml")
+@swag_from("../swagger_config/login.yml")
 def login():
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 402
@@ -99,7 +99,7 @@ def login():
         print('checkpw:', queried.pw)
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             # Identity can be any data that is json serializable
-            access_token = create_access_token(identity=queried.id)
+            access_token = create_access_token(identity=queried.id, fresh=True)
             refresh_token = create_refresh_token(identity=queried.id)
             print('ok')
             print(queried.id, queried.nickname)
@@ -123,18 +123,39 @@ def login():
             return jsonify({"msg": "비밀번호 불일치", "status": 401})
 
 
+
 @bp.route("/refresh", methods=["POST"])
-# @swag_from("swagger_config/random_letters.yml")
+# @swag_from("../swagger_config/refresh.yml", validation=True)
 @jwt_required(refresh=True)
 def refresh():
+    """
+    refresh
+    ---
+    description: refresh 토큰에서 id를 받아서 새로운 토큰을 만드는 api.
+    responses:
+      200:
+        description: 성공적으로 access 토큰이 생성되었습니다.
+    security:
+      - ApiKeyAuth: []
+    """
     identity = get_jwt_identity()
-    access_token = create_access_token(identity=queried.id, fresh=False)
+    access_token = create_access_token(identity=identity, fresh=False)
     return jsonify(access_token=access_token)
 
 
 # Only allow fresh JWTs to access this route with the `fresh=True` arguement.
 @bp.route("/protected", methods=["GET"])
-# @swag_from("swagger_config/random_letters.yml")
+# @swag_from("../swagger_config/protected.yml", validation=True)
 @jwt_required(fresh=True)
 def protected():
+    """
+    protected
+    ---
+    description: fresh=True인 토큰으로만 접근 가능한 api (로그인할 때 생성되는 access 토큰)
+    responses:
+      200:
+        description: 성공적으로 접근했습니다.
+    security:
+      - ApiKeyAuth: []
+    """
     return jsonify(foo="bar")
