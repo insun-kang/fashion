@@ -168,6 +168,30 @@ def modify():
 
         return jsonify({"msg": "회원변경 완료", "status": 200})
 
+@bp.route('/withdrawal', methods=['POST'])
+@swag_from("../swagger_config/register.yml")
+# @jwt_required()
+def withdrawal():
+    if not request.is_json:
+        print("check_no_jason")  # 확인용... 나중에 삭제할것
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    else:
+        print('check')
+        # body = literal_eval(request.get_json()['body'])
+        body=request.get_json()
+        
+        userid=body['id']
+        pw=body['pw']
+
+        admin=models.User.query.filter_by(id=userid).first()
+        if bcrypt.checkpw(pw.encode('utf-8'), admin.pw.encode('utf-8')):
+            models.db.session.delete(admin)
+            models.db.session.commit()
+            return jsonify({"msg": "회원탈퇴 완료", "status": 200})
+        else:
+            return jsonify({"msg": "비밀번호가 다릅니다", "status": 400})
+
 
 @bp.route("/refresh", methods=["POST"])
 # @swag_from("../swagger_config/refresh.yml", validation=True)
