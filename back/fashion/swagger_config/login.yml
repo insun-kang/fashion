@@ -1,0 +1,38 @@
+summary: "로그인"
+description: "로그인 api"
+consumes:
+  - application/json
+produces:
+- "application/json"
+requestBody:
+        description: email과 pw (json 형태)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Login'
+            examples:
+              user1:
+                summary: 강인선
+                value:
+                  email: "sunink1@naver.com"
+                  pw: "qwer!@6789"
+              user2:
+                summary: 김다인
+                value:
+                  email: "dainlinda@naver.com"
+                  pw: "dainlinda!@1234"
+responses:
+  200:
+    description: OK
+definitions:
+  Login:
+    type: object
+    required:
+      - email
+      - pw
+    properties:
+      email:
+        type: string
+      pw:
+        type: string
