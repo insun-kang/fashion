@@ -169,7 +169,7 @@ def modify():
         return jsonify({"msg": "회원변경 완료", "status": 200})
 
 @bp.route('/withdrawal', methods=['POST'])
-# @swag_from("../swagger_config/withdrawal.yml", validation=True)
+@swag_from("../swagger_config/withdrawal.yml", validation=True)
 # @jwt_required()
 def withdrawal():
     if not request.is_json:
