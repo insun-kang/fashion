@@ -122,7 +122,7 @@ def login():
             return jsonify({"msg": "비밀번호 불일치", "status": 400})
 
 @bp.route('/modification', methods=['POST'])
-@swag_from("../swagger_config/register.yml")
+@swag_from("../swagger_config/modify.yml", validation=True)
 # @jwt_required()
 def modify():
     if not request.is_json:
@@ -133,13 +133,13 @@ def modify():
         print('check')
         # body = literal_eval(request.get_json()['body'])
         body=request.get_json()
-        
+
         userid = body['id']
         email = body['email']
         pw = body['pw']
         name = body['name']
         nickname = body['nickname']
-        
+
         hashpw = bcrypt.hashpw(
                     pw.encode('utf-8'), bcrypt.gensalt())
 
@@ -169,7 +169,7 @@ def modify():
         return jsonify({"msg": "회원변경 완료", "status": 200})
 
 @bp.route('/withdrawal', methods=['POST'])
-@swag_from("../swagger_config/register.yml")
+# @swag_from("../swagger_config/withdrawal.yml", validation=True)
 # @jwt_required()
 def withdrawal():
     if not request.is_json:
@@ -180,7 +180,7 @@ def withdrawal():
         print('check')
         # body = literal_eval(request.get_json()['body'])
         body=request.get_json()
-        
+
         userid=body['id']
         pw=body['pw']
 
@@ -228,4 +228,3 @@ def protected():
       - ApiKeyAuth: []
     """
     return jsonify(foo="bar")
-
