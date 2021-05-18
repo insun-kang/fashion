@@ -20,13 +20,13 @@ const CustomSignIn = () => {
     return passwordError;
   };
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <h2>Sign In</h2>
+    <div className="signin-container">
+      <h2>Sign In</h2>
+      <div className="signin-form">
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ email: '', pw: '' }}
           onSubmit={(values, actions) => {
-            //회원가입 기능 작성
+            //로그인 기능 작성
           }}
         >
           {(props) => (
@@ -34,35 +34,44 @@ const CustomSignIn = () => {
               <Field name="email" validate={validateEmail}>
                 {({ field, form }) => (
                   <div>
-                    <label for="email">e-mail</label>
+                    <label htmlFor="email">e-mail</label>
                     <input
                       {...field}
                       id="email"
                       type="text"
                       placeholder="e-mail"
                     />
-                    <div className="email-error">{form.errors.email}</div>
+                    <div className="email-error">
+                      {form.errors.email && form.touched.email
+                        ? form.errors.email
+                        : null}
+                    </div>
                   </div>
                 )}
               </Field>
-              <Field name="password" validate={validatePassword}>
+              <Field name="pw" validate={validatePassword}>
                 {({ field, form }) => (
                   <div>
-                    <label for="password">password</label>
+                    <label htmlFor="pw">password</label>
                     <input
                       {...field}
-                      id="password"
+                      id="pw"
                       type="password"
                       placeholder="password"
                     />
-                    <div className="password-error">{form.errors.password}</div>
+                    <div className="password-error">
+                      {form.errors.pw && form.touched.pw
+                        ? form.errors.pw
+                        : null}
+                      {/* password input이 touched 되었고 + errors 값에 password의 에러가 있을때만 에러메세지를 보여준다. */}
+                    </div>
                   </div>
                 )}
               </Field>
               <input
                 type="submit"
                 disabled={props.isSubmitting}
-                // submit 중에는 버튼 disable (loading 처리를 해도 좋음)
+                // submit 중에는 버튼 disable (같은 방식으로 loading 처리도 가능)
                 value="Sign In"
               />
             </Form>

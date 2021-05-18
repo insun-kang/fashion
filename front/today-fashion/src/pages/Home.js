@@ -1,4 +1,5 @@
 import CustomSignIn from '../components/CustomSignIn';
+import SignUp from '../components/SignUp';
 
 const Home = () => {
   return (
@@ -6,6 +7,7 @@ const Home = () => {
       <input type="button" value="Sign In" />
       <CustomSignIn />
       <input type="button" value="Sign Up" />
+      <SignUp />
     </div>
   );
 };
