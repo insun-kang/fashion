@@ -1,11 +1,11 @@
-import CustomLogIn from '../components/CustomLogIn';
+import CustomSignIn from '../components/CustomSignIn';
 
 const Home = () => {
   return (
     <div className="home-container">
-      <input type="button" value="로그인" />
-      <CustomLogIn />
-      <input type="button" value="회원가입" />
+      <input type="button" value="Sign In" />
+      <CustomSignIn />
+      <input type="button" value="Sign Up" />
     </div>
   );
 };
