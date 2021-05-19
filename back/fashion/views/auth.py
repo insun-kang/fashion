@@ -190,9 +190,12 @@ def modify():
         emailcheck=models.User.query.filter_by(email=email).all()
         nicknamecheck=models.User.query.filter_by(nickname=nickname).all()
 
-        if admin.email != email and emailcheck is None :
-            admin.email=email
-            models.db.session.commit()
+        if admin.email != email:
+            if emailcheck is None :
+                admin.email=email
+                models.db.session.commit()
+            else:
+                return jsonify({"msg": "이미 존재하는 이메일입니다", "status": 400})
         
         if admin.pw != pw:
             admin.pw=hashpw
@@ -202,9 +205,12 @@ def modify():
             admin.name=name
             models.db.session.commit()
         
-        if admin.nickname != nickname and nicknamecheck is None:
-            admin.nickname=nickname
-            models.db.session.commit()
+        if admin.nickname != nickname:
+            if nicknamecheck is None:
+                admin.nickname=nickname
+                models.db.session.commit()
+            else:
+                return jsonify({"msg": "이미 존재하는 닉네임입니다", "status": 400})
         
 
         return jsonify({"msg": "회원변경 완료", "status": 200})
@@ -249,7 +255,7 @@ def refresh():
     """
     identity = get_jwt_identity()
     access_token = create_access_token(identity=identity, fresh=False)
-    return jsonify(access_token=access_token)
+    return jsonify(access_token=access_token), 200
 
 
 # Only allow fresh JWTs to access this route with the `fresh=True` arguement.
@@ -267,4 +273,4 @@ def protected():
     security:
       - ApiKeyAuth: []
     """
-    return jsonify(foo="bar")
+    return jsonify({"msg":"신성하게 남다르게 강인하게 황송하게 이게 다인가 싶을 때 박연빈 화이팅", "status": 200})
