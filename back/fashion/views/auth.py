@@ -29,7 +29,10 @@ def register():
 
     else:
         print('check')
+
         # body = literal_eval(request.get_json()['body'])
+
+
         body=request.get_json()
 
         email = body['email']
@@ -63,7 +66,7 @@ def register():
                     pw=hashpw,
                     birth=birth,
                     gender=gender,
-                    date=datetime.now()
+                    sign_up_date=datetime.now()
                 )
                 models.db.session.add(user)
                 models.db.session.commit()
@@ -108,7 +111,7 @@ def login():
                 "nickname": queried.nickname,
                 "birth":queried.birth,
                 "gender":queried.gender,
-                "date":queried.date
+                "sign_up_date":queried.sign_up_date
 
             }
 
@@ -127,7 +130,7 @@ def login():
 def modify():
     if not request.is_json:
         print("check_no_jason")  # 확인용... 나중에 삭제할것
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify({"msg": "Missing JSON in request", "status":400 })
 
     else:
         print('check')
@@ -174,7 +177,7 @@ def modify():
 def withdrawal():
     if not request.is_json:
         print("check_no_jason")  # 확인용... 나중에 삭제할것
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify({"msg": "Missing JSON in request", "status":400 })
 
     else:
         print('check')
