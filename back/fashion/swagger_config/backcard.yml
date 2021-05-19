@@ -1,5 +1,7 @@
 summary: "카드게임 - 배경"
 description: "카드게임 배경 api"
+tags:
+    - cardgame
 produces:
 - "application/json"
 requestBody:

@@ -1,5 +1,7 @@
 summary: "회원정보수정"
 description: "회원정보수정 api"
+tags:
+    - auth
 produces:
 - "application/json"
 requestBody:

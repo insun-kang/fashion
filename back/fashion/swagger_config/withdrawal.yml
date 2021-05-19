@@ -1,5 +1,7 @@
 summary: "회원탈퇴"
 description: "회원탈퇴 api"
+tags:
+    - auth
 produces:
 - "application/json"
 requestBody:

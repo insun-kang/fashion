@@ -1,5 +1,7 @@
 summary: "회원가입"
 description: "회원가입 api"
+tags:
+    - auth
 produces:
 - "application/json"
 requestBody:
