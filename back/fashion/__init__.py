@@ -32,9 +32,11 @@ def create_app():
     CORS(app, supports_credentials=True)
     # 블루프린트
 # --------------------------------------------------------------------------- #
-    from .views import auth
+    from .views import auth, search
     app.register_blueprint(auth.bp)
+    app.register_blueprint(search.bp)
 
+    
     app.config['JWT_SECRET_KEY'] = 'fashion'
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(hours=20)
