@@ -14,7 +14,7 @@ const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loggedinState);
   const [openSignIn, setOpenSignIn] = useRecoilState(signInModalOpenState);
   const [openSignUp, setOpenSignUp] = useRecoilState(signUpModalOpenState);
-  console.log(openSignIn);
+
   const handleSignUp = async (data) => {
     const res = await axios.post(SERVER_URL + '/sign-up', data);
     console.log(res);
