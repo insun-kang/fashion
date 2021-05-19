@@ -55,6 +55,6 @@ class Product(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     asin = Column(String(256), nullable=False)
-    title = Column(String(16000000), nullable=False)
+    title = Column(String(2048), nullable=False)
     brand = Column(String(1024), nullable=True)
     price = Column(Integer, nullable=False)
