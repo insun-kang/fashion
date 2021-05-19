@@ -9,30 +9,38 @@ import {
   signInModalOpenState,
   signUpModalOpenState,
 } from '../states/state';
-import { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { Redirect } from 'react-router';
 
-const Home = () => {
+const Home = ({ location }) => {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loggedinState);
   const [openSignIn, setOpenSignIn] = useRecoilState(signInModalOpenState);
   const [openSignUp, setOpenSignUp] = useRecoilState(signUpModalOpenState);
 
-  const handleSignUp = useCallback(async (data) => {
+  const { from } = location.state || { from: { pathname: '/main' } };
+  if (isLoggedIn) {
+    return <Redirect to={from} />;
+    //로그인 된 상태라면 직전에 있었던 페이지로 redirect
+  }
+  const handleSignUp = async (data) => {
     const res = await axios.post(SERVER_URL + '/sign-up', data);
     console.log(res);
     //로그인도 시켜주기
-  }, []); //회원가입 요청
+    //회원가입이 된 유저라면 로그인 창 띄워주기
+  }; //회원가입 요청
 
-  const handleCustomSignIn = useCallback(async (data) => {
+  const handleCustomSignIn = async (data) => {
     const res = await axios.post(SERVER_URL + '/sign-in', data);
     console.log(res);
     if ((res.data.status = 200)) {
       localStorage.setItem('access_token', res.data.access_token);
       localStorage.setItem('refresh_token', res.data.refresh_token);
       setIsLoggedIn(true);
+      setOpenSignIn(false);
       //로그인 후 main화면으로 이동
       //만약 이미 로그인 된 사용자가 /로 들어온다면?
     }
-  }, []); //로그인 요청
+  }; //로그인 요청
 
   return (
     <div className="home-container">
