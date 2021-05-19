@@ -1,70 +1,11 @@
-# Getting Started with Create React App
+#front 진행일지
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+###week1 - 남다영
 
-In the project directory, you can run:
+- prettier, eslint 설정을 두번째 해보지만 처음 해보는 것처럼 어려웠다. prettier 설치시 오류가 많이 나는데, editor 환경에서의 설정과 editorconfig의 설정, prettier 규칙 설정과 eslint 규칙 설정을 통일하는게 매우 중요하다. 어느 하나라도 놓치면 에러가 일어난다(놓치지 않기가 매우 어렵고 놓친 경우 어느 부분을 놓쳤는지 알기 어렵기 때문에 고치기가 어렵다). 내 경우 한 줄의 코드 길이가가 max 100를 넘지 않는다는 규칙을 설정했는데 editor 환경에서는 기본적으로 80으로 설정되어 있었다. 해당 부분을 수정했더니 오류가 나지 않았다.
+  또 이전에는 삼중첩 삼항연산자를 썼을 때 문법적 오류는 없었는데 prettier 오류가 났었고, 해당부분이 왜 잘못되었는지 알지 못했는데 이번에 오류를 고치려다 eslint에 삼중첩 삼항연산자를 허락하지 않는 규칙이 있다는 걸 알게되었다.
+- bootstrap과 material ui 중에 어떤 ui framework를 쓸지 많이 고민했다. 처음에는 bootstrap을 쓰려다가 datepicker 컴포넌트가 기본으로 존재하지 않는다는 것을 알고 material ui를 설치했다. 하지만 material ui는 bootstrap보다 반응형 ui의 구현이 훨씬 복잡하다는 것을 알게되었다. 그래서 다시 bootstrap을 설치했다.
 
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+###week2 - 남다영
