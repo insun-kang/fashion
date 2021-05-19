@@ -34,7 +34,9 @@ def create_app():
 # --------------------------------------------------------------------------- #
     from .views import auth
     app.register_blueprint(auth.bp)
+    # app.register_blueprint(search.bp)
 
+    
     app.config['JWT_SECRET_KEY'] = 'fashion'
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(hours=20)

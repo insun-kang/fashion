@@ -1,7 +1,6 @@
 from fashion import db
 from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text
 
-
 class User(db.Model):  # usertable
     __tablename__ = 'user'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
@@ -14,3 +13,13 @@ class User(db.Model):  # usertable
     birth=Column(DATE, nullable=False)
     gender = Column(String(32), nullable=False)
     sign_up_date = Column(DATE, nullable=False)
+
+
+class Keyword(db.Model):
+    __tablename__:'keyword'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    userid = Column(Integer)
+    keyword = Column(Text(4294000000), nullable=True )
+
