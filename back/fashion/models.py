@@ -10,9 +10,10 @@ class User(db.Model):  # usertable
     email = Column(String(64), unique=True)
     name = Column(String(100), nullable=False)
     pw = Column(String(64), nullable=False)
-    birth=Column(DATE, nullable=False)
+    birth = Column(DATE, nullable=False)
     gender = Column(String(32), nullable=False)
     sign_up_date = Column(DATE, nullable=False)
+
 
 #count가 큰 50개의 키워드를 뽑아 검색에 사용할 테이블
 class Keyword(db.Model):
@@ -30,12 +31,11 @@ class Product_keyword_match(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    asin= Column(String(256), nullable=False)
+    asin = Column(String(256), nullable=False)
     product_keyword = Column(Text(16000000), nullable=True)#제품키워드
     good_review_keyword = Column(Text(16000000), nullable=True)#긍정키워드
     bad_review_keyword = Column(Text(16000000), nullable=True)#부정키워드
     rating = Column(Integer)
-
 
 
 #게임을 통해 얻어진 키워드를 유저와 매칭시켜주는 테이블(일대일로 매칭시켜주고 count를 해줘서 많은 키워드를 가져오면 될듯)
@@ -44,7 +44,17 @@ class Preferred_keyword(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    userid= Column(Integer)
+    userid = Column(Integer)
     keyword = Column(String(256), nullable=True)
 
 
+# 상품 테이블
+class Product(db.Model):
+    __tablename__ = 'product'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    asin = Column(String(256), nullable=False)
+    title = Column(String(16000000), nullable=False)
+    brand = Column(String(1024), nullable=True)
+    price = Column(Integer, nullable=False)
