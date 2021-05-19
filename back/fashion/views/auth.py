@@ -140,6 +140,31 @@ def login():
         else:
             return jsonify({"msg": "비밀번호 불일치", "status": 400})
 
+@bp.route('/mypage', methods=['POST'])
+@swag_from("../swagger_config/modify.yml", validation=True)
+# @jwt_required()
+def check_pw():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request", "status":400 })
+
+    else:
+        # body = literal_eval(request.get_json()['body'])
+        body=request.get_json()
+
+        userid=body['id']
+        pw = body['pw']
+        
+        queried = models.User.query.filter_by(id=userid).first()
+
+        if not pw:
+            return jsonify({"msg": "비번 치세요", 'status': 400})
+
+        if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
+            return jsonify({"msg": "비밀번호 일치", "status": 200})
+        else:
+            return jsonify({"msg": "비밀번호 불일치", "status": 400})
+
+
 @bp.route('/modification', methods=['POST'])
 @swag_from("../swagger_config/modify.yml", validation=True)
 # @jwt_required()
