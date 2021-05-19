@@ -76,7 +76,6 @@ def register():
                     "sign_up_date":queried.sign_up_date
 
                 }
-                print(user_object)
 
                 return jsonify({
                                 "msg": "회원가입 성공", 
