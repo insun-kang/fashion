@@ -1,7 +1,8 @@
 import React from 'react';
 import { Field, Form, Formik } from 'formik';
 
-const CustomSignIn = () => {
+const CustomSignIn = (props) => {
+  const { handleCustomSignIn } = props;
   const validateEmail = (emailValue) => {
     let emailError;
     if (!emailValue) {
@@ -27,6 +28,7 @@ const CustomSignIn = () => {
           initialValues={{ email: '', pw: '' }}
           onSubmit={(values, actions) => {
             //로그인 기능 작성
+            handleCustomSignIn(values);
             console.log('submit');
             setTimeout(() => {
               alert(JSON.stringify(values, null, 2));

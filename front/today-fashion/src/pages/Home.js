@@ -9,21 +9,30 @@ import {
   signInModalOpenState,
   signUpModalOpenState,
 } from '../states/state';
+import { useCallback } from 'react';
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loggedinState);
   const [openSignIn, setOpenSignIn] = useRecoilState(signInModalOpenState);
   const [openSignUp, setOpenSignUp] = useRecoilState(signUpModalOpenState);
 
-  const handleSignUp = async (data) => {
+  const handleSignUp = useCallback(async (data) => {
     const res = await axios.post(SERVER_URL + '/sign-up', data);
     console.log(res);
-  }; //회원가입 요청
+    //로그인도 시켜주기
+  }, []); //회원가입 요청
 
-  const handleSignIn = async (data) => {
+  const handleCustomSignIn = useCallback(async (data) => {
     const res = await axios.post(SERVER_URL + '/sign-in', data);
     console.log(res);
-  }; //로그인 요청
+    if ((res.data.status = 200)) {
+      localStorage.setItem('access_token', res.data.access_token);
+      localStorage.setItem('refresh_token', res.data.refresh_token);
+      setIsLoggedIn(true);
+      //로그인 후 main화면으로 이동
+      //만약 이미 로그인 된 사용자가 /로 들어온다면?
+    }
+  }, []); //로그인 요청
 
   return (
     <div className="home-container">
@@ -47,7 +56,7 @@ const Home = () => {
       ) : null}
       {openSignIn ? (
         <div className="signin-modal">
-          <CustomSignIn />
+          <CustomSignIn handleCustomSignIn={handleCustomSignIn} />
           <button
             type="button"
             onClick={() => {
