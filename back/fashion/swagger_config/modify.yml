@@ -1,47 +1,46 @@
-summary: "회원가입"
-description: "회원가입 api"
+summary: "회원정보수정"
+description: "회원정보수정 api"
 produces:
 - "application/json"
 requestBody:
-        description: 유저에 관한 정보(email,pw,name,nickname,birth,gender)
+        description: 수정할 정보(id,email,pw,name,nickname)
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/definitions/User'
+              $ref: '#/definitions/Modified'
             examples:
               case1:
                 summary: 강인선
                 value:
+                  id: 1
                   email: "sunink1@naver.com"
                   pw: "qwer!@6789"
-                  name: "강인선"
-                  nickname: "강인성"
-                  birth: "19950310"
-                  gender: "남"
+                  name: "강인성"
+                  nickname: "인성킹"
               case2:
                 summary: 김다인
                 value:
-                  email: "dainlinda@naver.com"
+                  id: 2
+                  email: "dainlinda@gmail.com"
                   pw: "dainlinda!@1234"
                   name: "김다인"
-                  nickname: "익명이"
-                  birth: "19960325"
-                  gender: "여"
+                  nickname: "어른익명"
 responses:
   200:
     description: OK
 definitions:
-  User:
+  Modified:
     type: object
     required:
+      - id
       - email
       - pw
       - name
       - nickname
-      - birth
-      - gender
     properties:
+      id:
+        type: string
       email:
         type: string
       pw:
@@ -49,8 +48,4 @@ definitions:
       name:
         type: string
       nickname:
-        type: string
-      birth:
-        type: string
-      gender:
         type: string

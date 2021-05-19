@@ -1,70 +1,17 @@
-# Getting Started with Create React App
+#front 진행일지
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+###week1 - 남다영
+**eslint-prettier 설정**
 
-In the project directory, you can run:
+- prettier, eslint 설정을 두번째 해보지만 처음 해보는 것처럼 어려웠다. prettier 설치시 오류가 많이 나는데, editor 환경에서의 설정과 editorconfig의 설정, prettier 규칙 설정과 eslint 규칙 설정을 통일하는게 매우 중요하다. 어느 하나라도 놓치면 에러가 일어난다(놓치지 않기가 매우 어렵고 놓친 경우 어느 부분을 놓쳤는지 알기 어렵기 때문에 고치기가 어렵다). 내 경우 한 줄의 코드 길이가가 max 100를 넘지 않는다는 규칙을 설정했는데 editor 환경에서는 기본적으로 80으로 설정되어 있었다. 해당 부분을 수정했더니 오류가 나지 않았다.
+  또 이전에는 삼중첩 삼항연산자를 썼을 때 문법적 오류는 없었는데 prettier 오류가 났었고, 해당부분이 왜 잘못되었는지 알지 못했는데 이번에 오류를 고치려다 eslint에 삼중첩 삼항연산자를 허락하지 않는 규칙이 있다는 걸 알게되었다.
+  **내 프로젝트에 적합한 ui 사용하기**
+- bootstrap과 material ui 중에 어떤 ui framework를 쓸지 많이 고민했다. 처음에는 bootstrap을 쓰려다가 datepicker 컴포넌트가 기본으로 존재하지 않는다는 것을 알고 material ui를 설치했다. 하지만 material ui는 bootstrap보다 반응형 ui의 구현이 훨씬 복잡하다는 것을 알게되었다. 그래서 다시 bootstrap을 설치했다. 결국 업무 재분배로 나는 ui를 관리하지 않게 되었고, 내 결정과 다르게 되었지만 무작정 뭐가 좋다는 말만 듣고 사용하기보다 직접 살펴보며 내 프로젝트에 적합한 프레임워크가 무엇인지 고민하는 과정이 뜻깊었다.
 
-### `yarn start`
+###week2 - 남다영
+**라우팅으로 인증 관리**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 저번에 로그인 관리를 했을 때는 모든 페이지에서 on mount 시점에 login이 되었는지 되지 않았는지 구분하는 함수를 실행하는 식으로 구현했었다. 구현하는 당시에도 별로 좋은 방법이라는 느낌을 받지 못했는데 급해서 그냥 그대로 진행했고, 이번에는 다른 방식으로 구현해보기로 했다. 그래서 검색을 해보던 중 react router로 인증이 필요한 컴포넌트와 필요하지 않은 컴포넌트를 구분해서 라우팅을 하는 법이 있다는 걸 찾고, 해당 방법을 이용해보았다. 아직 많은 페이지를 작업하지 않아서 확신하기는 이르지만 결과적으로 훨씬 깔끔하게 로그인 관리가 가능할 것 같고, 많이 만족스럽다. react-router-dom 은 이전에도 사용해 본 적이 있지만 이렇게 사용할 수 있다는 건 몰랐다. 세상에는 좋은 프레임워크가 많지만 결국에는 내가 사용하려는 기술을 잘 알고 내 상황에 맞춰 효율적으로 사용할 수 있는지가 제일 중요한 것 같다.
+- 구현에 참고했던 레퍼런스 : https://www.daleseo.com/react-router-authentication/
