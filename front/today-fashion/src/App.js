@@ -11,6 +11,7 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <Home />
+            {/* login 되어있다면 main, 되어있지 않다면 home으로 처리 */}
           </Route>
         </Switch>
       </RecoilRoot>

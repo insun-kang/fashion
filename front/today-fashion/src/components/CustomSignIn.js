@@ -27,6 +27,10 @@ const CustomSignIn = () => {
           initialValues={{ email: '', pw: '' }}
           onSubmit={(values, actions) => {
             //로그인 기능 작성
+            console.log('submit');
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 2));
+            }, 400);
           }}
         >
           {(props) => (
@@ -34,7 +38,7 @@ const CustomSignIn = () => {
               <Field name="email" validate={validateEmail}>
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="email">e-mail</label>
+                    <label htmlFor="email">E-mail</label>
                     <input
                       {...field}
                       id="email"
@@ -52,7 +56,7 @@ const CustomSignIn = () => {
               <Field name="pw" validate={validatePassword}>
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="pw">password</label>
+                    <label htmlFor="pw">Password</label>
                     <input
                       {...field}
                       id="pw"
