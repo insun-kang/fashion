@@ -1,0 +1,6 @@
+description: 마이페이지 유저정보 api
+responses:
+  200:
+    description: 성공적으로 접근했습니다.
+security:
+  - ApiKeyAuth: []
