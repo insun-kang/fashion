@@ -78,7 +78,7 @@ def register():
                 }
 
                 return jsonify({
-                                "msg": "회원가입 성공", 
+                                "msg": "회원가입 성공",
                                 'access_token': access_token,
                                 'refresh_token': refresh_token,
                                 'user_object': user_object,
@@ -87,7 +87,7 @@ def register():
 
             elif checkvalid.passwordCheck(pw) == 2:
                 return jsonify({'msg': '비밀번호 기준에 맞지 않습니다. 비밀번호는 8자이상, 숫자+영어+특수문자 조합으로 이루어집니다.', 'status': 304})
-            
+
             else:
                 return jsonify({'msg': '비밀번호는 하나이상의 특수문자가 들어가야합니다', 'status': 400})
 
@@ -106,7 +106,7 @@ def login():
         pw = body['pw']
 
         queried = models.User.query.filter_by(email=email).first()
-        
+
 
         if queried is None:
             return jsonify({"msg": "존재하지 않는 회원입니다", 'status': 400})
@@ -153,7 +153,7 @@ def check_pw():
 
         userid=body['id']
         pw = body['pw']
-        
+
         queried = models.User.query.filter_by(id=userid).first()
 
         if not pw:
@@ -196,22 +196,22 @@ def modify():
                 models.db.session.commit()
             else:
                 return jsonify({"msg": "이미 존재하는 이메일입니다", "status": 400})
-        
+
         if admin.pw != pw:
             admin.pw=hashpw
             models.db.session.commit()
-       
+
         if admin.name != name:
             admin.name=name
             models.db.session.commit()
-        
+
         if admin.nickname != nickname:
             if nicknamecheck is None:
                 admin.nickname=nickname
                 models.db.session.commit()
             else:
                 return jsonify({"msg": "이미 존재하는 닉네임입니다", "status": 400})
-        
+
 
         return jsonify({"msg": "회원변경 완료", "status": 200})
 
@@ -247,6 +247,8 @@ def refresh():
     refresh
     ---
     description: refresh 토큰에서 id를 받아서 새로운 토큰을 만드는 api.
+    tags:
+        - auth
     responses:
       200:
         description: 성공적으로 access 토큰이 생성되었습니다.
@@ -267,6 +269,8 @@ def protected():
     protected
     ---
     description: fresh=True인 토큰으로만 접근 가능한 api (로그인할 때 생성되는 access 토큰)
+    tags:
+        - auth
     responses:
       200:
         description: 성공적으로 접근했습니다.
