@@ -40,11 +40,3 @@ def backcard():
                     }, 200
         except:
             return {"msg": str(limit_num)+"개의 데이터가 없습니다."}, 400
-
-# product 테이블 테스트용 데이터들
-# INSERT INTO `product` (asin, title, brand, price) VALUES
-# ('1234', 'test1', 'test1', 1234),
-# ('5647', 'test2', 'test2', 5647),
-# ('3101', 'test3', 'test3', 3101),
-# ('5687', 'test4', 'test4', 5687),
-# ('9999', 'test5', 'test5', 9999);
