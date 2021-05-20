@@ -29,10 +29,6 @@ const CustomSignIn = (props) => {
           onSubmit={(values, actions) => {
             //로그인 기능 작성
             handleCustomSignIn(values);
-            console.log('submit');
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-            }, 400);
           }}
         >
           {(props) => (
