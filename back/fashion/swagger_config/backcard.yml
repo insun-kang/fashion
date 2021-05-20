@@ -21,3 +21,5 @@ responses:
     description: limit_num 만큼의 제품이 반환된 경우
   400:
     description: limit_num 만큼의 제품이 없을 경우
+security:
+  - ApiKeyAuth: []

@@ -1,0 +1,11 @@
+summary: "카드게임 - 배경 위 문구"
+description: "카드게임 배경 위 문구 api"
+tags:
+    - cardgame
+produces:
+- "application/json"
+responses:
+  200:
+    description: 문구가 잘 반환된 경우
+security:
+  - ApiKeyAuth: []
