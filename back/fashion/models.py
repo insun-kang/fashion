@@ -10,7 +10,7 @@ class User(db.Model):  # usertable
     email = Column(String(64), unique=True)
     name = Column(String(100), nullable=False)
     pw = Column(String(64), nullable=False)
-    birth=Column(DATE, nullable=False)
+    birth = Column(DATE, nullable=False)
     gender = Column(String(32), nullable=False)
     sign_up_date = Column(DATE, nullable=False)
 
@@ -25,16 +25,21 @@ class Keyword(db.Model):
     count = Column(Integer, nullable=False)
 
 
-#상품과 키워드를 매칭시켜서 저장하는 테이블(asion과 키워드를 매칭하면 될듯??)
-class Product_keyword_match(db.Model):
-    __tablename__:'product_keyword_match'
+#상품 테이블(키워드 포함)
+class Product(db.Model):
+    __tablename__:'product'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    asin= Column(Integer)
-    keyword = Column(Text(16000000), nullable=True)
-    image = Column(Text(16000000), nullable=False)
-    link = Column(Text(16000000), nullable=False)
+    asin = Column(String(256), nullable=False)
+    title = Column(Text(16000000), nullable=False)
+    brand = Column(String(1024), nullable=True)
+    price = Column(Integer, nullable=False)
+    rating = Column(Integer)
+
+    product_keyword = Column(Text(16000000), nullable=True)#제품키워드
+    good_review_keyword = Column(Text(16000000), nullable=True)#긍정키워드
+    bad_review_keyword = Column(Text(16000000), nullable=True)#부정키워드
 
 
 
@@ -44,7 +49,5 @@ class Preferred_keyword(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    userid= Column(Integer)
+    userid = Column(Integer)
     keyword = Column(String(256), nullable=True)
-
-

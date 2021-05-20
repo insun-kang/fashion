@@ -1,5 +1,7 @@
 summary: "회원가입"
 description: "회원가입 api"
+tags:
+    - auth
 produces:
 - "application/json"
 requestBody:
@@ -18,7 +20,7 @@ requestBody:
                   name: "강인선"
                   nickname: "강인성"
                   birth: "19950310"
-                  gender: "남"
+                  gender: "male"
               case2:
                 summary: 김다인
                 value:
@@ -27,7 +29,7 @@ requestBody:
                   name: "김다인"
                   nickname: "익명이"
                   birth: "19960325"
-                  gender: "여"
+                  gender: "female"
 responses:
   200:
     description: OK

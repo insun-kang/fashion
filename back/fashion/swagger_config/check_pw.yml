@@ -1,40 +1,35 @@
-summary: "로그인"
-description: "로그인 api"
+summary: "회원 비번 확인"
+description: "회원 비번 확인 api"
 tags:
-    - auth
-consumes:
-  - application/json
+    - mypage
 produces:
 - "application/json"
 requestBody:
-        description: email과 pw (json 형태)
+        description: 확인할 정보(id,pw)
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/definitions/Login'
+              $ref: '#/definitions/Checkpw'
             examples:
-              user1:
+              case1:
                 summary: 강인선
                 value:
-                  email: "sunink1@naver.com"
                   pw: "qwer!@6789"
-              user2:
+              case2:
                 summary: 김다인
                 value:
-                  email: "dainlinda@naver.com"
                   pw: "dainlinda!@1234"
 responses:
   200:
     description: OK
 definitions:
-  Login:
+  Checkpw:
     type: object
     required:
-      - email
       - pw
     properties:
-      email:
-        type: string
       pw:
         type: string
+security:
+  - ApiKeyAuth: []

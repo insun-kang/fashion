@@ -1,0 +1,7 @@
+
+description: fresh=True인 토큰으로만 접근 가능한 api (로그인할 때 생성되는 access 토큰)
+responses:
+  200:
+    description: 성공적으로 접근했습니다.
+security:
+  - ApiKeyAuth: []
