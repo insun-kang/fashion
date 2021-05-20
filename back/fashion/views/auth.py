@@ -145,9 +145,8 @@ def check_pw():
 
 @bp.route('/modification', methods=['GET','POST'])
 @jwt_required()
-@swag_from("../swagger_config/modify.yml", validation=True)
-# @swag_from("../swagger_config/modify_get.yml", methods=['GET'], validation=True)
-# @swag_from("../swagger_config/modify_post.yml", methods=['POST'], validation=True)
+@swag_from("../swagger_config/modify_get.yml", methods=['GET'])
+@swag_from("../swagger_config/modify_post.yml", methods=['POST'], validation=True)
 def modify():
     if request.method =='GET':
         header = request.headers.get('Authorization')
@@ -234,7 +233,7 @@ def refresh():
 # Only allow fresh JWTs to access this route with the `fresh=True` arguement.
 @bp.route("/protected", methods=["GET"])
 @jwt_required(fresh=True)
-@swag_from("../swagger_config/protected.yml", validation=True)
+@swag_from("../swagger_config/protected.yml")
 def protected():
     return jsonify({"msg": "protected 접근 성공"}), 200
 
