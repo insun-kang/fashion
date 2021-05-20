@@ -69,7 +69,6 @@ def register():
 
                 return jsonify({
                                 'access_token': access_token,
-                                'refresh_token': refresh_token,
                                 'nickname': queried.nickname
                                 
                             }), 200
@@ -111,7 +110,6 @@ def login():
 
             return jsonify({
                 'access_token': access_token,
-                'refresh_token': refresh_token,
                 'nickname': queried.nickname
                 
             }), 200
