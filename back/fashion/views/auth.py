@@ -193,13 +193,13 @@ def modify():
 @jwt_required()
 @swag_from("../swagger_config/withdrawal.yml", validation=True)
 def withdrawal():
-    if not request.is_json:
+     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
 
-    else:
+     else:
         header = request.headers.get('Authorization')
         userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-
+        print(userid)
         admin=models.User.query.filter_by(id=userid).first()
         models.db.session.delete(admin)
         models.db.session.commit()
