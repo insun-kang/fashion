@@ -5,7 +5,7 @@ tags:
 produces:
 - "application/json"
 requestBody:
-        description: 수정할 정보(id,email,pw,name,nickname)
+        description: 수정할 정보(email,pw,name,nickname)
         required: true
         content:
           application/json:
@@ -15,7 +15,6 @@ requestBody:
               case1:
                 summary: 강인선
                 value:
-                  id: 1
                   email: "sunink1@naver.com"
                   pw: "qwer!@6789"
                   name: "강인성"
@@ -23,7 +22,6 @@ requestBody:
               case2:
                 summary: 김다인
                 value:
-                  id: 2
                   email: "dainlinda@gmail.com"
                   pw: "dainlinda!@1234"
                   name: "김다인"
@@ -35,14 +33,11 @@ definitions:
   Modified:
     type: object
     required:
-      - id
       - email
       - pw
       - name
       - nickname
     properties:
-      id:
-        type: string
       email:
         type: string
       pw:
@@ -51,3 +46,5 @@ definitions:
         type: string
       nickname:
         type: string
+security:
+  - ApiKeyAuth: []

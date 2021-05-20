@@ -153,7 +153,6 @@ def modify():
     else:
         body = request.get_json()
         header = request.headers.get('Authorization')
-
         userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
 
@@ -188,13 +187,23 @@ def modify():
 
             return jsonify({"msg": "회원변경 완료", "nickname": admin.nickname}), 200
         except:
-            return jsonify({"msg": "회원변경 실패"}), 200
+            return jsonify({"msg": "회원변경 실패"}), 400
 
-@bp.route('/withdrawal', methods=['GET'])
+@bp.route('/withdrawal', methods=['POST'])
 @jwt_required()
 @swag_from("../swagger_config/withdrawal.yml", validation=True)
 def withdrawal():
-    return jsonify({"msg": "회원탈퇴 완료"}), 200
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    else:
+        header = request.headers.get('Authorization')
+        userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+
+        admin=models.User.query.filter_by(id=userid).first()
+        models.db.session.delete(admin)
+        models.db.session.commit()
+        return jsonify({"msg": "회원탈퇴 완료"}), 200
 
 
 @bp.route("/refresh", methods=["POST"])

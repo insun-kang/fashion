@@ -15,12 +15,10 @@ requestBody:
               case1:
                 summary: 강인선
                 value:
-                  id: 1
                   pw: "qwer!@6789"
               case2:
                 summary: 김다인
                 value:
-                  id: 2
                   pw: "dainlinda!@1234"
 responses:
   200:
@@ -29,11 +27,8 @@ definitions:
   Checkpw:
     type: object
     required:
-      - id
       - pw
     properties:
-      id:
-        type: string
       pw:
         type: string
 security:
