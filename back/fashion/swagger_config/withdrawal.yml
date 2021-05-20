@@ -4,9 +4,37 @@ tags:
     - auth
 produces:
 - "application/json"
-        
+requestBody:
+        description: 탈퇴할 때 필요한 정보(id,pw)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Withdrawal'
+            examples:
+              case1:
+                summary: 강인선
+                value:
+                  id: 1
+                  pw: "qwer!@6789"
+              case2:
+                summary: 김다인(다른 비밀번호 입력)
+                value:
+                  id: 2
+                  pw: "dainlinda!@12345"
 responses:
   200:
     description: OK
+definitions:
+  Withdrawal:
+    type: object
+    required:
+      - id
+      - pw
+    properties:
+      id:
+        type: string
+      pw:
+        type: string
 security:
   - ApiKeyAuth: []
