@@ -1,9 +1,13 @@
 import { atom } from 'recoil';
 
+export const userNick = atom({
+  key: 'userNick',
+  default: '',
+});
+
 export const loggedinState = atom({
   key: 'loggedinState',
-  default: false,
-  //  로그인한 유저 정보 저장
+  default: undefined,
 });
 
 export const signInModalOpenState = atom({
