@@ -70,12 +70,12 @@ def register():
                 return jsonify({
                                 'access_token': access_token,
                                 'nickname': queried.nickname
-                                
+
                             }), 200
 
             elif checkvalid.passwordCheck(pw) == 2:
                 return jsonify({'msg': '비밀번호 기준에 맞지 않습니다. 비밀번호는 8자이상, 숫자+영어+특수문자 조합으로 이루어집니다.'}), 400
-            
+
             else:
                 return jsonify({'msg': '비밀번호는 하나이상의 특수문자가 들어가야합니다'}), 400
 
@@ -93,7 +93,7 @@ def login():
         pw = body['pw']
 
         queried = models.User.query.filter_by(email=email).first()
-        
+
         if queried is None:
             return jsonify({"msg": "존재하지 않는 회원입니다"}), 400
 
@@ -106,12 +106,12 @@ def login():
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             access_token = create_access_token(identity=queried.id, fresh=True)
             refresh_token = create_refresh_token(identity=queried.id)
-            
+
 
             return jsonify({
                 'access_token': access_token,
                 'nickname': queried.nickname
-                
+
             }), 200
 
         else:
@@ -127,11 +127,11 @@ def check_pw():
     else:
         body = request.get_json()
         header = request.headers.get('Authorization')
-        
+
         userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-        
+
         queried = models.User.query.filter_by(id=userid).first()
-        
+
         pw=body['pw']
 
         if not pw:
@@ -146,7 +146,7 @@ def check_pw():
 @bp.route('/modification', methods=['GET','POST'])
 @jwt_required()
 @swag_from("../swagger_config/modify_get.yml", methods=['GET'])
-@swag_from("../swagger_config/modify_post.yml", methods=['POST'], validation=True)
+@swag_from("../swagger_config/modify_post.yml", methods=['POST'])
 def modify():
     if request.method =='GET':
         header = request.headers.get('Authorization')
@@ -170,7 +170,7 @@ def modify():
             body = request.get_json()
             header = request.headers.get('Authorization')
             userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-            
+
             email = body['email']
             pw = body['pw']
             name = body['name']
@@ -191,11 +191,11 @@ def modify():
                 if admin.pw != pw:
                     admin.pw=hashpw
                     models.db.session.commit()
-            
+
                 if admin.name != name:
                     admin.name=name
                     models.db.session.commit()
-                
+
                 if admin.nickname != nickname and nicknamecheck is None:
                     admin.nickname=nickname
                     models.db.session.commit()
@@ -236,4 +236,3 @@ def refresh():
 @swag_from("../swagger_config/protected.yml")
 def protected():
     return jsonify({"msg": "protected 접근 성공"}), 200
-
