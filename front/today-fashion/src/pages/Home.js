@@ -9,7 +9,7 @@ import {
   signInModalOpenState,
   signUpModalOpenState,
 } from '../states/state';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
 
@@ -37,7 +37,7 @@ const Home = ({ location, history }) => {
         console.log(res);
         setToken(res.data.access_token);
 
-        localStorage.setItem('access_token', res.data.access_token);
+        // localStorage.setItem('access_token', res.data.access_token);
         setOpenSignIn(false);
         history.push('/main');
         //전역 state에 사용자 닉네임 저장해주기
@@ -48,6 +48,14 @@ const Home = ({ location, history }) => {
     },
     [history, setToken]
   );
+
+  useEffect(() => {
+    return () => {
+      setOpenSignIn(false);
+      setOpenSignUp(false);
+      //unmount memory leak 에러 방지용
+    };
+  }, []);
 
   if (token) {
     return <Redirect to={from} />;
