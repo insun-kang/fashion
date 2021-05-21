@@ -1,5 +1,5 @@
 summary: "카드게임 - 배경 위 문구"
-description: "카드게임 배경 위 문구 api"
+description: "카드게임 배경 위 문구 api: maincard 안에 합쳐서 사용자 누적 플레이 개수에 따라 달라지게 할 것"
 tags:
     - cardgame
 produces:
