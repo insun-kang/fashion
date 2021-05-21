@@ -6,15 +6,15 @@ import Main from './pages/Main';
 import AuthRoute from './AuthRoute';
 import { SERVER_URL } from './config';
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
-import { loggedinState } from './states/state';
 import MyPage from './pages/MyPage';
+import { useLocalStorage } from './customHooks/useLocalStorage';
 function App() {
   const location = useLocation();
-  const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loggedinState);
 
-  const checkLoggedState = useCallback(async () => {
+  const [token, setToken] = useLocalStorage('access_token', null);
+
+  const checkTokenState = useCallback(async () => {
+    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
     try {
       const res = await axios.get(SERVER_URL + '/protected', {
         headers: {
@@ -22,23 +22,25 @@ function App() {
         },
       });
       console.log(res);
-      setIsLoggedIn(true);
     } catch (error) {
-      alert(error);
-      //로그아웃 된다는 모달? alert 띄워주기?
-      setIsLoggedIn(false);
-      localStorage.removeItem('refresh_token');
+      // alert(error);
+      setToken(null);
+      //위 코드 없으면 에러남...(왜...? 아래와 중복된 코드 아닌가...?)
+      // //로그아웃 된다는 모달? alert 띄워주기?
       localStorage.removeItem('access_token');
     }
-  }, [AuthStr, setIsLoggedIn]);
+  }, [setToken]);
+  console.log(token);
 
   useEffect(() => {
     if (localStorage.getItem('access_token')) {
-      checkLoggedState();
+      console.log(token);
+      console.log('check token state');
+      checkTokenState();
     }
-  }, [location, checkLoggedState]);
+  }, [location, token, checkTokenState]);
   //페이지가 변할때마다 로그인 여부 확인
-  console.log(isLoggedIn);
+
   return (
     <div className="App">
       <Switch>

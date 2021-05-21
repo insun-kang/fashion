@@ -1,0 +1,6 @@
+description: 키워드 검색 api
+responses:
+  200:
+    description: 성공적으로 접근했습니다.
+security:
+  - ApiKeyAuth: []

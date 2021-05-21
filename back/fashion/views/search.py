@@ -14,27 +14,30 @@ from flasgger.utils import swag_from
 
 bp = Blueprint('search', __name__, url_prefix='/')
 
-@bp.route('/search', methods=['GET','POST'])
-@swag_from("../swagger_config/login.yml")
+@bp.route('/search', methods=['GET'])
+@swag_from("../swagger_config/search.yml")
 def search():
     if request.method =='GET':
+        
         keyword=[]
         search_keyword=models.Keyword.query.order_by(models.Keyword.count.desc()).limit(50)
         for i in search_keyword:
+            
             keyword.append(i.keyword)
+
         print(keyword)
         return jsonify({"msg": "성공","keyword": keyword ,'status': 200})
-    else:
-        body=request.get_json()
+    # else:
+    #     body=request.get_json()
 
-        keyword = body['keyword']
-        count = body['count']
-        keyword = models.Keyword(
-                    keyword=keyword,
-                    count=count
-                )
-        models.db.session.add(keyword)
-        models.db.session.commit()
-        return jsonify({'msg': '성공', 'status': 200})
+    #     keyword = body['keyword']
+    #     count = body['count']
+    #     keyword = models.Keyword(
+    #                 keyword=keyword,
+    #                 count=count
+    #             )
+    #     models.db.session.add(keyword)
+    #     models.db.session.commit()
+        # return jsonify({'msg': '성공', 'status': 200})
 
     
