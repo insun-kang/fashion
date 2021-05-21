@@ -1,0 +1,47 @@
+summary: "메인카드 post"
+description: "메인카드 post api: 유저가 본 상품을 좋아요 했는지 싫어요 했는지 저장"
+tags:
+    - cardgame
+produces:
+- "application/json"
+requestBody:
+        description: 유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Maincard'
+            examples:
+              case1:
+                summary: 강인선
+                value:
+                  user_id: "1"
+                  asin: "1234567"
+                  love_or_hate: 1
+              case2:
+                summary: 김다인
+                value:
+                  user_id: "2"
+                  asin: "1023658"
+                  love_or_hate: 0
+responses:
+  200:
+    description: OK
+  400:
+    description: Missing JSON in request
+definitions:
+  Maincard:
+    type: object
+    required:
+      - user_id
+      - asin
+      - love_or_hate
+    properties:
+      user_id:
+        type: string
+      asin:
+        type: string
+      love_or_hate:
+        type: boolean
+security:
+  - ApiKeyAuth: []

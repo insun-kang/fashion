@@ -1,0 +1,13 @@
+summary: "결과카드"
+description: "결과카드 get api: 유저에게 추천 정보 인공지능으로 나오는 수만큼 반환"
+tags:
+    - cardgame
+produces:
+- "application/json"
+responses:
+  200:
+    description: ok
+  400:
+    description: There's no recommendation for user at all
+security:
+  - ApiKeyAuth: []
