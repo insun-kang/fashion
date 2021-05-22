@@ -9,7 +9,7 @@ import axios from 'axios';
 import MyPage from './pages/MyPage';
 import { useLocalStorage } from './customHooks/useLocalStorage';
 import UserInfo from './pages/UserInfo';
-import SignOut from './pages/SignOut';
+import WithDraw from './pages/Withdraw';
 function App() {
   const location = useLocation();
 
@@ -23,7 +23,6 @@ function App() {
           Authorization: AuthStr,
         },
       });
-      console.log(res);
     } catch (error) {
       alert(error);
       setToken(null);
@@ -56,7 +55,7 @@ function App() {
         />
         <AuthRoute
           path="/mypage/signout"
-          render={(props) => <SignOut {...props} />}
+          render={(props) => <WithDraw {...props} />}
         />
         {/* login 필요한 경로들은 AuthRoute로 배정하기 */}
       </Switch>
