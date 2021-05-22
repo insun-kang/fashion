@@ -4,49 +4,66 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { SERVER_URL } from '../config';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import {
-  loggedinState,
-  signInModalOpenState,
-  signUpModalOpenState,
-} from '../states/state';
+import { userNick } from '../states/state';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
 
 const Home = ({ location, history }) => {
+  const [user, setUser] = useRecoilState(userNick);
   const [token, setToken] = useLocalStorage('access_token', null);
   const [openSignIn, setOpenSignIn] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
 
   const { from } = location.state || { from: { pathname: '/main' } };
-  const handleSignUp = useCallback(async (data) => {
-    try {
-      const res = await axios.post(SERVER_URL + '/sign-up', data);
-      console.log(res);
-      //로그인도 시켜주기
-    } catch (error) {
-      alert(error);
-      //회원가입이 된 유저라면 로그인 창 띄워주기
-    }
-  }, []); //회원가입 요청
+
+  const handleSignUp = useCallback(
+    async (data) => {
+      try {
+        const res = await axios.post(SERVER_URL + '/sign-up', data);
+        setToken(res.data.access_token);
+        setUser(res.data.nickname);
+        setOpenSignUp(false);
+        history.push('/main');
+        //로그인 시켜준 후 게임 화면으로 이동
+      } catch (error) {
+        if (error.response.data.errorCode === 'Alr_Signed_email') {
+          alert(error.response.data.msg);
+          setOpenSignUp(false);
+          setOpenSignIn(true);
+        } else if (error.response.data.errorCode === 'Alr_Signed_nickname') {
+          alert(error.response.data.msg);
+        } else if (error.response.data.errorCode === 'Invalid_pw') {
+          alert(error.response.data.msg);
+        } else {
+          alert(error);
+        }
+      }
+    },
+    [history, setToken, setUser]
+  );
 
   const handleCustomSignIn = useCallback(
     async (data) => {
       try {
         const res = await axios.post(SERVER_URL + '/sign-in', data);
-        console.log(res);
         setToken(res.data.access_token);
-
-        // localStorage.setItem('access_token', res.data.access_token);
+        setUser(res.data.nickname);
         setOpenSignIn(false);
         history.push('/main');
-        //전역 state에 사용자 닉네임 저장해주기
-        //로그인 후 게임 화면으로 이동
       } catch (error) {
-        alert(error);
+        if (error.response.data.errorCode === 'Not_Exists') {
+          alert(error.response.data.msg);
+        } else if (error.response.data.errorCode === 'Missing_email') {
+          alert(error.response.data.msg);
+        } else if (error.response.data.errorCode === 'Missing_pw') {
+          alert(error.response.data.msg);
+        } else {
+          alert(error);
+        }
       }
     },
-    [history, setToken]
+    [history, setToken, setUser]
   );
 
   useEffect(() => {
@@ -60,7 +77,6 @@ const Home = ({ location, history }) => {
   if (token) {
     return <Redirect to={from} />;
     //로그인 된 상태라면 직전에 있었던 페이지 혹은 main으로 redirect된다.
-    //redirect 되는 과정에서 아래에서 리턴되는 화면이 보여지는데 이걸 막는 방법이 있을까?
   }
 
   return (

@@ -88,7 +88,7 @@ const UserInfoForm = (props) => {
 
   return (
     <div className="signup-container">
-      <h2>Sign Up</h2>
+      <h2>{isSignUp ? 'Sign Up' : 'Modify User Info'}</h2>
       <div className="signup-form">
         <Formik
           initialValues={initialValues}
@@ -129,9 +129,15 @@ const UserInfoForm = (props) => {
 
             return errors;
           }}
-          onSubmit={(values, actions) => {
-            //회원가입 기능 작성
-            handleUserInfoForm(values);
+          onSubmit={async (values, actions) => {
+            if (isSignUp) {
+              values['birth'] = values['birth'].toISOString().slice(0, 10);
+            }
+            delete values['confirmPw'];
+
+            await handleUserInfoForm(values);
+            actions.setSubmitting(false);
+            //나중에 여유 생기면 back에러를 form에러로 반영하기.
           }}
         >
           {(props) => (

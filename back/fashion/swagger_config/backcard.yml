@@ -1,5 +1,5 @@
 summary: "카드게임 - 배경"
-description: "카드게임 배경 api"
+description: "카드게임 배경에 필요한 제품들을 요청한 숫자만큼 반환하는 api"
 tags:
     - cardgame
 produces:
@@ -19,5 +19,16 @@ requestBody:
 responses:
   200:
     description: limit_num 만큼의 제품이 반환된 경우
-  400:
-    description: limit_num 만큼의 제품이 없을 경우
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+                'request_num': '5',
+                'total_num': '0',
+                'msg': '제품 반환 성공',
+                'bg_products_list': {}
+            }
+security:
+  - ApiKeyAuth: []

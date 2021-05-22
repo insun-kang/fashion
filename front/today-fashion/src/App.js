@@ -8,6 +8,8 @@ import { SERVER_URL } from './config';
 import axios from 'axios';
 import MyPage from './pages/MyPage';
 import { useLocalStorage } from './customHooks/useLocalStorage';
+import UserInfo from './pages/UserInfo';
+import SignOut from './pages/SignOut';
 function App() {
   const location = useLocation();
 
@@ -25,7 +27,6 @@ function App() {
     } catch (error) {
       alert(error);
       setToken(null);
-      // //위 코드 없으면 에러남...(왜...? 아래와 중복된 코드 아닌가...?)
       // // //로그아웃 된다는 모달? alert 띄워주기?
       localStorage.removeItem('access_token');
     }
@@ -44,7 +45,19 @@ function App() {
         <Route path="/" exact render={(props) => <Home {...props} />} />
         {/* login 되어있다면 main("/main"), 되어있지 않다면 home("/")으로 처리 */}
         <AuthRoute path="/main" render={(props) => <Main {...props} />} />
-        <AuthRoute path="/mypage" render={(props) => <MyPage {...props} />} />
+        <AuthRoute
+          path="/mypage"
+          exact
+          render={(props) => <MyPage {...props} />}
+        />
+        <AuthRoute
+          path="/mypage/userinfo"
+          render={(props) => <UserInfo {...props} />}
+        />
+        <AuthRoute
+          path="/mypage/signout"
+          render={(props) => <SignOut {...props} />}
+        />
         {/* login 필요한 경로들은 AuthRoute로 배정하기 */}
       </Switch>
     </div>
