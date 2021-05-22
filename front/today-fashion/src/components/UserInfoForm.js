@@ -74,6 +74,12 @@ const UserInfoForm = (props) => {
     let birthError;
     if (!birthValue) {
       birthError = 'Birth is required';
+    } else {
+      const birth = new Date(birthValue);
+      const curDate = new Date();
+      if (birth > curDate) {
+        birthError = 'Invalid Date for Birth';
+      }
     }
     return birthError;
   };
@@ -219,16 +225,23 @@ const UserInfoForm = (props) => {
                   {({ field, form }) => (
                     <div>
                       <label>birth</label>
-                      <DatePicker
-                        selected={form.values.birth}
-                        onChange={(date) =>
-                          form.setValues({ ...form.values, birth: date })
-                        }
-                        peekNextMonth
-                        showMonthDropdown
-                        showYearDropdown
-                        dropdownMode="select"
-                      />
+                      <span
+                        onMouseUp={() => {
+                          form.setTouched({ ...form.touched, birth: true });
+                        }}
+                      >
+                        <DatePicker
+                          name="birth"
+                          selected={form.values.birth}
+                          onChange={(date) =>
+                            form.setValues({ ...form.values, birth: date })
+                          }
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                        />
+                      </span>
                       <div className="birth-error">
                         {form.errors.birth && form.touched.birth
                           ? form.errors.birth
