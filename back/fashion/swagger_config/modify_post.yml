@@ -1,0 +1,72 @@
+summary: "회원정보수정"
+description: "회원정보수정 api"
+tags:
+    - mypage
+produces:
+- "application/json"
+requestBody:
+        description: 수정할 정보(email,pw,name,nickname)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Modified'
+            examples:
+              case1:
+                summary: 강인선
+                value:
+                  email: "sunink1@naver.com"
+                  pw: "qwer!@6789"
+                  name: "강인성"
+                  nickname: "인성킹"
+              case2:
+                summary: 김다인
+                value:
+                  email: "dainlinda@gmail.com"
+                  pw: "dainlinda!@1234"
+                  name: "김다인"
+                  nickname: "어른익명"
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+              {'msg': 'Succeed to change member info', 'nickname': admin.nickname}
+  400.1:
+    description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+  400.2:
+    description: 회원정보 변경 실패
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Failed_ChangeInfo', 'msg': 'Failed to change member info'}
+definitions:
+  Modified:
+    type: object
+    required:
+      - email
+      - pw
+      - name
+      - nickname
+    properties:
+      email:
+        type: string
+      pw:
+        type: string
+      name:
+        type: string
+      nickname:
+        type: string
+security:
+  - ApiKeyAuth: []
