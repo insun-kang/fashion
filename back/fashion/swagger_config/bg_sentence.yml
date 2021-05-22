@@ -7,5 +7,14 @@ produces:
 responses:
   200:
     description: 문구가 잘 반환된 경우
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "bg_sentence": "당신의 스타일이면 좋아요를 눌러주세요!",
+              "msg": "메시지 반환 성공"
+            }
 security:
   - ApiKeyAuth: []

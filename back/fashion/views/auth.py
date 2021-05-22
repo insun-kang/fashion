@@ -215,7 +215,7 @@ def withdrawal():
         admin=models.User.query.filter_by(id=userid).first()
         models.db.session.delete(admin)
         models.db.session.commit()
-        return {'msg': 'Succeed deleting member\'s account'}, 200
+        return {'msg': 'Succeed deleting members account'}, 200
 
 
 @bp.route("/refresh", methods=["POST"])
