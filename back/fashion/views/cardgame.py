@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import bcrypt
 from flask_cors import CORS
 from .. import models

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import bcrypt
 from flask_cors import CORS
 from .. import models
@@ -151,14 +151,14 @@ def modify():
         print(userid)
         userinfo=models.User.query.filter_by(id=userid).first()
 
-        return jsonify({
-                        'nickname' : userinfo.nickname,
-                        'email' : userinfo.email,
-                        'name' : userinfo.name,
-                        'birth' : userinfo.birth,
-                        'gender' : userinfo.gender,
-                        'sign_up_date' : userinfo.sign_up_date
-                    }), 200
+        return {
+                    'nickname' : userinfo.nickname,
+                    'email' : userinfo.email,
+                    'name' : userinfo.name,
+                    'birth' : userinfo.birth,
+                    'gender' : userinfo.gender,
+                    'sign_up_date' : userinfo.sign_up_date
+                }, 200
     else:
         if not request.is_json:
             return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
@@ -224,7 +224,7 @@ def withdrawal():
 def refresh():
     identity = get_jwt_identity()
     access_token = create_access_token(identity=identity, fresh=False)
-    return jsonify(access_token=access_token), 200
+    return {'access_token': access_token}, 200
 
 
 # Only allow fresh JWTs to access this route with the `fresh=True` arguement.
