@@ -143,51 +143,66 @@ def check_pw():
             return jsonify({"msg": "비밀번호 불일치"}), 400
 
 
-@bp.route('/modification', methods=['POST'])
+@bp.route('/modification', methods=['GET','POST'])
 @jwt_required()
-@swag_from("../swagger_config/modify.yml", validation=True)
+@swag_from("../swagger_config/modify_get.yml", methods=['GET'])
+@swag_from("../swagger_config/modify_post.yml", methods=['POST'])
 def modify():
-    if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
-
-    else:
-        body = request.get_json()
+    if request.method =='GET':
         header = request.headers.get('Authorization')
         userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+        print(userid)
+        userinfo=models.User.query.filter_by(id=userid).first()
 
+        return jsonify({
+                        'nickname' : userinfo.nickname,
+                        'email' : userinfo.email,
+                        'name' : userinfo.name,
+                        'birth' : userinfo.birth,
+                        'gender' : userinfo.gender,
+                        'sign_up_date' : userinfo.sign_up_date
+                    }), 200
+    else:
+        if not request.is_json:
+            return jsonify({"msg": "Missing JSON in request"}), 400
 
-        email = body['email']
-        pw = body['pw']
-        name = body['name']
-        nickname = body['nickname']
+        else:
+            body = request.get_json()
+            header = request.headers.get('Authorization')
+            userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
-        hashpw = bcrypt.hashpw(
-                    pw.encode('utf-8'), bcrypt.gensalt())
+            email = body['email']
+            pw = body['pw']
+            name = body['name']
+            nickname = body['nickname']
 
-        admin=models.User.query.filter_by(id=userid).first()
+            hashpw = bcrypt.hashpw(
+                        pw.encode('utf-8'), bcrypt.gensalt())
 
-        emailcheck=models.User.query.filter_by(email=email).first()
-        nicknamecheck=models.User.query.filter_by(nickname=nickname).first()
-        try:
-            if admin.email != email and emailcheck is None:
-                admin.email=email
-                models.db.session.commit()
+            admin=models.User.query.filter_by(id=userid).first()
 
-            if admin.pw != pw:
-                admin.pw=hashpw
-                models.db.session.commit()
+            emailcheck=models.User.query.filter_by(email=email).first()
+            nicknamecheck=models.User.query.filter_by(nickname=nickname).first()
+            try:
+                if admin.email != email and emailcheck is None:
+                    admin.email=email
+                    models.db.session.commit()
 
-            if admin.name != name:
-                admin.name=name
-                models.db.session.commit()
+                if admin.pw != pw:
+                    admin.pw=hashpw
+                    models.db.session.commit()
 
-            if admin.nickname != nickname and nicknamecheck is None:
-                admin.nickname=nickname
-                models.db.session.commit()
+                if admin.name != name:
+                    admin.name=name
+                    models.db.session.commit()
 
-            return jsonify({"msg": "회원변경 완료", "nickname": admin.nickname}), 200
-        except:
-            return jsonify({"msg": "회원변경 실패"}), 400
+                if admin.nickname != nickname and nicknamecheck is None:
+                    admin.nickname=nickname
+                    models.db.session.commit()
+
+                return jsonify({"msg": "회원변경 완료", "nickname": admin.nickname}), 200
+            except:
+                return jsonify({"msg": "회원변경 실패"}), 400
 
 @bp.route('/withdrawal', methods=['POST'])
 @jwt_required()
@@ -199,7 +214,7 @@ def withdrawal():
      else:
         header = request.headers.get('Authorization')
         userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-        print(userid)
+
         admin=models.User.query.filter_by(id=userid).first()
         models.db.session.delete(admin)
         models.db.session.commit()
