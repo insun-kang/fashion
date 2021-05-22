@@ -88,7 +88,7 @@ const UserInfoForm = (props) => {
 
   return (
     <div className="signup-container">
-      <h2>Sign Up</h2>
+      <h2>{isSignUp ? 'Sign Up' : 'Modify User Info'}</h2>
       <div className="signup-form">
         <Formik
           initialValues={initialValues}
@@ -131,8 +131,10 @@ const UserInfoForm = (props) => {
           }}
           onSubmit={(values, actions) => {
             //회원가입 기능 작성
+            if (isSignUp) {
+              values['birth'] = values['birth'].toISOString().slice(0, 10);
+            }
             delete values['confirmPw'];
-            values['birth'] = values['birth'].toISOString().slice(0, 10);
             console.log(values);
 
             handleUserInfoForm(values);

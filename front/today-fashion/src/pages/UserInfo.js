@@ -1,24 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import UserInfoField from '../components/UserInfoField';
 import UserInfoForm from '../components/UserInfoForm';
+import { SERVER_URL } from '../config';
 
 const UserInfo = () => {
-  //비밀번호 입력
-  //회원정보 보기 , 회원정보 수정
-  //회원탈퇴 -> 페이지 새로 만들어야 할듯
-
-  //테스트 중. 추후 false로 바꿀 것
   const [editInfo, setEditInfo] = useState(false);
+  const [userValues, setUserValues] = useState();
 
-  const getUserInfo = async () => {
+  const getUserInfo = useCallback(async () => {
     //userValues 여기서 구하기
-  };
+    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+    try {
+      const res = await axios.get(SERVER_URL + '/modification', {
+        headers: {
+          Authorization: AuthStr,
+        },
+      });
+      const value = res.data;
+      value['pw'] = '';
+      value['confirmPw'] = '';
+      let formatBirth = new Date(value['birth']);
+      value['birth'] = formatBirth.toISOString().slice(0, 10);
+      setUserValues(value);
+      console.log(value);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const handleUpdateUserInfo = async (data) => {
-    console.log(data);
+    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+    try {
+      const res = await axios.post(SERVER_URL + '/modification', data, {
+        headers: {
+          Authorization: AuthStr,
+        },
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
     setEditInfo(false);
   };
+
+  useEffect(() => {
+    getUserInfo();
+  }, [getUserInfo, editInfo]);
+
+  if (!userValues) {
+    return null;
+  }
+
   return (
     <>
       <Link to="/mypage/signout">
@@ -26,13 +60,23 @@ const UserInfo = () => {
       </Link>
       <button disabled>user info</button>
       {editInfo ? (
-        <UserInfoForm
-          handleUserInfoForm={handleUpdateUserInfo}
-          //   initialValues={userValues}
-        /> //   회원정보 수정
-      ) : (
         <>
-          <UserInfoField />
+          <UserInfoForm
+            handleUserInfoForm={handleUpdateUserInfo}
+            initialValues={userValues}
+          />
+          <input
+            type="button"
+            value="close"
+            onClick={() => {
+              setEditInfo(false);
+            }}
+          />
+        </>
+      ) : (
+        //   회원정보 수정
+        <>
+          <UserInfoField userValues={userValues} />
           <input
             type="button"
             value="수정하기"
