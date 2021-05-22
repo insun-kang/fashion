@@ -23,7 +23,7 @@ bp = Blueprint('cardgame', __name__, url_prefix='/')
 def backcard():
     # 예외: json 파일이 없을 경우
     if not request.is_json:
-        return {'msg': 'Missing JSON in request'}, 400
+        return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
     else:
         body=request.get_json()
         limit_num = body['limit_num']
@@ -150,7 +150,7 @@ def maincard():
     else: # POST 요청:
         # 예외: json 파일이 없을 경우
         if not request.is_json:
-            return {'msg': 'Missing JSON in request'}, 400
+            return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
         else:
             # 요소 중 빠진 게 있을 경우 예외처리1
             # db에 이미 있는 user-product set일 경우 예외처리2=>get에서 이미 예외처리 해서 필요 없을듯
