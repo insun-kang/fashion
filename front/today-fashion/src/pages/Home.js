@@ -20,23 +20,24 @@ const Home = ({ location, history }) => {
   const handleSignUp = useCallback(
     async (data) => {
       try {
-        // const res = await axios.post(SERVER_URL + '/sign-up', {
-        //   data: data,
-        // });
         const res = await axios.post(SERVER_URL + '/sign-up', data);
-        console.log(res);
         setToken(res.data.access_token);
         setUser(res.data.nickname);
         setOpenSignUp(false);
         history.push('/main');
-        //로그인 후 게임 화면으로 이동
+        //로그인 시켜준 후 게임 화면으로 이동
       } catch (error) {
-        alert(error);
-        setOpenSignUp(false);
-        setOpenSignIn(true);
-        //회원가입이 된 유저라면 로그인 창 띄워주기
-        //이외 다른 예외처리도 필요
-        //회원가입 된 유저, 이메일 겹침, 닉네임 겹침 예외처리
+        if (error.response.data.errorCode === 'Alr_Signed_email') {
+          alert(error.response.data.msg);
+          setOpenSignUp(false);
+          setOpenSignIn(true);
+        } else if (error.response.data.errorCode === 'Alr_Signed_nickname') {
+          alert(error.response.data.msg);
+        } else if (error.response.data.errorCode === 'Invalid_pw') {
+          alert(error.response.data.msg);
+        } else {
+          alert(error);
+        }
       }
     },
     [history, setToken, setUser]
@@ -50,10 +51,16 @@ const Home = ({ location, history }) => {
         setUser(res.data.nickname);
         setOpenSignIn(false);
         history.push('/main');
-        //로그인 후 게임 화면으로 이동
       } catch (error) {
-        console.log(error);
-        alert(error);
+        if (error.response.data.errorCode === 'Not_Exists') {
+          alert(error.response.data.msg);
+        } else if (error.response.data.errorCode === 'Missing_email') {
+          alert(error.response.data.msg);
+        } else if (error.response.data.errorCode === 'Missing_pw') {
+          alert(error.response.data.msg);
+        } else {
+          alert(error);
+        }
       }
     },
     [history, setToken, setUser]

@@ -27,6 +27,13 @@ const MyPage = () => {
       console.log(res);
       history.push('/mypage/userinfo');
     } catch (error) {
+      if (error.response.data.errorCode === 'Incorrect_pw') {
+        alert(error.response.data.msg);
+      } else if (error.response.data.errorCode === 'Missing_pw') {
+        alert(error.response.data.msg);
+      } else {
+        alert(error);
+      }
       console.log(error);
     }
   }, [history, password]);

@@ -27,7 +27,6 @@ function App() {
     } catch (error) {
       alert(error);
       setToken(null);
-      // //위 코드 없으면 에러남...(왜...? 아래와 중복된 코드 아닌가...?)
       // // //로그아웃 된다는 모달? alert 띄워주기?
       localStorage.removeItem('access_token');
     }

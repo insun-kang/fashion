@@ -24,9 +24,8 @@ const UserInfo = () => {
       let formatBirth = new Date(value['birth']);
       value['birth'] = formatBirth.toISOString().slice(0, 10);
       setUserValues(value);
-      console.log(value);
     } catch (error) {
-      console.log(error);
+      alert('Unable to bring user information');
     }
   }, []);
 
@@ -40,7 +39,11 @@ const UserInfo = () => {
       });
       console.log(res);
     } catch (error) {
-      console.log(error);
+      if (error.response.data.errorCode === 'Failed_ChangeInfo') {
+        alert(error.response.data.msg);
+      } else {
+        alert(error);
+      }
     }
     setEditInfo(false);
   };

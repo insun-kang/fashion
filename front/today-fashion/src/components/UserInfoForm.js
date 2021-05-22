@@ -129,15 +129,15 @@ const UserInfoForm = (props) => {
 
             return errors;
           }}
-          onSubmit={(values, actions) => {
-            //회원가입 기능 작성
+          onSubmit={async (values, actions) => {
             if (isSignUp) {
               values['birth'] = values['birth'].toISOString().slice(0, 10);
             }
             delete values['confirmPw'];
-            console.log(values);
 
-            handleUserInfoForm(values);
+            await handleUserInfoForm(values);
+            actions.setSubmitting(false);
+            //나중에 여유 생기면 back에러를 form에러로 반영하기.
           }}
         >
           {(props) => (
