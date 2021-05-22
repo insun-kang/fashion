@@ -91,6 +91,12 @@ responses:
               "products_num": 3
             }
   400:
-    description: There's no recommendation for user at all
+    description: 알고리즘으로부터 추천 결과가 없는 경우
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'No_Result','msg': "There's no recommendation for user at all"}
 security:
   - ApiKeyAuth: []

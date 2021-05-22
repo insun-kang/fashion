@@ -34,11 +34,26 @@ def backcard():
         for bg_product in bg_products:
             print(bg_product)
             bg_products_list.append({'product_title': bg_product.title, 'product_image': img_address.format(asin = bg_product.asin)})
+        # return {
+        #         'request_num': str(limit_num),
+        #         'total_num': str(len(bg_products)),
+        #         'msg': '제품 반환 성공',
+        #         'bg_products_list': bg_products_list
+        #         }, 200
         return {
-                'request_num': str(limit_num),
-                'total_num': str(len(bg_products)),
-                'msg': '제품 반환 성공',
-                'bg_products_list': bg_products_list
+                "bg_products_list": [
+                    {
+                    "product_image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                    "product_title": "womens blue popular shirts"
+                    },
+                    {
+                    "product_image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                    "product_title": "womens blue popular shirts"
+                    }
+                ],
+                "msg": "제품 반환 성공",
+                "request_num": "5",
+                "total_num": "2"
                 }, 200
 
 # api 문서화-----------------------------------------------제작은 아직 안 들어감!

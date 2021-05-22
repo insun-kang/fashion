@@ -68,6 +68,12 @@ responses:
               ]
             }
   400:
-    description: user saw all products available already
+    description: 유저가 모든 제품을 다 사용해서 더 이상 내보내줄 결과가 없을 때
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'No_Product_Available','msg': 'User saw all products available already'}
 security:
   - ApiKeyAuth: []
