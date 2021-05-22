@@ -148,7 +148,7 @@ def modify():
     if request.method =='GET':
         header = request.headers.get('Authorization')
         userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-        print(userid)
+        # print(userid)
         userinfo=models.User.query.filter_by(id=userid).first()
 
         return {
@@ -201,21 +201,17 @@ def modify():
             except:
                 return {'errorCode': 'Failed_ChangeInfo', 'msg': 'Failed to change member info'}, 400
 
-@bp.route('/withdrawal', methods=['POST'])
+@bp.route('/withdrawal', methods=['GET'])
 @jwt_required()
-@swag_from('../swagger_config/withdrawal.yml', validation=True)
+@swag_from('../swagger_config/withdrawal.yml')
 def withdrawal():
-     if not request.is_json:
-        return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
+    header = request.headers.get('Authorization')
+    userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
-     else:
-        header = request.headers.get('Authorization')
-        userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-
-        admin=models.User.query.filter_by(id=userid).first()
-        models.db.session.delete(admin)
-        models.db.session.commit()
-        return {'msg': 'Succeed deleting member\'s account'}, 200
+    admin=models.User.query.filter_by(id=userid).first()
+    models.db.session.delete(admin)
+    models.db.session.commit()
+    return {'msg': 'Succeed deleting members account'}, 200
 
 
 @bp.route("/refresh", methods=["POST"])
