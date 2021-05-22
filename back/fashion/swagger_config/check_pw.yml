@@ -21,8 +21,30 @@ requestBody:
                 value:
                   pw: "dainlinda!@1234"
 responses:
-  200:
-    description: OK
+  400:
+    description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+  400.1:
+    description: 패스워드 입력 안 함
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}
+  400.2:
+    description: 패스워드 부정확함
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}
 definitions:
   Checkpw:
     type: object

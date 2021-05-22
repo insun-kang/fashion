@@ -27,8 +27,27 @@ requestBody:
 responses:
   200:
     description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "msg": "결과 db 추가 성공",
+              "result": {
+                "love_or_hate": 1,
+                "product_asin": "1234567",
+                "user_id": "1"
+              }
+            }
   400:
     description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
 definitions:
   Maincard:
     type: object
