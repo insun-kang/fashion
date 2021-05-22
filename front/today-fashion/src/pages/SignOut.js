@@ -11,7 +11,7 @@ const SignOut = () => {
   const handleDoSignOut = useCallback(async () => {
     const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
     try {
-      const res = await axios.get(SERVER_URL + '/withdrawal', {
+      await axios.get(SERVER_URL + '/withdrawal', {
         headers: {
           Authorization: AuthStr,
         },
@@ -22,7 +22,6 @@ const SignOut = () => {
     } catch (error) {
       alert(error);
     }
-    // const res = await axios.post();
   }, [history]);
   return (
     <>
