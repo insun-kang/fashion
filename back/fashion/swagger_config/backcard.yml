@@ -30,5 +30,13 @@ responses:
                 'msg': '제품 반환 성공',
                 'bg_products_list': {}
             }
+  400:
+    description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
 security:
   - ApiKeyAuth: []

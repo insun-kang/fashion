@@ -36,7 +36,7 @@ responses:
               "msg": "결과 db 추가 성공",
               "result": {
                 "love_or_hate": 1,
-                "product_asin": "1234567",
+                "product_asin": "B00007GDFV",
                 "user_id": "1"
               }
             }
