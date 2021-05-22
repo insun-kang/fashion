@@ -7,7 +7,7 @@ const LogoutButton = ({ history }) => {
     localStorage.removeItem('access_token');
     history.push('/');
   };
-  return <button onClick={handleLogout}>Logout</button>;
+  return <button onClick={handleLogout}>SignOut</button>;
 };
 
 export default withRouter(LogoutButton);
