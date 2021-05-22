@@ -26,13 +26,9 @@ const CustomSignIn = (props) => {
       <div className="signin-form">
         <Formik
           initialValues={{ email: '', pw: '' }}
-          onSubmit={(values, actions) => {
-            //로그인 기능 작성
-            handleCustomSignIn(values);
-            console.log('submit');
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-            }, 400);
+          onSubmit={async (values, actions) => {
+            await handleCustomSignIn(values);
+            actions.setSubmitting(false);
           }}
         >
           {(props) => (

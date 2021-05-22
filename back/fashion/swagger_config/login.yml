@@ -1,5 +1,7 @@
 summary: "로그인"
 description: "로그인 api"
+tags:
+    - auth
 consumes:
   - application/json
 produces:
@@ -25,6 +27,55 @@ requestBody:
 responses:
   200:
     description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "access_token": "액세스 토큰 내용",
+              "nickname": "강인성"
+            }
+  400:
+    description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+  400.1:
+    description: 존재하지 않는 회원
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Not_Exists', 'msg': 'This member does not exist'}
+  400.2:
+    description: 이메일 입력 안함
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_email', 'msg': 'Missing email in request'}
+  400.3:
+    description: 비밀번호 입력 안함
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}
+  400.4:
+    description: 틀린 비밀번호
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}
 definitions:
   Login:
     type: object
