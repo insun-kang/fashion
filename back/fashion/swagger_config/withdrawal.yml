@@ -4,24 +4,6 @@ tags:
     - mypage
 produces:
 - "application/json"
-requestBody:
-        description: 탈퇴할 때 필요한 정보(id,pw)
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/Withdrawal'
-            examples:
-              case1:
-                summary: 강인선
-                value:
-                  id: 1
-                  pw: "qwer!@6789"
-              case2:
-                summary: 김다인(다른 비밀번호 입력)
-                value:
-                  id: 2
-                  pw: "dainlinda!@12345"
 responses:
   200:
     description: 회원탈퇴 성공
@@ -31,24 +13,5 @@ responses:
           type: object
           example:
             {'msg': 'Succeed deleting members account'}
-  400:
-    description: Missing JSON in request
-    content:
-      application/json:
-        schema:
-          type: object
-          example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
-definitions:
-  Withdrawal:
-    type: object
-    required:
-      - id
-      - pw
-    properties:
-      id:
-        type: string
-      pw:
-        type: string
 security:
   - ApiKeyAuth: []
