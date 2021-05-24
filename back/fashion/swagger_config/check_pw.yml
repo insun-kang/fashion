@@ -28,7 +28,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
   400.1:
     description: 패스워드 입력 안 함
     content:
@@ -36,7 +36,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}
+            {'errorCode': 'missing_pw', 'msg': 'Missing password in request'}
   400.2:
     description: 패스워드 부정확함
     content:
@@ -44,7 +44,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}
+            {'errorCode': 'incorrect_pw', 'msg': 'Incorrect Password'}
 definitions:
   Checkpw:
     type: object

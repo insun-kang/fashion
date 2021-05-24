@@ -19,7 +19,7 @@ bp = Blueprint('cardgame', __name__, url_prefix='/')
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 @swag_from('../swagger_config/backcard.yml', validation=True)
 def backcard():
     # 예외: json 파일이 없을 경우
@@ -58,7 +58,7 @@ def backcard():
 # api 문서화-----------------------------------------------제작은 아직 안 들어감!
 # 배경 위 문구 반환 api
 @bp.route('/bg-sentence', methods=['GET'])
-# @jwt_required()
+@jwt_required()
 @swag_from('../swagger_config/bg_sentence.yml')
 def bg_sentence():
     # db 테이블 만든 뒤 바꿀 예정
@@ -82,7 +82,7 @@ def bg_sentence():
 
 # 메인 카드 api
 @bp.route('/maincard', methods=['GET','POST'])
-# @jwt_required()
+@jwt_required()
 @swag_from('../swagger_config/maincard_get.yml', methods=['GET'])
 @swag_from('../swagger_config/maincard_post.yml', methods=['POST'])
 def maincard():
@@ -102,7 +102,6 @@ def maincard():
 
         # 제품 10개 안될때 예외 처리 해주기
         return {
-            'msg': '제품 10개 반환 성공',
             'products':
                 [
                     {
@@ -163,14 +162,14 @@ def maincard():
     else: # POST 요청:
         # 예외: json 파일이 없을 경우
         if not request.is_json:
-            return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
+            return error_code.missing_json_error
         else:
             # 요소 중 빠진 게 있을 경우 예외처리1
             # db에 이미 있는 user-product set일 경우 예외처리2=>get에서 이미 예외처리 해서 필요 없을듯
             body=request.get_json()
-            user_id = body['user_id']
+            user_id = body['userId']
             product_asin = body['asin']
-            love_or_hate = body['love_or_hate']
+            love_or_hate = body['loveOrHate']
 
             # 아직 db 없어서 주석 처리
             # product_user_match = models.Product_user_match(
@@ -182,18 +181,17 @@ def maincard():
             # models.db.session.add(product_user_match)
             # models.db.session.commit()
             result = {
-                'user_id': user_id,
-                'product_asin': product_asin,
-                'love_or_hate': love_or_hate
+                'userId': user_id,
+                'productAsin': product_asin,
+                'loveOrHate': love_or_hate
             }
             return {
-                    'msg': '결과 db 추가 성공',
                     'result': result
                     }, 200
 
 # 게임 결과 api
 @bp.route('/result-cards', methods=['GET'])
-# @jwt_required()
+@jwt_required()
 @swag_from('../swagger_config/result_cards.yml')
 def result_cards():
     # bookmarks = models.Product_user_match.query.all()
@@ -203,56 +201,55 @@ def result_cards():
     poduct_address = 'https://www.amazon.com/dp/{asin}'
     asin = 'B00007GDFV'
     return {
-            'msg': '사용자 취향 맞춤 제품들 반환 성공',
-            'products_num': 3,
+            'productsNum': 3,
             'products':
                 [
                     {
                         'keyword': 'flower, dress, red, summer, womens',
                         'asin': asin,
-                        'price': '300,000',
+                        'price': 300000,
                         'bookmarks': True,
-                        'nlp_result': {
-                                            'good_review': ['reasonable','pretty','cute'],
-                                            'bad_review': ['small','dirty','smelly']
+                        'nlpResult': {
+                                            'goodReview': ['reasonable','pretty','cute'],
+                                            'badReview': ['small','dirty','smelly']
                                         },
-                        'star_rating': '5.0',
-                        'good_review_rating': '80%',
-                        'bad_review_rating': '20%',
+                        'starRating': 5,
+                        'goodReviewRating': '80%',
+                        'badReviewRating': '20%',
                         'image': img_address.format(asin = asin),
-                        'product_url': poduct_address.format(asin = asin),
+                        'productUrl': poduct_address.format(asin = asin),
                         'title': 'women\'s flower sundress'
                     },
                     {
                         'keyword': 'flower, pants, green, winter, womens',
                         'asin': asin,
-                        'price': '1,000',
+                        'price': 1000,
                         'bookmarks': False,
-                        'nlp_result': {
-                                            'good_review': ['clean','good quality','cute'],
-                                            'bad_review': ['expensive','not useful','ugly']
+                        'nlpResult': {
+                                            'goodReview': ['clean','good quality','cute'],
+                                            'badReview': ['expensive','not useful','ugly']
                                         },
-                        'star_rating': '3.5',
-                        'good_review_rating': '55%',
-                        'bad_review_rating': '45%',
+                        'starRating': 3,
+                        'goodReviewRating': '55%',
+                        'badReviewRating': '45%',
                         'image': img_address.format(asin = asin),
-                        'product_url': poduct_address.format(asin = asin),
+                        'productUrl': poduct_address.format(asin = asin),
                         'title': 'women\'s flower green pants'
                     },
                     {
                         'keyword': 'flower, dress, red, summer, womens',
                         'asin': asin,
-                        'price': '300,000',
+                        'price': 300000,
                         'bookmarks': True,
-                        'nlp_result': {
-                                        'good_review': ['reasonable','pretty','cute'],
-                                        'bad_review': ['small','dirty','smelly']
+                        'nlpResult': {
+                                        'goodReview': ['reasonable','pretty','cute'],
+                                        'badReview': ['small','dirty','smelly']
                                      },
-                        'star_rating': '5.0',
-                        'good_review_rating': '80%',
-                        'bad_review_rating': '20%',
+                        'starRating': 5,
+                        'goodReviewRating': '80%',
+                        'badReviewRating': '20%',
                         'image': img_address.format(asin = asin),
-                        'product_url': poduct_address.format(asin = asin),
+                        'productUrl': poduct_address.format(asin = asin),
                         'title': 'women\'s flower sundress'
                     },
                 ]

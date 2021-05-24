@@ -36,6 +36,6 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
 security:
   - ApiKeyAuth: []
