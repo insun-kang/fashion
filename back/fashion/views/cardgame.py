@@ -13,6 +13,7 @@ import random
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
+from .. import address_format
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
@@ -30,11 +31,11 @@ def backcard():
         limit_num = body['limitNum']
         bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
         bg_products_list = []
-        img_address = 'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={asin}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250'
 
+        asin = 'B00007GDFV'
         for bg_product in bg_products:
             print(bg_product)
-            bg_products_list.append({'productTitle': bg_product.title, 'productImage': img_address.format(asin = bg_product.asin)})
+            bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin)})
         # return {
         #         'requestNum': limit_num,
         #         'totalNum': len(bg_products),
@@ -43,11 +44,11 @@ def backcard():
         return {
                 "productsList": [
                     {
-                    "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                    "productImage": address_format.img('B00007GDFV'),
                     "productTitle": "womens blue popular shirts"
                     },
                     {
-                    "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                    "productImage": address_format.img('B00007GDFV'),
                     "productTitle": "Womens blue popular shirts"
                     }
                 ],
@@ -98,60 +99,58 @@ def maincard():
             # 알고리즘이 어떤 식으로 결과가 나와야 완성 가능
         # else: # 본 카드가 아니라면 결과 반환
 
-        img_address = 'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={asin}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250'
-
         # 제품 10개 안될때 예외 처리 해주기
         return {
             'products':
                 [
                     {
                         'keyword': 'flower, dress, red, summer, womens',
-                        'image': img_address.format(asin = '7106116521'),
+                        'image': address_format.img('7106116521'),
                         'title': 'women\'s flower sundress'
                     },
                     {
                         'keyword': 'blue, womens, shirts, popular',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'women\'s blue popular shirts'
                     },
                     {
                         'keyword': 'green, poledance, top, sports',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'green poledance sports top - very popular now!'
                     },
                     {
                         'keyword': 'flower, pink, winter, mens',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'men\'s flower pink winter shoes'
                     },
                     {
                         'keyword': 'idk, what, to, type, anymore',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'There are too many products here....'
                     },
                     {
                         'keyword': 'five, more, left, omg',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'so now I\'m typing whatever things'
                     },
                     {
                         'keyword': 'you, might, not, understand, whatIM, typing',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'I\'m doing my best so plz understand'
                     },
                     {
                         'keyword': 'ok, now, three, products, left',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'I\'m writing this in the Gongcha'
                     },
                     {
                         'keyword': 'Taro, milk, tea, is, JMT',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'Boba tea is the love'
                     },
                     {
                         'keyword': 'finally, this, is, last, one',
-                        'image': img_address.format(asin = 'B00007GDFV'),
+                        'image': address_format.img('B00007GDFV'),
                         'title': 'oh yeah!!!!!!!!!!'
                     }
                 ]
@@ -197,8 +196,6 @@ def result_cards():
     # bookmarks = models.Product_user_match.query.all()
     # products = models.Product.query.all()
 
-    img_address = 'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={asin}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250'
-    poduct_address = 'https://www.amazon.com/dp/{asin}'
     asin = 'B00007GDFV'
     return {
             'productsNum': 3,
@@ -216,8 +213,8 @@ def result_cards():
                         'starRating': 5,
                         'goodReviewRating': '80%',
                         'badReviewRating': '20%',
-                        'image': img_address.format(asin = asin),
-                        'productUrl': poduct_address.format(asin = asin),
+                        'image': address_format.img('B00007GDFV'),
+                        'productUrl': address_format.product('B00007GDFV'),
                         'title': 'women\'s flower sundress'
                     },
                     {
@@ -232,8 +229,8 @@ def result_cards():
                         'starRating': 3,
                         'goodReviewRating': '55%',
                         'badReviewRating': '45%',
-                        'image': img_address.format(asin = asin),
-                        'productUrl': poduct_address.format(asin = asin),
+                        'image': address_format.img('B00007GDFV'),
+                        'productUrl': address_format.product('B00007GDFV'),
                         'title': 'women\'s flower green pants'
                     },
                     {
@@ -248,8 +245,8 @@ def result_cards():
                         'starRating': 5,
                         'goodReviewRating': '80%',
                         'badReviewRating': '20%',
-                        'image': img_address.format(asin = asin),
-                        'productUrl': poduct_address.format(asin = asin),
+                        'image': address_format.img('B00007GDFV'),
+                        'productUrl': address_format.product('B00007GDFV'),
                         'title': 'women\'s flower sundress'
                     },
                 ]
