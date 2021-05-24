@@ -12,6 +12,7 @@ from sqlalchemy.sql.expression import func
 import random
 # Flasgger
 from flasgger.utils import swag_from
+from .. import error_code
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
@@ -23,37 +24,35 @@ bp = Blueprint('cardgame', __name__, url_prefix='/')
 def backcard():
     # 예외: json 파일이 없을 경우
     if not request.is_json:
-        return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
+        return error_code.missing_json_error
     else:
         body=request.get_json()
-        limit_num = body['limit_num']
+        limit_num = body['limitNum']
         bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
         bg_products_list = []
         img_address = 'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN={asin}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250'
 
         for bg_product in bg_products:
             print(bg_product)
-            bg_products_list.append({'product_title': bg_product.title, 'product_image': img_address.format(asin = bg_product.asin)})
+            bg_products_list.append({'productTitle': bg_product.title, 'productImage': img_address.format(asin = bg_product.asin)})
         # return {
-        #         'request_num': str(limit_num),
-        #         'total_num': str(len(bg_products)),
-        #         'msg': '제품 반환 성공',
-        #         'bg_products_list': bg_products_list
+        #         'requestNum': limit_num,
+        #         'totalNum': len(bg_products),
+        #         'productsList': products_list
         #         }, 200
         return {
-                "bg_products_list": [
+                "productsList": [
                     {
-                    "product_image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "product_title": "womens blue popular shirts"
+                    "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                    "productTitle": "womens blue popular shirts"
                     },
                     {
-                    "product_image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "product_title": "womens blue popular shirts"
+                    "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                    "productTitle": "Womens blue popular shirts"
                     }
                 ],
-                "msg": "제품 반환 성공",
-                "request_num": "5",
-                "total_num": "2"
+                "requestNum": 5,
+                "totalNum": 2
                 }, 200
 
 # api 문서화-----------------------------------------------제작은 아직 안 들어감!
@@ -69,8 +68,7 @@ def bg_sentence():
     bg_sentence_list = ['당신의 스타일이면 좋아요를 눌러주세요!', '이런 스타일은 어떠세요?', '스타일 평가를 많이 할 수록 추천이 정확해져요!']
 
     return {
-            'msg': '메시지 반환 성공',
-            'bg_sentence': bg_sentence_list[n]
+            'bgSentence': bg_sentence_list[n]
             }, 200
 
 

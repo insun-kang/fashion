@@ -11,6 +11,7 @@ from ast import literal_eval
 
 # Flasgger
 from flasgger.utils import swag_from
+from .. import error_code
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
@@ -93,7 +94,7 @@ def login():
         queried = models.User.query.filter_by(email=email).first()
 
         if queried is None:
-            return {'errorCode': 'Not_Exists', 'msg': 'This member does not exist'}, 400
+            return error_code.error_body('Not_Exists','This member does not exist')
 
         if not email:
             return {'errorCode': 'Missing_email', 'msg': 'Missing email in request'}, 400

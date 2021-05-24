@@ -12,23 +12,22 @@ requestBody:
             schema:
               type: object
               property:
-                limit_num:
+                limitNum:
                     type: integer
               example:
-                limit_num: 5
+                limitNum: 5
 responses:
   200:
-    description: limit_num 만큼의 제품이 반환된 경우
+    description: limitNum 만큼의 제품이 반환된 경우
     content:
       application/json:
         schema:
           type: object
           example:
             {
-                'request_num': '5',
-                'total_num': '0',
-                'msg': '제품 반환 성공',
-                'bg_products_list': {}
+                'requestNum': 5,
+                'totalNum': 0,
+                'ProductsList': {}
             }
   400:
     description: Missing JSON in request
