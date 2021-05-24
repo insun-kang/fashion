@@ -10,6 +10,6 @@ responses:
         schema:
           type: object
           example:
-            {'msg': '성공', 'keyword': '키워드 리스트 반환'}
+            {'keyword': '키워드 리스트 반환'}
 security:
   - ApiKeyAuth: []

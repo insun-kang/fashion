@@ -11,6 +11,7 @@ from ast import literal_eval
 
 # Flasgger
 from flasgger.utils import swag_from
+from .. import error_code
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
@@ -18,7 +19,7 @@ bp = Blueprint('auth', __name__, url_prefix='/')
 @swag_from('../swagger_config/register.yml', validation=True)
 def register():
     if not request.is_json:
-        return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
+        return error_code.missing_json_error
 
     else:
         body=request.get_json()
@@ -35,13 +36,12 @@ def register():
         nicknamecheck = models.User.query.filter_by(nickname=nickname).first()
 
         if not(name and email and pw and nickname):
-            return {'errorCode': 'Missing_Param', 'msg': 'Missing parameter in request'}, 400
-
+            return error_code.error_body('missing_param','Missing parameter in request')
         elif emailcheck is not None:
-            return {'errorCode': 'Alr_Signed_email', 'msg': 'This email has already been signed up'}, 400
+            return error_code.error_body('alr_signed_email','This email has already been signed up')
 
         elif nicknamecheck is not None:
-            return {'errorCode': 'Alr_Signed_nickname', 'msg': 'This nickname has already been signed up'}, 400
+            return error_code.error_body('alr_signed_nickname','This nickname has already been signed up')
 
         else:
             if checkvalid.passwordCheck(pw) == 1:
@@ -68,21 +68,21 @@ def register():
                 refresh_token = create_refresh_token(identity=queried.id)
 
                 return {
-                            'access_token': access_token,
+                            'accessToken': access_token,
                             'nickname': queried.nickname
                         }, 200
 
             elif checkvalid.passwordCheck(pw) == 2:
-                return {'errorCode': 'Invalid_pw', 'msg': 'Password must contain at least one number digit, one special character, one English character,and be at least 8 characters'}, 400
+                return error_code.error_body('invalid_pw','Password must contain at least one number digit, one special character, one English character,and be at least 8 characters')
             else:
-                return {'errorCode': 'Invalid_pw', 'msg': 'Password must contain at least one special character'}, 400
+                return error_code.error_body('invalid_pw','Password must contain at least one special character')
 
 
 @bp.route('/sign-in', methods=['POST'])
 @swag_from('../swagger_config/login.yml')
 def login():
     if not request.is_json:
-        return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
+        return error_code.missing_json_error
 
     else:
         body=request.get_json()
@@ -93,13 +93,13 @@ def login():
         queried = models.User.query.filter_by(email=email).first()
 
         if queried is None:
-            return {'errorCode': 'Not_Exists', 'msg': 'This member does not exist'}, 400
+            return error_code.error_body('not_exists','This member does not exist')
 
         if not email:
-            return {'errorCode': 'Missing_email', 'msg': 'Missing email in request'}, 400
+            return error_code.error_body('missing_email','Missing email in request')
 
         if not pw:
-            return {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}, 400
+            return error_code.error_body('missing_pw','Missing password in request')
 
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             access_token = create_access_token(identity=queried.id, fresh=True)
@@ -107,19 +107,19 @@ def login():
 
 
             return {
-                     'access_token': access_token,
+                     'accessToken': access_token,
                      'nickname': queried.nickname
                   }, 200
 
         else:
-            return {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}, 400
+            return error_code.error_body('incorrect_pw','Incorrect Password')
 
 @bp.route('/mypage', methods=['POST'])
 @jwt_required()
 @swag_from('../swagger_config/check_pw.yml', validation=True)
 def check_pw():
     if not request.is_json:
-        return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
+        return error_code.missing_json_error
 
     else:
         body = request.get_json()
@@ -132,12 +132,12 @@ def check_pw():
         pw=body['pw']
 
         if not pw:
-            return {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}, 400
+            return error_code.error_body('missing_pw','Missing password in request')
 
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             return {'msg': 'Correct Password'}, 200
         else:
-            return {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}, 400
+            return error_code.error_body('incorrect_pw','Incorrect Password')
 
 
 @bp.route('/modification', methods=['GET','POST'])
@@ -157,11 +157,11 @@ def modify():
                     'name' : userinfo.name,
                     'birth' : userinfo.birth,
                     'gender' : userinfo.gender,
-                    'sign_up_date' : userinfo.sign_up_date
+                    'signUpDate' : userinfo.sign_up_date
                 }, 200
     else:
         if not request.is_json:
-            return {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}, 400
+            return error_code.missing_json_error
 
         else:
             body = request.get_json()
@@ -197,9 +197,9 @@ def modify():
                     admin.nickname=nickname
                     models.db.session.commit()
 
-                return {'msg': 'Succeed to change member info', 'nickname': admin.nickname}, 200
+                return {'nickname': admin.nickname}, 200
             except:
-                return {'errorCode': 'Failed_ChangeInfo', 'msg': 'Failed to change member info'}, 400
+                return error_code.error_body('failed_change_info','Failed to change member info')
 
 @bp.route('/withdrawal', methods=['GET'])
 @jwt_required()
@@ -220,7 +220,7 @@ def withdrawal():
 def refresh():
     identity = get_jwt_identity()
     access_token = create_access_token(identity=identity, fresh=False)
-    return {'access_token': access_token}, 200
+    return {'accessToken': access_token}, 200
 
 
 # Only allow fresh JWTs to access this route with the `fresh=True` arguement.

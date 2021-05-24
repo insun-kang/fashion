@@ -39,7 +39,7 @@ responses:
           type: object
           example:
             {
-              'access_token': '액세스토큰',
+              'accessToken': '액세스토큰',
               'nickname': '닉네임'
             }
   400:
@@ -49,7 +49,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
   400.1:
     description: 정보 중에 빠진 정보가 있음
     content:
@@ -57,7 +57,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_Param', 'msg': 'Missing parameter in request'}
+            {'errorCode': 'missing_param', 'msg': 'Missing parameter in request'}
   400.2:
     description: 이미 있는 email
     content:
@@ -65,7 +65,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Alr_Signed_email', 'msg': 'This email has already been signed up'}
+            {'errorCode': 'alr_signed_email', 'msg': 'This email has already been signed up'}
   400.3:
     description: 이미 있는 닉네임
     content:
@@ -73,7 +73,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Alr_Signed_nickname', 'msg': 'This nickname has already been signed up'}
+            {'errorCode': 'alr_signed_nickname', 'msg': 'This nickname has already been signed up'}
   400.4:
     description: 비밀번호 에러 - 8자 이상 & 숫자+영문+특수문자 포함
     content:
@@ -81,7 +81,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Invalid_pw', 'msg': 'Password must contain at least one number digit, one special character, one English character,and be at least 8 characters'}
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one number digit, one special character, one English character,and be at least 8 characters'}
   400.5:
     description: 비밀번호 에러 - 특수문자 없음
     content:
@@ -89,7 +89,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Invalid_pw', 'msg': 'Password must contain at least one special character'}
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one special character'}
 definitions:
   User:
     type: object

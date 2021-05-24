@@ -15,15 +15,15 @@ requestBody:
               case1:
                 summary: 강인선
                 value:
-                  user_id: "1"
+                  userId: "1"
                   asin: "1234567"
-                  love_or_hate: 1
+                  loveOrHate: 1
               case2:
                 summary: 김다인
                 value:
-                  user_id: "2"
+                  userId: "2"
                   asin: "1023658"
-                  love_or_hate: 0
+                  loveOrHate: 0
 responses:
   200:
     description: OK
@@ -33,11 +33,10 @@ responses:
           type: object
           example:
             {
-              "msg": "결과 db 추가 성공",
               "result": {
-                "love_or_hate": 1,
-                "product_asin": "B00007GDFV",
-                "user_id": "1"
+                "loveOrHate": 1,
+                "productAsin": "B00007GDFV",
+                "userId": "1"
               }
             }
   400:
@@ -47,20 +46,20 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
 definitions:
   Maincard:
     type: object
     required:
-      - user_id
+      - userId
       - asin
-      - love_or_hate
+      - loveOrHate
     properties:
-      user_id:
+      userId:
         type: string
       asin:
         type: string
-      love_or_hate:
+      loveOrHate:
         type: boolean
 security:
   - ApiKeyAuth: []

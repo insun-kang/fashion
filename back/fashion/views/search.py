@@ -11,6 +11,7 @@ from ast import literal_eval
 
 # Flasgger
 from flasgger.utils import swag_from
+from .. import error_code
 
 bp = Blueprint('search', __name__, url_prefix='/')
 
@@ -26,7 +27,7 @@ def search():
             keyword.append(i.keyword)
 
         print(keyword)
-        return {'msg': '성공', 'keyword': keyword}, 200
+        return {'keyword': keyword}, 200
     # else:
     #     body=request.get_json()
 
