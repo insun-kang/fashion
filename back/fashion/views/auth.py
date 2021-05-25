@@ -151,7 +151,6 @@ def modify():
                     'email' : userinfo.email,
                     'name' : userinfo.name,
                     'birth' : userinfo.birth,
-                    'gender' : userinfo.gender,
                     'signUpDate' : userinfo.sign_up_date
                 }, 200
     else:
