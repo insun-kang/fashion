@@ -7,11 +7,10 @@ class User(db.Model):  # usertable
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nickname = Column(String(64), unique=True)
-    email = Column(String(64), unique=True)
-    name = Column(String(100), nullable=False)
+    email = Column(String(320), unique=True)
+    name = Column(String(500), nullable=False)
     pw = Column(String(64), nullable=False)
     birth = Column(DATE, nullable=False)
-    gender = Column(String(32), nullable=False)
     sign_up_date = Column(DATE, nullable=False)
 
 
@@ -44,7 +43,7 @@ class Product(db.Model):
 
 
 #게임을 통해 얻어진 키워드를 유저와 매칭시켜주는 테이블(일대일로 매칭시켜주고 count를 해줘서 많은 키워드를 가져오면 될듯)
-class Preferred_keyword(db.Model):
+class Preferredkeyword(db.Model):
     __tablename__:'preferred_keyword'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 

@@ -33,7 +33,7 @@ responses:
           type: object
           example:
             {
-              "access_token": "액세스 토큰 내용",
+              "accessToken": "액세스 토큰 내용",
               "nickname": "강인성"
             }
   400:
