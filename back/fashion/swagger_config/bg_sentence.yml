@@ -13,8 +13,7 @@ responses:
           type: object
           example:
             {
-              "bg_sentence": "당신의 스타일이면 좋아요를 눌러주세요!",
-              "msg": "메시지 반환 성공"
+              "bgSentence": "당신의 스타일이면 좋아요를 눌러주세요!"
             }
 security:
   - ApiKeyAuth: []
