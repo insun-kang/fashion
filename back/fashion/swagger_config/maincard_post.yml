@@ -5,7 +5,7 @@ tags:
 produces:
 - "application/json"
 requestBody:
-        description: 유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부
+        description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:1, 싫어요: 0)"
         required: true
         content:
           application/json:
@@ -15,13 +15,11 @@ requestBody:
               case1:
                 summary: 강인선
                 value:
-                  userId: "1"
                   asin: "1234567"
                   loveOrHate: 1
               case2:
                 summary: 김다인
                 value:
-                  userId: "2"
                   asin: "1023658"
                   loveOrHate: 0
 responses:
