@@ -118,7 +118,7 @@ def check_pw():
 
     else:
         body = request.get_json()
-        header = request.headers.get('Authorization')
+        header = request.headers.get('Authorization') 
 
         userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
