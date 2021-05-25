@@ -29,7 +29,6 @@ def register():
         name = body['name']
         nickname = body['nickname']
         birth = body['birth']
-        gender = body['gender']
 
 
         emailcheck = models.User.query.filter_by(email=email).first()
@@ -43,39 +42,36 @@ def register():
         elif nicknamecheck is not None:
             return error_code.error_body('alr_signed_nickname','This nickname has already been signed up')
 
+        if checkvalid.passwordCheck(pw) == 1:
+            hashpw = bcrypt.hashpw(
+                pw.encode('utf-8'), bcrypt.gensalt())
+
+            user = models.User(
+                nickname=nickname,
+                email=email,
+                name=name,
+                pw=hashpw,
+                birth=birth,
+                sign_up_date=datetime.now()
+            )
+            models.db.session.add(user)
+            models.db.session.commit()
+
+
+            #바로 로그인 실행
+            queried = models.User.query.filter_by(email=email).first()
+
+            accessToken = create_access_token(identity=queried.id, fresh=True)
+
+            return {
+                        'accessToken': accessToken,
+                        'nickname': queried.nickname
+                    }, 200
+
+        elif checkvalid.passwordCheck(pw) == 2:
+            return error_code.error_body('invalid_pw','Password must contain at least one number digit, one special character, one English character,and be at least 8 characters')
         else:
-            if checkvalid.passwordCheck(pw) == 1:
-                hashpw = bcrypt.hashpw(
-                    pw.encode('utf-8'), bcrypt.gensalt())
-
-                user = models.User(
-                    nickname=nickname,
-                    email=email,
-                    name=name,
-                    pw=hashpw,
-                    birth=birth,
-                    gender=gender,
-                    sign_up_date=datetime.now()
-                )
-                models.db.session.add(user)
-                models.db.session.commit()
-
-
-                #바로 로그인 실행
-                queried = models.User.query.filter_by(email=email).first()
-
-                access_token = create_access_token(identity=queried.id, fresh=True)
-                refresh_token = create_refresh_token(identity=queried.id)
-
-                return {
-                            'accessToken': access_token,
-                            'nickname': queried.nickname
-                        }, 200
-
-            elif checkvalid.passwordCheck(pw) == 2:
-                return error_code.error_body('invalid_pw','Password must contain at least one number digit, one special character, one English character,and be at least 8 characters')
-            else:
-                return error_code.error_body('invalid_pw','Password must contain at least one special character')
+            return error_code.error_body('invalid_pw','Password must contain at least one special character')
 
 
 @bp.route('/sign-in', methods=['POST'])
@@ -102,12 +98,11 @@ def login():
             return error_code.error_body('missing_pw','Missing password in request')
 
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
-            access_token = create_access_token(identity=queried.id, fresh=True)
-            refresh_token = create_refresh_token(identity=queried.id)
+            accessToken = create_access_token(identity=queried.id, fresh=True)
 
 
             return {
-                     'accessToken': access_token,
+                     'accessToken': accessToken,
                      'nickname': queried.nickname
                   }, 200
 
@@ -214,13 +209,6 @@ def withdrawal():
     return {'msg': 'Succeed deleting members account'}, 200
 
 
-@bp.route("/refresh", methods=["POST"])
-@jwt_required(refresh=True)
-@swag_from('../swagger_config/refresh.yml', validation=True)
-def refresh():
-    identity = get_jwt_identity()
-    access_token = create_access_token(identity=identity, fresh=False)
-    return {'accessToken': access_token}, 200
 
 
 # Only allow fresh JWTs to access this route with the `fresh=True` arguement.
