@@ -118,11 +118,11 @@ def check_pw():
 
     else:
         body = request.get_json()
-        header = request.headers.get('Authorization') 
+        header = request.headers.get('Authorization')
 
-        userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+        user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
-        queried = models.User.query.filter_by(id=userid).first()
+        queried = models.User.query.filter_by(id=user_id).first()
 
         pw=body['pw']
 
@@ -142,9 +142,9 @@ def check_pw():
 def modify():
     if request.method =='GET':
         header = request.headers.get('Authorization')
-        userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-        # print(userid)
-        userinfo=models.User.query.filter_by(id=userid).first()
+        user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+        # print(user_id)
+        userinfo=models.User.query.filter_by(id=user_id).first()
 
         return {
                     'nickname' : userinfo.nickname,
@@ -160,7 +160,7 @@ def modify():
         else:
             body = request.get_json()
             header = request.headers.get('Authorization')
-            userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+            user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
             email = body['email']
             pw = body['pw']
@@ -170,7 +170,7 @@ def modify():
             hashpw = bcrypt.hashpw(
                         pw.encode('utf-8'), bcrypt.gensalt())
 
-            admin=models.User.query.filter_by(id=userid).first()
+            admin=models.User.query.filter_by(id=user_id).first()
 
             emailcheck=models.User.query.filter_by(email=email).first()
             nicknamecheck=models.User.query.filter_by(nickname=nickname).first()
@@ -200,9 +200,9 @@ def modify():
 @swag_from('../swagger_config/withdrawal.yml')
 def withdrawal():
     header = request.headers.get('Authorization')
-    userid = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+    user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
-    admin=models.User.query.filter_by(id=userid).first()
+    admin=models.User.query.filter_by(id=user_id).first()
     models.db.session.delete(admin)
     models.db.session.commit()
     return {'msg': 'Succeed deleting members account'}, 200

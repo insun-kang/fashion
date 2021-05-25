@@ -35,6 +35,7 @@ class Product(db.Model):
     brand = Column(String(1024), nullable=True)
     price = Column(Integer, nullable=False)
     rating = Column(Integer)
+    shared = Column(Integer, nullable=False, default=0)
 
 
 class Productkeyword(db.Model):
@@ -46,4 +47,3 @@ class Productkeyword(db.Model):
     product_keyword = Column(Text(16000000), nullable=True)#제품키워드
     good_review_keyword = Column(Text(16000000), nullable=True)#긍정키워드
     bad_review_keyword = Column(Text(16000000), nullable=True)#부정키워드
-
