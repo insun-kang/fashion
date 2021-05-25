@@ -10,6 +10,7 @@ import MyPage from './pages/MyPage';
 import { useLocalStorage } from './customHooks/useLocalStorage';
 import UserInfo from './pages/UserInfo';
 import WithDraw from './pages/Withdraw';
+import Game from './pages/Game';
 function App() {
   const location = useLocation();
 
@@ -54,9 +55,10 @@ function App() {
           render={(props) => <UserInfo {...props} />}
         />
         <AuthRoute
-          path="/mypage/signout"
+          path="/mypage/withdraw"
           render={(props) => <WithDraw {...props} />}
         />
+        <AuthRoute path="/game" render={(props) => <Game {...props} />} />
         {/* login 필요한 경로들은 AuthRoute로 배정하기 */}
       </Switch>
     </div>

@@ -13,7 +13,6 @@ export const validateName = (nameValue) => {
   if (!nameValue) {
     nameError = 'Name is required';
   }
-  //regex 추가
   return nameError;
 };
 
