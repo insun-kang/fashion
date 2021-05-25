@@ -6,7 +6,7 @@ import {
   FormControl,
   LinearProgress,
 } from '@material-ui/core';
-import { PCButton } from '../ui-components/@material-extend';
+import { PCButton, PCChip } from '../ui-components/@material-extend';
 import { Block } from '../ui-components/Block';
 import Page from '../ui-components/Page';
 import { Formik, Form, Field } from 'formik';
@@ -23,6 +23,8 @@ const styleBlock = {
   flexWrap: 'wrap',
   '& > *': { mx: '5px !important' },
 };
+
+const onDelete = () => {};
 
 export default function Test() {
   return (
@@ -111,6 +113,66 @@ export default function Test() {
               helperText="Invaild Password"
             />
           </FormControl>
+        </Block>
+      </Grid>
+      <Grid item xs={5}>
+        <Block title="PC Chip Non Click" sx={styleBlock}>
+          <PCChip label="Skirt" color="primary" />
+          <PCChip label="Pants" color="secondary" />
+          <PCChip label="Dress" color="success" />
+          <PCChip label="Knit" color="info" />
+          <PCChip label="Shirts" color="warning" />
+          <PCChip label="Hood" color="error" />
+        </Block>
+      </Grid>
+      <Grid item xs={5}>
+        <Block title="PC Chip Click" sx={styleBlock}>
+          <PCChip label="Skirt" color="primary" clickable="clickable" />
+          <PCChip label="Pants" color="secondary" clickable="clickable" />
+          <PCChip label="Dress" color="success" clickable="clickable" />
+          <PCChip label="Knit" color="info" clickable="clickable" />
+          <PCChip label="Shirts" color="warning" clickable="clickable" />
+          <PCChip label="Hood" color="error" clickable="clickable" />
+        </Block>
+      </Grid>
+      <Grid item xs={5}>
+        <Block title="PC Chip Deletable" sx={styleBlock}>
+          <PCChip
+            label="Skirt"
+            variant="outlined"
+            color="primary"
+            onDelete={onDelete}
+          />
+          <PCChip
+            label="Pants"
+            variant="outlined"
+            color="secondary"
+            onDelete={onDelete}
+          />
+          <PCChip
+            label="Dress"
+            variant="outlined"
+            color="success"
+            onDelete={onDelete}
+          />
+          <PCChip
+            label="Knit"
+            variant="outlined"
+            color="info"
+            onDelete={onDelete}
+          />
+          <PCChip
+            label="Shirts"
+            variant="outlined"
+            color="warning"
+            onDelete={onDelete}
+          />
+          <PCChip
+            label="Hood"
+            variant="outlined"
+            color="error"
+            onDelete={onDelete}
+          />
         </Block>
       </Grid>
     </Grid>

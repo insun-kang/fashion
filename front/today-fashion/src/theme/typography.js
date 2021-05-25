@@ -94,6 +94,12 @@ const typography = {
     fontSize: pxToRem(15),
     textTransform: 'capitalize',
   },
+  chip: {
+    fontWeight: 700,
+    lineHeight: 24 / 14,
+    fontSize: pxToRem(13),
+    textTransform: 'capitalize',
+  },
 };
 
 export default typography;

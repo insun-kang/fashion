@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import closeCircleFill from '@iconify/icons-eva/close-circle-fill';
+import { alpha } from '@material-ui/core';
 
 export default function Chip(theme) {
   return {
@@ -7,15 +8,10 @@ export default function Chip(theme) {
       defaultProps: {
         deleteIcon: <Icon icon={closeCircleFill} />,
       },
-
       styleOverrides: {
-        colorDefault: {
-          '&.MuiChip-avatarMedium, .MuiChip-avatarSmall': {
-            color: theme.palette.text.secondary,
-          },
-        },
         outlined: {
-          borderColor: theme.palette.grey[500_32],
+          border: `2px solid`,
+          borderColor: theme.palette.main,
           '&.MuiChip-colorPrimary': {
             borderColor: theme.palette.primary.main,
           },

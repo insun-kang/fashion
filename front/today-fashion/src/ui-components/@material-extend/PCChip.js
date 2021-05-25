@@ -38,10 +38,7 @@ const ChipStyle = styled(Chip)(({ theme, styleProps }) => {
     color: theme.palette[color].main,
     border: `2px solid ${theme.palette[color].main}`,
     '&:focus, &.MuiChip-clickable:hover': {
-      backgroundColor: alpha(
-        theme.palette[color].main,
-        theme.palette.action.hoverOpacity
-      ),
+      backgroundColor: alpha('transparent', theme.palette.action.hoverOpacity),
     },
     '&.MuiChip-icon': { color: 'currentColor' },
     '&.MuiChip-deleteIcon': {
@@ -63,6 +60,42 @@ const ChipStyle = styled(Chip)(({ theme, styleProps }) => {
   };
 });
 
+const EllipsisText = (props) => {
+  const { children } = props;
+
+  return (
+    <div
+      style={{
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        minWidth: 70,
+        fontWeight: 700,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+const EllipsisTextDelete = (props) => {
+  const { children } = props;
+
+  return (
+    <div
+      style={{
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        minWidth: 48,
+        fontWeight: 700,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 const PCChip = forwardRef(
   (
     {
@@ -70,21 +103,37 @@ const PCChip = forwardRef(
       variant = 'filled',
       clickable: clickableProp,
       onDelete: onDeleteProp,
+      label: labelProp,
       ...other
     },
     ref
   ) => {
     if (color === 'default' || color === 'primary' || color || 'secondary') {
-      return (
-        <Chip
-          ref={ref}
-          color={color}
-          variant={variant}
-          clickable={clickableProp && clickableProp}
-          onDelete={onDeleteProp && onDeleteProp}
-          {...other}
-        />
-      );
+      if (onDeleteProp) {
+        return (
+          <Chip
+            ref={ref}
+            color={color}
+            variant={variant}
+            clickable={clickableProp && clickableProp}
+            onDelete={onDeleteProp && onDeleteProp}
+            label={<EllipsisTextDelete>{labelProp}</EllipsisTextDelete>}
+            {...other}
+          />
+        );
+      } else {
+        return (
+          <Chip
+            ref={ref}
+            color={color}
+            variant={variant}
+            clickable={clickableProp && clickableProp}
+            onDelete={onDeleteProp && onDeleteProp}
+            label={<EllipsisText>{labelProp}</EllipsisText>}
+            {...other}
+          />
+        );
+      }
     }
 
     return (
@@ -100,6 +149,7 @@ const PCChip = forwardRef(
           clickable: clickableProp && clickableProp,
           onDelete: onDeleteProp && onDeleteProp,
         }}
+        label={<EllipsisText>{labelProp}</EllipsisText>}
         {...other}
       />
     );
