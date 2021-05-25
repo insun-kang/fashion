@@ -20,7 +20,7 @@ bp = Blueprint('cardgame', __name__, url_prefix='/')
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 @swag_from('../swagger_config/backcard.yml', validation=True)
 def backcard():
     # 예외: json 파일이 없을 경우
