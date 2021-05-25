@@ -27,7 +27,7 @@ def search():
             keyword.append(i.keyword)
 
         print(keyword)
-        return {'keyword': keyword}, 200
+        return {'msg': '성공', 'keyword': keyword}, 200
     # else:
     #     body=request.get_json()
 
@@ -40,3 +40,4 @@ def search():
     #     models.db.session.add(keyword)
     #     models.db.session.commit()
         # return {'msg': '성공'}, 200
+
