@@ -1,5 +1,13 @@
 import { Field, Form, Formik } from 'formik';
 import DatePicker from 'react-datepicker';
+import {
+  validateBirth,
+  validateConfirmPassword,
+  validateEmail,
+  validateName,
+  validateNickName,
+  validatePassword,
+} from './formValidations';
 
 const UserInfoForm = (props) => {
   const { handleUserInfoForm } = props;
@@ -12,7 +20,6 @@ const UserInfoForm = (props) => {
     initialValues = {
       birth: '',
       email: '',
-      gender: '',
       name: '',
       nickname: '',
       pw: '',
@@ -20,77 +27,6 @@ const UserInfoForm = (props) => {
     };
     isSignUp = true;
   }
-
-  const validateName = (nameValue) => {
-    let nameError;
-    if (!nameValue) {
-      nameError = 'Name is required';
-    }
-    //regex 추가
-    return nameError;
-  };
-  const validateEmail = (emailValue) => {
-    let emailError;
-    if (!emailValue) {
-      emailError = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) {
-      emailError = 'Invalid email address';
-    }
-    return emailError;
-  };
-
-  const validatePassword = (passwordValue) => {
-    let passwordError;
-    if (!passwordValue) {
-      passwordError = 'Password is required';
-    } else if (
-      !/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,20}$/.test(passwordValue)
-    ) {
-      passwordValue =
-        'Valid Password consists of at least 8 characters and a combination of numbers + English + special characters.';
-    }
-    return passwordError;
-  };
-
-  const validateConfirmPassword = (pw, confirmPw) => {
-    let confirmPwError;
-    if (!confirmPw) {
-      confirmPwError = 'Please confirm password';
-    } else if (pw !== confirmPw) {
-      confirmPwError = 'Password is not the same';
-    }
-    return confirmPwError;
-  };
-
-  const validateGender = (genderValue) => {
-    let genderError;
-    if (!genderValue) {
-      genderError = 'Gender is required';
-    }
-    return genderError;
-  };
-
-  const validateBirth = (birthValue) => {
-    let birthError;
-    if (!birthValue) {
-      birthError = 'Birth is required';
-    } else {
-      const birth = new Date(birthValue);
-      const curDate = new Date();
-      if (birth > curDate) {
-        birthError = 'Invalid Date for Birth';
-      }
-    }
-    return birthError;
-  };
-
-  const validateNickName = (nickNameValue) => {
-    let nickNameError;
-    if (!nickNameValue) {
-      nickNameError = 'Nickname is required';
-    }
-    return nickNameError;
-  };
 
   return (
     <div className="signup-container">
@@ -109,10 +45,6 @@ const UserInfoForm = (props) => {
             if (email) {
               errors.email = email;
             }
-            const gender = validateGender(values.gender);
-            if (gender) {
-              errors.gender = gender;
-            }
             const name = validateName(values.name);
             if (name) {
               errors.name = name;
@@ -129,6 +61,7 @@ const UserInfoForm = (props) => {
               values.pw,
               values.confirmPw
             );
+
             if (confirmPw) {
               errors.confirmPw = confirmPw;
             }
@@ -274,29 +207,6 @@ const UserInfoForm = (props) => {
                   </div>
                 )}
               </Field>
-
-              <div id="radio-group"> Gender </div>
-              {isSignUp ? (
-                <>
-                  <div role="group" aria-labelledby="radio-group">
-                    <label>
-                      <Field type="radio" name="gender" value="female" />
-                      female
-                    </label>
-                    <label>
-                      <Field type="radio" name="gender" value="male" />
-                      male
-                    </label>
-                  </div>
-                  <div className="gender-error">
-                    {props.errors.gender && props.touched.gender
-                      ? props.errors.gender
-                      : null}
-                  </div>
-                </>
-              ) : (
-                <div>{initialValues.gender}</div>
-              )}
 
               <input
                 type="submit"
