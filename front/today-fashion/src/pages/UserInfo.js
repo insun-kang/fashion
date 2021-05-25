@@ -39,7 +39,7 @@ const UserInfo = () => {
       });
       console.log(res);
     } catch (error) {
-      if (error.response.data.errorCode === 'Failed_ChangeInfo') {
+      if (error.response.data.errorCode === 'failed_change_info') {
         alert(error.response.data.msg);
       } else {
         alert(error);
