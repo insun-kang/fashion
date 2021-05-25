@@ -36,17 +36,14 @@ class Product(db.Model):
     price = Column(Integer, nullable=False)
     rating = Column(Integer)
 
+
+class Productkeyword(db.Model):
+    __tablename__:'Productkeyword'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    asin = Column(String(256), nullable=False)
     product_keyword = Column(Text(16000000), nullable=True)#제품키워드
     good_review_keyword = Column(Text(16000000), nullable=True)#긍정키워드
     bad_review_keyword = Column(Text(16000000), nullable=True)#부정키워드
 
-
-
-#게임을 통해 얻어진 키워드를 유저와 매칭시켜주는 테이블(일대일로 매칭시켜주고 count를 해줘서 많은 키워드를 가져오면 될듯)
-class Preferredkeyword(db.Model):
-    __tablename__:'preferred_keyword'
-    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    userid = Column(Integer)
-    keyword = Column(String(256), nullable=True)
