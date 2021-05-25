@@ -5,7 +5,7 @@ tags:
 produces:
 - "application/json"
 requestBody:
-        description: 유저에 관한 정보(email,pw,name,nickname,birth,gender)
+        description: 유저에 관한 정보(email,pw,name,nickname,birth)
         required: true
         content:
           application/json:
