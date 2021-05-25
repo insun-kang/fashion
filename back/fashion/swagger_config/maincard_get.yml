@@ -13,7 +13,6 @@ responses:
           type: object
           example:
             {
-              "msg": "제품 10개 반환 성공",
               "products": [
                 {
                   "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=7106116521&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
@@ -68,6 +67,12 @@ responses:
               ]
             }
   400:
-    description: user saw all products available already
+    description: 유저가 모든 제품을 다 사용해서 더 이상 내보내줄 결과가 없을 때
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'no_product_available','msg': 'User saw all products available already'}
 security:
   - ApiKeyAuth: []

@@ -34,7 +34,7 @@ responses:
         schema:
           type: object
           example:
-              {'msg': 'Succeed to change member info', 'nickname': admin.nickname}
+              {'nickname': admin.nickname}
   400.1:
     description: Missing JSON in request
     content:
@@ -42,7 +42,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
   400.2:
     description: 회원정보 변경 실패
     content:
@@ -50,7 +50,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Failed_ChangeInfo', 'msg': 'Failed to change member info'}
+            {'errorCode': 'failed_change_info', 'msg': 'Failed to change member info'}
 definitions:
   Modified:
     type: object

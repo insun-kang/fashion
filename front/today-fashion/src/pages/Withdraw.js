@@ -6,7 +6,7 @@ import { SERVER_URL } from '../config';
 import { userNick } from '../states/state';
 
 const WithDraw = () => {
-  const [user, setUser] = useRecoilState(userNick);
+  // const [user, setUser] = useRecoilState(userNick);
   const history = useHistory();
   const handleWithdrawal = useCallback(async () => {
     const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
