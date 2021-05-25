@@ -1,8 +1,15 @@
+import PropTypes from 'prop-types';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Grid, TextField } from '@material-ui/core';
+import {
+  Grid,
+  TextField,
+  FormControl,
+  LinearProgress,
+} from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
 import { Block } from '../ui-components/Block';
 import Page from '../ui-components/Page';
+import { Formik, Form, Field } from 'formik';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(8),
@@ -90,13 +97,20 @@ export default function Test() {
       </Grid>
       <Grid item xs={5}>
         <Block title="PC Input" sx={styleBlock}>
-          <TextField fullWidth label="email" />
-          <TextField
-            error
-            fullWidth
-            label="password"
-            helperText="Invaild Password"
-          />
+          <FormControl>
+            <TextField fullWidth label="email" />
+          </FormControl>
+          <div>
+            <br />
+          </div>
+          <FormControl>
+            <TextField
+              error
+              fullWidth
+              label="password"
+              helperText="Invaild Password"
+            />
+          </FormControl>
         </Block>
       </Grid>
     </Grid>
