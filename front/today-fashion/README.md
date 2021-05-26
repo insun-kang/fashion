@@ -41,3 +41,18 @@ hooks 사용에 많이 익숙해졌다는 생각이 드는 동시에 처음에 �
   - manually chaingin the DOM in react components
 - [useMemo](https://reactjs.org/docs/hooks-reference.html#usememo)
   useMemo에 전달된 함수는 렌더링 중에 실행된다. 따라서 side effect들을 useMemo에서는 실행해서는 안된다. 또한 state 변경도 렌더링 중에 이루어져서는 안된다.
+
+**UseEffect deps**
+[참고링크](https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook)
+const로 정의된 함수를 useEffect나 useCallback 내에 쓰면 deps에 추가하지 않을 경우 다음과 같은 주의메세지가 나타났다.
+
+```
+React Hook useEffect has a missing dependency: 'checkTokenState'. Either include it or remove the dependency array.
+```
+
+나는 useCallback으로 만들어진 함수의 경우 deps가 변화할때만 재생성 되는 것으로 이해했기 때문에 deps에 추가해도 문제가 없다고 생각했는데, 실행이 안될 뿐 함수 생성 자체는 렌더링마다 된다고 한다. 그래서 사실 checkTokenState라는 저 함수의 경우 useEffect deps에 추가되면 랜더링마다 useEffect가 실행되게 된다고...(사실 내가 정확히 이해했는지 아직 확신이 없다.)
+useCallback에 대한 공부가 더 필요할 것 같다. 함수에 대해서는 되도록...습관적으로 useCallback을 사용하고 있었는데 최적화가 반드시 필요한 경우가 아니라면 최적화를 하는 것 자체가 오히려 비용이 될 수 있다고 한다.
+코드를 작성할 때 생각보다 생각없이 작성하는 경우가 많은 것 같다. 앞으로는 그러지 말도록 조심하자.
+
+- React guarantees that setState function identity is stable and won’t change on re-renders. This is why it’s safe to omit from the useEffect or useCallback dependency list.
+  라고 한다. deps에 setState 함수는 추가할 필요가 없다고 하니까 앞으로도 굳이 넣지 말도록 하자.

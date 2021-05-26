@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import GameCard from '../components/GameCard';
 import { SERVER_URL } from '../config';
 
 const Game = () => {
@@ -9,6 +10,8 @@ const Game = () => {
   const [background, setBackground] = useState();
   const [questions, setQuestions] = useState();
   const [questionIdx, setQuestionIdx] = useState(0);
+  const [isPending, setIsPending] = useState(true);
+
   const getBackGroundData = useCallback(async () => {
     try {
       const res = await axios.post(
@@ -33,17 +36,18 @@ const Game = () => {
           Authorization: AuthStr,
         },
       });
-      setQuestions(res.data.products);
+      setQuestions(res.data);
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
   }, [AuthStr]);
 
-  const curQuestion = useMemo(() => {
-    if (questions) {
-      return questions[questionIdx];
-    }
-  }, [questions, questionIdx]);
+  // const curQuestion = useMemo(() => {
+  //   if (questions?.products) {
+  //     return questions.products[questionIdx];
+  //   }
+  // }, [questions, questionIdx]);
 
   const sendAnswer = useCallback(
     async (data) => {
@@ -53,6 +57,7 @@ const Game = () => {
             Authorization: AuthStr,
           },
         });
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -60,20 +65,51 @@ const Game = () => {
     [AuthStr]
   );
 
-  const handleAnswerClick = useCallback((preferrence) => {
-    //questionIdx 갱신
-    //(먼저 하는게 중요하다 post 로딩 시간 유저는 기다릴 필요 없음)
-    //sendAnswer로 대답내용 post 요청 보내기
-  }, []);
+  const handleAnswerClick = useCallback(
+    (asin, preference) => {
+      console.log(asin);
+      setQuestionIdx(questionIdx + 1);
+      //10개 넘어가면???에러처리 필요
+      sendAnswer({ asin: asin, loveOrHate: preference });
+      //questionIdx 갱신
+      //(먼저 하는게 중요하다 유저는 post 로딩 시간 기다릴 필요 없음)
+      //sendAnswer로 대답내용 post 요청 보내기
+      if (questionIdx === 9) {
+        setIsPending(true);
+        setQuestionIdx(0);
+        getQuestions();
+      }
+    },
+    [questionIdx, sendAnswer, getQuestions]
+  );
 
   useEffect(() => {
     getBackGroundData();
     getQuestions();
-  }, [getBackGroundData, getQuestions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // useEffect(()=>{
+  //   if(isPending){
+  //     setQuestionIdx(0);
+  //   }
+  // },[isPending])
+
+  useEffect(() => {
+    if (questions && questionIdx === 0) {
+      setIsPending(false);
+    }
+  }, [questions, questionIdx]);
+
+  console.log('pending', isPending);
   return (
     <div className="game-container">
       <div>게임화면</div>
+      <div>{isPending && '로딩중'}</div>
+      <div>
+        {questionIdx}
+        {questions && questions.bgSentence}
+      </div>
       <div className="background">
         {background &&
           background.map((product, idx) => (
@@ -83,24 +119,11 @@ const Game = () => {
               key={idx}
             />
           ))}
-        {curQuestion && (
-          <div className="question-card">
-            {curQuestion.title}
-            <input
-              type="button"
-              value="yes"
-              onClick={() => {
-                handleAnswerClick(1);
-              }}
-            />
-            <input
-              type="button"
-              value="no"
-              onClick={() => {
-                handleAnswerClick(0);
-              }}
-            />
-          </div>
+        {!isPending && questions?.products && (
+          <GameCard
+            questionData={questions.products[questionIdx]}
+            handleAnswerClick={handleAnswerClick}
+          />
         )}
       </div>
     </div>

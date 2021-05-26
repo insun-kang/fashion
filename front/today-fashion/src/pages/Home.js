@@ -36,7 +36,8 @@ const Home = ({ location, history }) => {
         }
       }
     },
-    [history, setToken]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [history]
   );
 
   const handleCustomSignIn = useCallback(
@@ -60,7 +61,8 @@ const Home = ({ location, history }) => {
         }
       }
     },
-    [history, setToken]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [history]
   );
 
   useEffect(() => {
