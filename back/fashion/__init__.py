@@ -36,6 +36,7 @@ def create_app():
     app.register_blueprint(auth.bp)
     app.register_blueprint(search.bp)
     app.register_blueprint(cardgame.bp)
+    
 
 
     app.config['JWT_SECRET_KEY'] = 'fashion'

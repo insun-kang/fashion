@@ -1,5 +1,5 @@
 from fashion import db
-from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text
+from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func
 
 class User(db.Model):  # usertable
     __tablename__ = 'user'
@@ -15,8 +15,8 @@ class User(db.Model):  # usertable
 
 
 #count가 큰 50개의 키워드를 뽑아 검색에 사용할 테이블
-class Keyword(db.Model):
-    __tablename__:'keyword'
+class SearchKeyword(db.Model):
+    __tablename__:'search_keyword'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -37,12 +37,13 @@ class Product(db.Model):
     rating = Column(Integer)
 
 
-class Productkeyword(db.Model):
-    __tablename__:'Productkeyword'
+class ProductKeyword(db.Model):
+    __tablename__:'product_keyword'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     asin = Column(String(256), nullable=False)
+    type_keyword=Column(String(256), nullable=False)
     product_keyword = Column(Text(16000000), nullable=True)#제품키워드
     good_review_keyword = Column(Text(16000000), nullable=True)#긍정키워드
     bad_review_keyword = Column(Text(16000000), nullable=True)#부정키워드
