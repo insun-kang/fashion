@@ -1,16 +1,20 @@
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import GameCard from '../components/GameCard';
 import { SERVER_URL } from '../config';
 
 const Game = () => {
   //게임 한번 진행할때마다 post로 결과 보내주기
+
+  //TODO: 첫 게임일 경우 게임 3번 이상부터 결과보기 버튼 생성
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const limitNum = 5;
   const [background, setBackground] = useState();
   const [questions, setQuestions] = useState();
   const [questionIdx, setQuestionIdx] = useState(0);
   const [isPending, setIsPending] = useState(true);
+  const [fetchQuestionCount, setFetchQuestionCount] = useState(0);
 
   const getBackGroundData = useCallback(async () => {
     try {
@@ -43,12 +47,6 @@ const Game = () => {
     }
   }, [AuthStr]);
 
-  // const curQuestion = useMemo(() => {
-  //   if (questions?.products) {
-  //     return questions.products[questionIdx];
-  //   }
-  // }, [questions, questionIdx]);
-
   const sendAnswer = useCallback(
     async (data) => {
       try {
@@ -78,9 +76,10 @@ const Game = () => {
         setIsPending(true);
         setQuestionIdx(0);
         getQuestions();
+        setFetchQuestionCount(fetchQuestionCount + 1);
       }
     },
-    [questionIdx, sendAnswer, getQuestions]
+    [questionIdx, sendAnswer, getQuestions, fetchQuestionCount]
   );
 
   useEffect(() => {
@@ -101,15 +100,25 @@ const Game = () => {
     }
   }, [questions, questionIdx]);
 
-  console.log('pending', isPending);
+  const totalPlayNum = useMemo(
+    () => fetchQuestionCount * 10 + questionIdx + 1,
+    [fetchQuestionCount, questionIdx]
+  );
+
   return (
     <div className="game-container">
       <div>게임화면</div>
       <div>{isPending && '로딩중'}</div>
       <div>
-        {questionIdx}
+        {totalPlayNum ? totalPlayNum : null}
         {questions && questions.bgSentence}
       </div>
+      {!isPending && totalPlayNum && (
+        <Link to="/main">
+          <input type="button" value="see result" />
+        </Link>
+      )}
+      {/* 결과보기 버튼 제한 더 붙이기 */}
       <div className="background">
         {background &&
           background.map((product, idx) => (
@@ -119,13 +128,13 @@ const Game = () => {
               key={idx}
             />
           ))}
-        {!isPending && questions?.products && (
-          <GameCard
-            questionData={questions.products[questionIdx]}
-            handleAnswerClick={handleAnswerClick}
-          />
-        )}
       </div>
+      {!isPending && questions?.products && (
+        <GameCard
+          questionData={questions.products[questionIdx]}
+          handleAnswerClick={handleAnswerClick}
+        />
+      )}
     </div>
   );
 };
