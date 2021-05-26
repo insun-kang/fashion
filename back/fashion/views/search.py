@@ -11,6 +11,7 @@ from ast import literal_eval
 
 # Flasgger
 from flasgger.utils import swag_from
+from .. import error_code
 
 bp = Blueprint('search', __name__, url_prefix='/')
 
@@ -39,3 +40,4 @@ def search():
     #     models.db.session.add(keyword)
     #     models.db.session.commit()
         # return {'msg': '성공'}, 200
+

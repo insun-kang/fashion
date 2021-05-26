@@ -5,7 +5,7 @@ import UserInfoField from '../components/UserInfoField';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
 
-const MyPage = () => {
+const MyPageIntro = () => {
   //비밀번호 입력
   //회원정보 보기 , 회원정보 수정
   //회원탈퇴 -> 페이지 새로 만들어야 할듯
@@ -27,9 +27,9 @@ const MyPage = () => {
       console.log(res);
       history.push('/mypage/userinfo');
     } catch (error) {
-      if (error.response.data.errorCode === 'Incorrect_pw') {
+      if (error.response.data.errorCode === 'incorrect_pw') {
         alert(error.response.data.msg);
-      } else if (error.response.data.errorCode === 'Missing_pw') {
+      } else if (error.response.data.errorCode === 'missing_pw') {
         alert(error.response.data.msg);
       } else {
         alert(error);
@@ -54,4 +54,4 @@ const MyPage = () => {
     </div>
   );
 };
-export default MyPage;
+export default MyPageIntro;
