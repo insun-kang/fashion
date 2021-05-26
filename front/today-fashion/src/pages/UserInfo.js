@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import MypageNav from '../components/MypageNav';
 import UserInfoField from '../components/UserInfoField';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
@@ -60,10 +61,7 @@ const UserInfo = () => {
 
   return (
     <>
-      <Link to="/mypage/withdraw">
-        <button>sign out</button>
-      </Link>
-      <button disabled>user info</button>
+      <MypageNav />
       {editInfo ? (
         <>
           <UserInfoForm

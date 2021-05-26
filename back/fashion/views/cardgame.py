@@ -29,13 +29,15 @@ def backcard():
     else:
         body=request.get_json()
         limit_num = body['limitNum']
-        bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
-        bg_products_list = []
+        # product 테이블에 shared 추가한 것 땜에 에러 나서 주석처리해놓음
 
-        asin = 'B00007GDFV'
-        for bg_product in bg_products:
-            print(bg_product)
-            bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin)})
+        # bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
+        # bg_products_list = []
+
+        asin = ['B08GMDTDBC', 'B07TN5K1TZ']
+        # for bg_product in bg_products:
+        #     print(bg_product)
+            # bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin[i])})
         # return {
         #         'requestNum': limit_num,
         #         'totalNum': len(bg_products),
@@ -44,11 +46,11 @@ def backcard():
         return {
                 "productsList": [
                     {
-                    "productImage": address_format.img('B00007GDFV'),
+                    "productImage": address_format.img(asin[0]),
                     "productTitle": "womens blue popular shirts"
                     },
                     {
-                    "productImage": address_format.img('B00007GDFV'),
+                    "productImage": address_format.img(asin[1]),
                     "productTitle": "Womens blue popular shirts"
                     }
                 ],
@@ -57,21 +59,6 @@ def backcard():
                 }, 200
 
 # api 문서화-----------------------------------------------제작은 아직 안 들어감!
-# 배경 위 문구 반환 api
-@bp.route('/bg-sentence', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/bg_sentence.yml')
-def bg_sentence():
-    # db 테이블 만든 뒤 바꿀 예정
-    # bg_sentence = models.Bgsentence.query.order_by(func.rand()).first()
-    n = random.randint(0,2)
-    # db에 들어갈 문장들
-    bg_sentence_list = ['당신의 스타일이면 좋아요를 눌러주세요!', '이런 스타일은 어떠세요?', '스타일 평가를 많이 할 수록 추천이 정확해져요!']
-
-    return {
-            'bgSentence': bg_sentence_list[n]
-            }, 200
-
 
 # 1,2,3,5,10,20,30,40,50(문구 10개 중 돌리거나)
 # 3번 뒤 상품 준비가 됐다고 팝업이 뜸
@@ -99,63 +86,55 @@ def maincard():
             # 알고리즘이 어떤 식으로 결과가 나와야 완성 가능
         # else: # 본 카드가 아니라면 결과 반환
 
-        # 제품 10개 안될때 예외 처리 해주기
-        return {
-            'products':
-                [
-                    {
-                        'keyword': 'flower, dress, red, summer, womens',
-                        'image': address_format.img('7106116521'),
-                        'title': 'women\'s flower sundress'
-                    },
-                    {
-                        'keyword': 'blue, womens, shirts, popular',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'women\'s blue popular shirts'
-                    },
-                    {
-                        'keyword': 'green, poledance, top, sports',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'green poledance sports top - very popular now!'
-                    },
-                    {
-                        'keyword': 'flower, pink, winter, mens',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'men\'s flower pink winter shoes'
-                    },
-                    {
-                        'keyword': 'idk, what, to, type, anymore',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'There are too many products here....'
-                    },
-                    {
-                        'keyword': 'five, more, left, omg',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'so now I\'m typing whatever things'
-                    },
-                    {
-                        'keyword': 'you, might, not, understand, whatIM, typing',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'I\'m doing my best so plz understand'
-                    },
-                    {
-                        'keyword': 'ok, now, three, products, left',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'I\'m writing this in the Gongcha'
-                    },
-                    {
-                        'keyword': 'Taro, milk, tea, is, JMT',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'Boba tea is the love'
-                    },
-                    {
-                        'keyword': 'finally, this, is, last, one',
-                        'image': address_format.img('B00007GDFV'),
-                        'title': 'oh yeah!!!!!!!!!!'
-                    }
-                ]
+        # 게임 플레이 횟수 product-user 테이블에서 len(user가 플레이한 product 갯수) 하면 될듯
+        # 1,2,3,5,10,20,30,40,50(문구 10개 중 돌리거나)
+        # 지금은 랜덤으로 뜨게 해놓음
+        user_play_num = random.randint(0,7)
+        bg_sentence_list = ['당신의 스타일이면 좋아요를 눌러주세요!', # 1
+        '이런 스타일은 어떠세요?', # 2
+        '스타일 평가를 많이 할 수록 추천이 정확해져요!', # 3
+        '게임 5번 플레이 하면 뜨는 문구에요!',  # 5
+        '게임 10번 플레이 하면 뜨는 문구에요!', # 10
+        '게임 20번 플레이 하면 뜨는 문구에요!', # 20
+        '게임 30번 플레이 하면 뜨는 문구에요!', # 30
+        '게임 40번 플레이 하면 뜨는 문구에요!', # 40
+        '게임 50번 플레이 하면 뜨는 문구에요! 다영님 최고에요' # 50
+        ]
 
+
+        asin = ['B01EGHS7RK', 'B07VRWQRQJ', 'B0815RPFNK', 'B08SWDB36C', 'B07KX22MR7',
+                'B07P13S7YR', '1593786867', 'B08GQ9N4DM', 'B08J67WJJX', 'B08HLXN153']
+        # 제품 10개 안될때 예외 처리 해주기
+        keywords = [['flower', 'dress', 'red', 'summer', 'womens'],
+                    ['blue', 'womens', 'shirts', 'popular'],
+                    ['green', 'poledance', 'top', 'sports'],
+                    ['flower', 'pink', 'winter', 'mens'],
+                    ['idk', 'what', 'to', 'type', 'anymore'],
+                    ['five', 'more', 'left', 'omg'],
+                    ['you', 'might', 'not', 'understand', 'whatIM', 'typing'],
+                    ['ok', 'now', 'three', 'products', 'left'],
+                    ['Taro', 'milk', 'tea', 'is', 'JMT'],
+                    ['finally', 'this', 'is', 'last', 'one']]
+
+        titles = ['women\'s flower sundress',
+                'women\'s blue popular shirts',
+                'green poledance sports top - very popular now!',
+                'men\'s flower pink winter shoes',
+                'There are too many products here....',
+                'so now I\'m typing whatever things',
+                'I\'m doing my best so plz understand',
+                'I\'m writing this in the Gongcha',
+                'Boba tea is the love',
+                'oh yeah!!!!!!!!!!']
+
+        products_list = []
+        for i in range(10):
+            products_list.append({'keywords': keywords[i],'image': address_format.img(asin[i]), 'title': titles[i], 'asin': asin[i]})
+        return {
+            'bgSentence': bg_sentence_list[user_play_num],
+            'products': products_list
             }, 200
+
         # 만약 모든 제품을 user가 다봤을 경우 return "msg": no product available 이런거 보내주기
         # Product_keyword_match 테이블, 유저 테이블, 유저와 유저가 이미 선택한 상품을 매칭시켜주는 Product_user_match 테이블(컬럼: user id, product_id)
     else: # POST 요청:
@@ -166,7 +145,8 @@ def maincard():
             # 요소 중 빠진 게 있을 경우 예외처리1
             # db에 이미 있는 user-product set일 경우 예외처리2=>get에서 이미 예외처리 해서 필요 없을듯
             body=request.get_json()
-            user_id = body['userId']
+
+            user_id = get_jwt_identity()
             product_asin = body['asin']
             love_or_hate = body['loveOrHate']
 
@@ -196,57 +176,57 @@ def result_cards():
     # bookmarks = models.Product_user_match.query.all()
     # products = models.Product.query.all()
 
-    asin = 'B00007GDFV'
+    asin = ['B00HGRB3CE', 'B07PGCYWRJ', '1975421663']
     return {
             'productsNum': 3,
             'products':
                 [
                     {
-                        'keyword': 'flower, dress, red, summer, womens',
-                        'asin': asin,
+                        'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
+                        'asin': asin[0],
                         'price': 300000,
-                        'bookmarks': True,
-                        'nlpResult': {
-                                            'goodReview': ['reasonable','pretty','cute'],
-                                            'badReview': ['small','dirty','smelly']
+                        'bookmark': True,
+                        'nlpResults': {
+                                            'goodReviews': ['reasonable','pretty','cute'],
+                                            'badReviews': ['small','dirty','smelly']
                                         },
                         'starRating': 5,
                         'goodReviewRating': '80%',
                         'badReviewRating': '20%',
-                        'image': address_format.img('B00007GDFV'),
-                        'productUrl': address_format.product('B00007GDFV'),
+                        'image': address_format.img(asin[0]),
+                        'productUrl': address_format.product(asin[0]),
                         'title': 'women\'s flower sundress'
                     },
                     {
-                        'keyword': 'flower, pants, green, winter, womens',
-                        'asin': asin,
+                        'keywords': ['flower', 'pants', 'green', 'winter', 'womens'],
+                        'asin': asin[1],
                         'price': 1000,
-                        'bookmarks': False,
-                        'nlpResult': {
-                                            'goodReview': ['clean','good quality','cute'],
-                                            'badReview': ['expensive','not useful','ugly']
+                        'bookmark': False,
+                        'nlpResults': {
+                                            'goodReviews': ['clean','good quality','cute'],
+                                            'badReviews': ['expensive','not useful','ugly']
                                         },
                         'starRating': 3,
                         'goodReviewRating': '55%',
                         'badReviewRating': '45%',
-                        'image': address_format.img('B00007GDFV'),
-                        'productUrl': address_format.product('B00007GDFV'),
+                        'image': address_format.img(asin[1]),
+                        'productUrl': address_format.product(asin[1]),
                         'title': 'women\'s flower green pants'
                     },
                     {
-                        'keyword': 'flower, dress, red, summer, womens',
-                        'asin': asin,
+                        'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
+                        'asin': asin[2],
                         'price': 300000,
-                        'bookmarks': True,
-                        'nlpResult': {
-                                        'goodReview': ['reasonable','pretty','cute'],
-                                        'badReview': ['small','dirty','smelly']
+                        'bookmark': True,
+                        'nlpResults': {
+                                        'goodReviews': ['reasonable','pretty','cute'],
+                                        'badReviews': ['small','dirty','smelly']
                                      },
                         'starRating': 5,
                         'goodReviewRating': '80%',
                         'badReviewRating': '20%',
-                        'image': address_format.img('B00007GDFV'),
-                        'productUrl': address_format.product('B00007GDFV'),
+                        'image': address_format.img(asin[2]),
+                        'productUrl': address_format.product(asin[2]),
                         'title': 'women\'s flower sundress'
                     },
                 ]

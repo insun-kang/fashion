@@ -15,74 +15,92 @@ responses:
             {
               "products": [
                 {
-                  "asin": "B00007GDFV",
+                  "asin": "B00HGRB3CE",
                   "badReviewRating": "20%",
-                  "bookmarks": true,
+                  "bookmark": true,
                   "goodReviewRating": "80%",
-                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                  "keyword": "flower, dress, red, summer, womens",
-                  "nlpResult": {
-                    "badReview": [
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HGRB3CE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
                       "small",
                       "dirty",
                       "smelly"
                     ],
-                    "goodReview": [
+                    "goodReviews": [
                       "reasonable",
                       "pretty",
                       "cute"
                     ]
                   },
                   "price": 300000,
-                  "productUrl": "https://www.amazon.com/dp/B00007GDFV",
+                  "productUrl": "https://www.amazon.com/dp/B00HGRB3CE",
                   "starRating": 5,
                   "title": "women's flower sundress"
                 },
                 {
-                  "asin": "B00007GDFV",
+                  "asin": "B07PGCYWRJ",
                   "badReviewRating": "45%",
-                  "bookmarks": false,
+                  "bookmark": false,
                   "goodReviewRating": "55%",
-                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                  "keyword": "flower, pants, green, winter, womens",
-                  "nlpResult": {
-                    "badReview": [
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07PGCYWRJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "pants",
+                    "green",
+                    "winter",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
                       "expensive",
                       "not useful",
                       "ugly"
                     ],
-                    "goodReview": [
+                    "goodReviews": [
                       "clean",
                       "good quality",
                       "cute"
                     ]
                   },
                   "price": 1000,
-                  "productUrl": "https://www.amazon.com/dp/B00007GDFV",
+                  "productUrl": "https://www.amazon.com/dp/B07PGCYWRJ",
                   "starRating": 3,
                   "title": "women's flower green pants"
                 },
                 {
-                  "asin": "B00007GDFV",
+                  "asin": "1975421663",
                   "badReviewRating": "20%",
-                  "bookmarks": true,
+                  "bookmark": true,
                   "goodReviewRating": "80%",
-                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                  "keyword": "flower, dress, red, summer, womens",
-                  "nlpResult": {
-                    "badReview": [
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1975421663&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
                       "small",
                       "dirty",
                       "smelly"
                     ],
-                    "goodReview": [
+                    "goodReviews": [
                       "reasonable",
                       "pretty",
                       "cute"
                     ]
                   },
                   "price": 300000,
-                  "productUrl": "https://www.amazon.com/dp/B00007GDFV",
+                  "productUrl": "https://www.amazon.com/dp/1975421663",
                   "starRating": 5,
                   "title": "women's flower sundress"
                 }

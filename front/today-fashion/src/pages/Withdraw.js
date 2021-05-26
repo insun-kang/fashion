@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
+import MypageNav from '../components/MypageNav';
 import { SERVER_URL } from '../config';
 import { userNick } from '../states/state';
 
@@ -25,13 +26,8 @@ const WithDraw = () => {
   }, [history]);
   return (
     <>
-      <button disabled>withdraw</button>
-      <Link to="/mypage/userinfo">
-        <button>user info</button>
-      </Link>
+      <MypageNav />
       <div className="withdraw-container">
-        {/* <h3>{user}, I thought we were friends...</h3> */}
-        {/* 위 내용은 protect api에서 userNick을 줘야 사용할 수 있음. */}
         <p>Are you sure you want to withdraw?</p>
         <button onClick={handleWithdrawal}>yes</button>
         <Link to="/main">

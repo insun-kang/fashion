@@ -5,7 +5,7 @@ import UserInfoField from '../components/UserInfoField';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
 
-const MyPage = () => {
+const MyPageIntro = () => {
   //비밀번호 입력
   //회원정보 보기 , 회원정보 수정
   //회원탈퇴 -> 페이지 새로 만들어야 할듯
@@ -54,4 +54,4 @@ const MyPage = () => {
     </div>
   );
 };
-export default MyPage;
+export default MyPageIntro;
