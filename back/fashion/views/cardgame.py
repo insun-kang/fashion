@@ -105,16 +105,16 @@ def maincard():
         asin = ['B01EGHS7RK', 'B07VRWQRQJ', 'B0815RPFNK', 'B08SWDB36C', 'B07KX22MR7',
                 'B07P13S7YR', '1593786867', 'B08GQ9N4DM', 'B08J67WJJX', 'B08HLXN153']
         # 제품 10개 안될때 예외 처리 해주기
-        keywords = ['flower, dress, red, summer, womens',
-                    'blue, womens, shirts, popular',
-                    'green, poledance, top, sports',
-                    'flower, pink, winter, mens',
-                    'idk, what, to, type, anymore',
-                    'five, more, left, omg',
-                    'you, might, not, understand, whatIM, typing',
-                    'ok, now, three, products, left',
-                    'Taro, milk, tea, is, JMT',
-                    'finally, this, is, last, one']
+        keywords = [['flower', 'dress', 'red', 'summer', 'womens'],
+                    ['blue', 'womens', 'shirts', 'popular'],
+                    ['green', 'poledance', 'top', 'sports'],
+                    ['flower', 'pink', 'winter', 'mens'],
+                    ['idk', 'what', 'to', 'type', 'anymore'],
+                    ['five', 'more', 'left', 'omg'],
+                    ['you', 'might', 'not', 'understand', 'whatIM', 'typing'],
+                    ['ok', 'now', 'three', 'products', 'left'],
+                    ['Taro', 'milk', 'tea', 'is', 'JMT'],
+                    ['finally', 'this', 'is', 'last', 'one']]
 
         titles = ['women\'s flower sundress',
                 'women\'s blue popular shirts',
@@ -129,7 +129,7 @@ def maincard():
 
         products_list = []
         for i in range(10):
-            products_list.append({'keyword': keywords[i],'image': address_format.img(asin[i]), 'title': titles[i], 'asin': asin[i]})
+            products_list.append({'keywords': keywords[i],'image': address_format.img(asin[i]), 'title': titles[i], 'asin': asin[i]})
         return {
             'bgSentence': bg_sentence_list[user_play_num],
             'products': products_list
@@ -182,13 +182,13 @@ def result_cards():
             'products':
                 [
                     {
-                        'keyword': 'flower, dress, red, summer, womens',
-                        'asin': asin,
+                        'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
+                        'asin': asin[0],
                         'price': 300000,
-                        'bookmarks': True,
-                        'nlpResult': {
-                                            'goodReview': ['reasonable','pretty','cute'],
-                                            'badReview': ['small','dirty','smelly']
+                        'bookmark': True,
+                        'nlpResults': {
+                                            'goodReviews': ['reasonable','pretty','cute'],
+                                            'badReviews': ['small','dirty','smelly']
                                         },
                         'starRating': 5,
                         'goodReviewRating': '80%',
@@ -198,13 +198,13 @@ def result_cards():
                         'title': 'women\'s flower sundress'
                     },
                     {
-                        'keyword': 'flower, pants, green, winter, womens',
-                        'asin': asin,
+                        'keywords': ['flower', 'pants', 'green', 'winter', 'womens'],
+                        'asin': asin[1],
                         'price': 1000,
-                        'bookmarks': False,
-                        'nlpResult': {
-                                            'goodReview': ['clean','good quality','cute'],
-                                            'badReview': ['expensive','not useful','ugly']
+                        'bookmark': False,
+                        'nlpResults': {
+                                            'goodReviews': ['clean','good quality','cute'],
+                                            'badReviews': ['expensive','not useful','ugly']
                                         },
                         'starRating': 3,
                         'goodReviewRating': '55%',
@@ -214,13 +214,13 @@ def result_cards():
                         'title': 'women\'s flower green pants'
                     },
                     {
-                        'keyword': 'flower, dress, red, summer, womens',
-                        'asin': asin,
+                        'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
+                        'asin': asin[2],
                         'price': 300000,
-                        'bookmarks': True,
-                        'nlpResult': {
-                                        'goodReview': ['reasonable','pretty','cute'],
-                                        'badReview': ['small','dirty','smelly']
+                        'bookmark': True,
+                        'nlpResults': {
+                                        'goodReviews': ['reasonable','pretty','cute'],
+                                        'badReviews': ['small','dirty','smelly']
                                      },
                         'starRating': 5,
                         'goodReviewRating': '80%',
