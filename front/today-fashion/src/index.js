@@ -4,12 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </LocalizationProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

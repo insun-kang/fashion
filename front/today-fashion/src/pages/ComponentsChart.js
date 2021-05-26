@@ -1,15 +1,11 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import {
-  Grid,
-  TextField,
-  FormControl,
-  LinearProgress,
-} from '@material-ui/core';
+import { Grid, TextField, FormControl } from '@material-ui/core';
 import { PCButton, PCChip } from '../ui-components/@material-extend';
 import { Block } from '../ui-components/Block';
 import Page from '../ui-components/Page';
-import { Formik, Form, Field } from 'formik';
+import { StaticDatePicker } from '@material-ui/lab';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(8),
@@ -27,6 +23,8 @@ const styleBlock = {
 const onDelete = () => {};
 
 export default function Test() {
+  const [value, setValue] = useState(new Date());
+
   return (
     <Grid container item xs={8} spacing={3}>
       <Grid item xs={5}>
@@ -172,6 +170,19 @@ export default function Test() {
             variant="outlined"
             color="error"
             onDelete={onDelete}
+          />
+        </Block>
+      </Grid>
+      <Grid item xs={6}>
+        <Block title="PC Date Pickers" sx={styleBlock}>
+          <StaticDatePicker
+            orientation="landscape"
+            openTo="day"
+            value={value}
+            onChange={(newValue) => {
+              setValue(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} />}
           />
         </Block>
       </Grid>
