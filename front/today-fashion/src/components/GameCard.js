@@ -6,7 +6,6 @@ const GameCard = (props) => {
         alt={questionData.title}
         src={questionData.image}
         onLoad={() => {
-          console.log('done load');
           setIsPending(false);
         }}
       ></img>

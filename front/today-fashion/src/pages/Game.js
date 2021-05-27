@@ -81,8 +81,6 @@ const Game = () => {
     },
     [questionIdx, sendAnswer, getQuestions, fetchQuestionCount]
   );
-  // console.log(isPending);
-  // console.log(questions);
   useEffect(() => {
     getBackGroundData();
     getQuestions();
