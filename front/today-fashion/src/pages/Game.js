@@ -67,13 +67,13 @@ const Game = () => {
     (asin, preference) => {
       console.log(asin);
       setQuestionIdx(questionIdx + 1);
-      //10개 넘어가면???에러처리 필요
       sendAnswer({ asin: asin, loveOrHate: preference });
       //questionIdx 갱신
       //(먼저 하는게 중요하다 유저는 post 로딩 시간 기다릴 필요 없음)
       //sendAnswer로 대답내용 post 요청 보내기
       if (questionIdx === 9) {
         setIsPending(true);
+        setQuestions();
         setQuestionIdx(0);
         getQuestions();
         setFetchQuestionCount(fetchQuestionCount + 1);
@@ -81,24 +81,13 @@ const Game = () => {
     },
     [questionIdx, sendAnswer, getQuestions, fetchQuestionCount]
   );
-
+  // console.log(isPending);
+  // console.log(questions);
   useEffect(() => {
     getBackGroundData();
     getQuestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(()=>{
-  //   if(isPending){
-  //     setQuestionIdx(0);
-  //   }
-  // },[isPending])
-
-  useEffect(() => {
-    if (questions && questionIdx === 0) {
-      setIsPending(false);
-    }
-  }, [questions, questionIdx]);
 
   const totalPlayNum = useMemo(
     () => fetchQuestionCount * 10 + questionIdx + 1,
@@ -129,12 +118,34 @@ const Game = () => {
             />
           ))}
       </div>
-      {!isPending && questions?.products && (
-        <GameCard
-          questionData={questions.products[questionIdx]}
-          handleAnswerClick={handleAnswerClick}
-        />
-      )}
+      {questions?.products &&
+        questions.products.map((question, idx) => {
+          let zIndex = 10 - idx;
+          if (idx < questionIdx) {
+            zIndex *= -1;
+          }
+          return (
+            <div
+              key={idx}
+              style={{
+                zIndex: zIndex,
+                position: 'absolute',
+                top: '100px',
+                left: '500px',
+                backgroundColor: 'white',
+                width: '300px',
+                height: '500px',
+                display: isPending ? 'none' : 'block',
+              }}
+            >
+              <GameCard
+                questionData={question}
+                handleAnswerClick={handleAnswerClick}
+                setIsPending={setIsPending}
+              />
+            </div>
+          );
+        })}
     </div>
   );
 };

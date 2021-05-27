@@ -29,7 +29,7 @@ SSOT는 Single Source Of Truth이라는 코드 설계 원칙 줄임말이라고 
 
 ---
 
-###week2 - 남다영
+###week3 - 남다영
 
 **api 요청에는 useEffect**
 hooks 사용에 많이 익숙해졌다는 생각이 드는 동시에 처음에 학습할 때 배운 이론을 까먹기 시작하는 타이밍이 온 것 같다. 비슷한 작업을 다시 할 때면 전에 썼던 방법 대신 이런 방법을 써보면 어떨까? 라는 생각이 든다. 이번에는 갑자기 axios 요청에 대해 useMemo를 써보고 싶다는 충동이 들었다. 그런데 어디서 분명히 안된다는 걸 읽은 것 같은데..이유가 뭐였지? 하고 찾아보게 되었고. 다음에도 비슷한 충동을 느끼지 않도록 기록해두기로 한다.
@@ -42,7 +42,7 @@ hooks 사용에 많이 익숙해졌다는 생각이 드는 동시에 처음에 �
 - [useMemo](https://reactjs.org/docs/hooks-reference.html#usememo)
   useMemo에 전달된 함수는 렌더링 중에 실행된다. 따라서 side effect들을 useMemo에서는 실행해서는 안된다. 또한 state 변경도 렌더링 중에 이루어져서는 안된다.
 
-**UseEffect deps**
+**useEffect, useCallback, deps**
 [참고링크](https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook)
 const로 정의된 함수를 useEffect나 useCallback 내에 쓰면 deps에 추가하지 않을 경우 다음과 같은 주의메세지가 나타났다.
 
@@ -50,9 +50,14 @@ const로 정의된 함수를 useEffect나 useCallback 내에 쓰면 deps에 추�
 React Hook useEffect has a missing dependency: 'checkTokenState'. Either include it or remove the dependency array.
 ```
 
-나는 useCallback으로 만들어진 함수의 경우 deps가 변화할때만 재생성 되는 것으로 이해했기 때문에 deps에 추가해도 문제가 없다고 생각했는데, 실행이 안될 뿐 함수 생성 자체는 렌더링마다 된다고 한다. 그래서 사실 checkTokenState라는 저 함수의 경우 useEffect deps에 추가되면 랜더링마다 useEffect가 실행되게 된다고...(사실 내가 정확히 이해했는지 아직 확신이 없다.)
-useCallback에 대한 공부가 더 필요할 것 같다. 함수에 대해서는 되도록...습관적으로 useCallback을 사용하고 있었는데 최적화가 반드시 필요한 경우가 아니라면 최적화를 하는 것 자체가 오히려 비용이 될 수 있다고 한다.
+이부분에 대해 보다 잘 이해하게 되었기 때문에 다시 문서를 작성한다. useCallback 함수는 렌더링 할때마다 생성되지만 deps array에 존재하는 변수의 값이 변화할때만 return 값을 변화시키게 된다. 때문에 다른 useEffect등의 deps array에 useCallback으로 감싸준 함수를 넣어줘도 괜찮다. (다만 일반 함수의 경우 렌더링할때마다 return 값이 변하므로 deps array에 추가하지 않도록 반드시 주의한다!) 이와 관련된 공식문서 내용을 하단에 추가한다.
+
+- useCallback will return a memoized version of the callback that only changes if one of the dependencies has changed.
+
+useCallback에 대한 공부가 더 필요할 것 같다. 함수에 대해서는 되도록...습관적으로 useCallback을 사용하고 있었는데 최적화가 반드시 필요한 경우가 아니라면 최적화를 하는 것 자체가 오히려 비용이 될 수 있다고 한다. (useCallback 사용시 memoized 하기 위한 메모리의 비용 등이 꼭 필요한가에 대한 고민 필요.)
 코드를 작성할 때 생각보다 생각없이 작성하는 경우가 많은 것 같다. 앞으로는 그러지 말도록 조심하자.
 
 - React guarantees that setState function identity is stable and won’t change on re-renders. This is why it’s safe to omit from the useEffect or useCallback dependency list.
   라고 한다. deps에 setState 함수는 추가할 필요가 없다고 하니까 앞으로도 굳이 넣지 말도록 하자.
+
+**로딩 속도가 느린 이미지를 포함하는 컴포넌트 관리**
