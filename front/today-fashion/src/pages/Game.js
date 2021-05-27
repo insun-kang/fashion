@@ -65,7 +65,6 @@ const Game = () => {
 
   const handleAnswerClick = useCallback(
     (asin, preference) => {
-      console.log(asin);
       setQuestionIdx(questionIdx + 1);
       sendAnswer({ asin: asin, loveOrHate: preference });
       //questionIdx 갱신
