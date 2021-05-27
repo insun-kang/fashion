@@ -1,5 +1,5 @@
 from fashion import db
-from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func
+from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func, Boolean
 
 class User(db.Model):  # usertable
     __tablename__ = 'user'
