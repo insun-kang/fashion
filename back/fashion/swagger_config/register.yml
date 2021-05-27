@@ -1,9 +1,11 @@
 summary: "회원가입"
 description: "회원가입 api"
+tags:
+    - auth
 produces:
 - "application/json"
 requestBody:
-        description: 유저에 관한 정보(email,pw,name,nickname,birth,gender)
+        description: 유저에 관한 정보(email,pw,name,nickname,birth)
         required: true
         content:
           application/json:
@@ -18,7 +20,6 @@ requestBody:
                   name: "강인선"
                   nickname: "강인성"
                   birth: "19950310"
-                  gender: "남"
               case2:
                 summary: 김다인
                 value:
@@ -27,10 +28,66 @@ requestBody:
                   name: "김다인"
                   nickname: "익명이"
                   birth: "19960325"
-                  gender: "여"
 responses:
   200:
-    description: OK
+    description: 회원가입 성공
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              'accessToken': '액세스토큰',
+              'nickname': '닉네임'
+            }
+  400:
+    description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
+  400.1:
+    description: 정보 중에 빠진 정보가 있음
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'missing_param', 'msg': 'Missing parameter in request'}
+  400.2:
+    description: 이미 있는 email
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'alr_signed_email', 'msg': 'This email has already been signed up'}
+  400.3:
+    description: 이미 있는 닉네임
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'alr_signed_nickname', 'msg': 'This nickname has already been signed up'}
+  400.4:
+    description: 비밀번호 에러 - 8자 이상 & 숫자+영문+특수문자 포함
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one number digit, one special character, one English character,and be at least 8 characters'}
+  400.5:
+    description: 비밀번호 에러 - 특수문자 없음
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one special character'}
 definitions:
   User:
     type: object
@@ -40,7 +97,6 @@ definitions:
       - name
       - nickname
       - birth
-      - gender
     properties:
       email:
         type: string
@@ -51,6 +107,4 @@ definitions:
       nickname:
         type: string
       birth:
-        type: string
-      gender:
         type: string

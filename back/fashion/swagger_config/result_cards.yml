@@ -1,0 +1,119 @@
+summary: "결과카드"
+description: "결과카드 get api: 유저에게 추천 정보 인공지능으로 나오는 수만큼 반환"
+tags:
+    - cardgame
+produces:
+- "application/json"
+responses:
+  200:
+    description: ok
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "products": [
+                {
+                  "asin": "B00HGRB3CE",
+                  "badReviewRating": "20%",
+                  "bookmark": true,
+                  "goodReviewRating": "80%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HGRB3CE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
+                      "small",
+                      "dirty",
+                      "smelly"
+                    ],
+                    "goodReviews": [
+                      "reasonable",
+                      "pretty",
+                      "cute"
+                    ]
+                  },
+                  "price": 300000,
+                  "productUrl": "https://www.amazon.com/dp/B00HGRB3CE",
+                  "starRating": 5,
+                  "title": "women's flower sundress"
+                },
+                {
+                  "asin": "B07PGCYWRJ",
+                  "badReviewRating": "45%",
+                  "bookmark": false,
+                  "goodReviewRating": "55%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07PGCYWRJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "pants",
+                    "green",
+                    "winter",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
+                      "expensive",
+                      "not useful",
+                      "ugly"
+                    ],
+                    "goodReviews": [
+                      "clean",
+                      "good quality",
+                      "cute"
+                    ]
+                  },
+                  "price": 1000,
+                  "productUrl": "https://www.amazon.com/dp/B07PGCYWRJ",
+                  "starRating": 3,
+                  "title": "women's flower green pants"
+                },
+                {
+                  "asin": "1975421663",
+                  "badReviewRating": "20%",
+                  "bookmark": true,
+                  "goodReviewRating": "80%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1975421663&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
+                      "small",
+                      "dirty",
+                      "smelly"
+                    ],
+                    "goodReviews": [
+                      "reasonable",
+                      "pretty",
+                      "cute"
+                    ]
+                  },
+                  "price": 300000,
+                  "productUrl": "https://www.amazon.com/dp/1975421663",
+                  "starRating": 5,
+                  "title": "women's flower sundress"
+                }
+              ],
+              "productsNum": 3
+            }
+  400:
+    description: 알고리즘으로부터 추천 결과가 없는 경우
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'no_result','msg': "There's no recommendation for user at all"}
+security:
+  - ApiKeyAuth: []

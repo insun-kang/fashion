@@ -1,9 +1,11 @@
 summary: "회원정보수정"
 description: "회원정보수정 api"
+tags:
+    - mypage
 produces:
 - "application/json"
 requestBody:
-        description: 수정할 정보(id,email,pw,name,nickname)
+        description: 수정할 정보(email,pw,name,nickname)
         required: true
         content:
           application/json:
@@ -13,7 +15,6 @@ requestBody:
               case1:
                 summary: 강인선
                 value:
-                  id: 1
                   email: "sunink1@naver.com"
                   pw: "qwer!@6789"
                   name: "강인성"
@@ -21,7 +22,6 @@ requestBody:
               case2:
                 summary: 김다인
                 value:
-                  id: 2
                   email: "dainlinda@gmail.com"
                   pw: "dainlinda!@1234"
                   name: "김다인"
@@ -29,18 +29,37 @@ requestBody:
 responses:
   200:
     description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+              {'nickname': admin.nickname}
+  400.1:
+    description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
+  400.2:
+    description: 회원정보 변경 실패
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'failed_change_info', 'msg': 'Failed to change member info'}
 definitions:
   Modified:
     type: object
     required:
-      - id
       - email
       - pw
       - name
       - nickname
     properties:
-      id:
-        type: string
       email:
         type: string
       pw:
@@ -49,3 +68,5 @@ definitions:
         type: string
       nickname:
         type: string
+security:
+  - ApiKeyAuth: []

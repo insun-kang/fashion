@@ -26,8 +26,8 @@ export default function Test() {
   const [value, setValue] = useState(new Date());
 
   return (
-    <Grid container item xs={8} spacing={3}>
-      <Grid item xs={5}>
+    <Grid container item xs={12} spacing={3}>
+      <Grid item xs={12}>
         <Block title="PC Default Button" sx={styleBlock}>
           <PCButton variant="contained" color="primary">
             Primary
@@ -49,7 +49,7 @@ export default function Test() {
           </PCButton>
         </Block>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={12}>
         <Block title="PC Outlined Button" sx={styleBlock}>
           <PCButton variant="outlined" color="primary">
             Primary
@@ -71,9 +71,9 @@ export default function Test() {
           </PCButton>
         </Block>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={12}>
         <Block title="PC Text Button" sx={styleBlock}>
-          <Grid item xs={7}>
+          <Grid item xs={12}>
             <PCButton variant="text" color="primary">
               Primary
             </PCButton>
@@ -95,25 +95,26 @@ export default function Test() {
           </Grid>
         </Block>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={12}>
         <Block title="PC Input" sx={styleBlock}>
-          <FormControl>
-            <TextField fullWidth label="email" />
-          </FormControl>
-          <div>
-            <br />
-          </div>
-          <FormControl>
-            <TextField
-              error
-              fullWidth
-              label="password"
-              helperText="Invaild Password"
-            />
-          </FormControl>
+          <Grid item xs={5} spacing={1}>
+            <FormControl>
+              <TextField fullWidth label="email" />
+            </FormControl>
+          </Grid>
+          <Grid item xs={5} spacing={1}>
+            <FormControl>
+              <TextField
+                error
+                fullWidth
+                label="password"
+                helperText="Invaild Password"
+              />
+            </FormControl>
+          </Grid>
         </Block>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={12}>
         <Block title="PC Chip Non Click" sx={styleBlock}>
           <PCChip label="Skirt" color="primary" />
           <PCChip label="Pants" color="secondary" />
@@ -123,7 +124,7 @@ export default function Test() {
           <PCChip label="Hood" color="error" />
         </Block>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={12}>
         <Block title="PC Chip Click" sx={styleBlock}>
           <PCChip label="Skirt" color="primary" clickable="clickable" />
           <PCChip label="Pants" color="secondary" clickable="clickable" />
@@ -133,7 +134,7 @@ export default function Test() {
           <PCChip label="Hood" color="error" clickable="clickable" />
         </Block>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={12}>
         <Block title="PC Chip Deletable" sx={styleBlock}>
           <PCChip
             label="Skirt"
@@ -173,7 +174,7 @@ export default function Test() {
           />
         </Block>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <Block title="PC Date Pickers" sx={styleBlock}>
           <StaticDatePicker
             orientation="landscape"
@@ -186,6 +187,11 @@ export default function Test() {
           />
         </Block>
       </Grid>
+      {/* <Grid>
+        <Block title="PC Pop Up Button">
+          <PopupButton></PopupButton>
+        </Block>
+      </Grid> */}
     </Grid>
   );
 }

@@ -10,7 +10,7 @@ const ButtonStyle = styled(Button)(({ theme, styleProps }) => {
     width: '125px',
     height: '45px',
     margin: '1rem',
-    boxShadow: theme.customShadows[color],
+    // boxShadow: theme.customShadows[color],
     color: theme.palette[color].contrastText,
     backgroundColor: theme.palette[color].main,
     '&:hover': {

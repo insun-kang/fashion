@@ -1,87 +1,39 @@
 import { Field, Form, Formik } from 'formik';
 import DatePicker from 'react-datepicker';
+import {
+  validateBirth,
+  validateConfirmPassword,
+  validateEmail,
+  validateName,
+  validateNickName,
+  validatePassword,
+} from './formValidations';
 
 const UserInfoForm = (props) => {
   const { handleUserInfoForm } = props;
-  const validateName = (nameValue) => {
-    let nameError;
-    if (!nameValue) {
-      nameError = 'Name is required';
-    }
-    //regex 추가
-    return nameError;
-  };
-  const validateEmail = (emailValue) => {
-    let emailError;
-    if (!emailValue) {
-      emailError = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) {
-      emailError = 'Invalid email address';
-    }
-    return emailError;
-  };
-
-  const validatePassword = (passwordValue) => {
-    let passwordError;
-    if (!passwordValue) {
-      passwordError = 'Password is required';
-    } else if (
-      !/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,20}$/.test(passwordValue)
-    ) {
-      passwordValue =
-        'Valid Password consists of at least 8 characters and a combination of numbers + English + special characters.';
-    }
-    return passwordError;
-  };
-
-  const validateConfirmPassword = (pw, confirmPw) => {
-    let confirmPwError;
-    if (!confirmPw) {
-      confirmPwError = 'Please confirm password';
-    } else if (pw !== confirmPw) {
-      confirmPwError = 'Password is not the same';
-    }
-    return confirmPwError;
-  };
-
-  const validateGender = (genderValue) => {
-    let genderError;
-    if (!genderValue) {
-      genderError = 'Gender is required';
-    }
-    return genderError;
-  };
-
-  const validateBirth = (birthValue) => {
-    let birthError;
-    if (!birthValue) {
-      birthError = 'Birth is required';
-    }
-    return birthError;
-  };
-
-  const validateNickName = (nickNameValue) => {
-    let nickNameError;
-    if (!nickNameValue) {
-      nickNameError = 'Nickname is required';
-    }
-    return nickNameError;
-  };
+  let isSignUp;
+  let initialValues;
+  if (props.initialValues) {
+    initialValues = props.initialValues;
+    isSignUp = false;
+  } else {
+    initialValues = {
+      birth: '',
+      email: '',
+      name: '',
+      nickname: '',
+      pw: '',
+      confirmPw: '',
+    };
+    isSignUp = true;
+  }
 
   return (
     <div className="signup-container">
-      <h2>Sign Up</h2>
+      <h2>{isSignUp ? 'Sign Up' : 'Modify User Info'}</h2>
       <div className="signup-form">
         <Formik
-          initialValues={{
-            birth: '',
-            email: '',
-            gender: '',
-            name: '',
-            nickname: '',
-            pw: '',
-            confirmPw: '',
-          }}
+          initialValues={initialValues}
           // 수정할때는 initial value를 유저 정보에서 받아온 값으로 하기
           validate={(values) => {
             const errors = {};
@@ -92,10 +44,6 @@ const UserInfoForm = (props) => {
             const email = validateEmail(values.email);
             if (email) {
               errors.email = email;
-            }
-            const gender = validateGender(values.gender);
-            if (gender) {
-              errors.gender = gender;
             }
             const name = validateName(values.name);
             if (name) {
@@ -113,15 +61,22 @@ const UserInfoForm = (props) => {
               values.pw,
               values.confirmPw
             );
+
             if (confirmPw) {
               errors.confirmPw = confirmPw;
             }
 
             return errors;
           }}
-          onSubmit={(values, actions) => {
-            //회원가입 기능 작성
-            handleUserInfoForm(values);
+          onSubmit={async (values, actions) => {
+            if (isSignUp) {
+              values['birth'] = values['birth'].toISOString().slice(0, 10);
+            }
+            delete values['confirmPw'];
+
+            await handleUserInfoForm(values);
+            actions.setSubmitting(false);
+            //나중에 여유 생기면 back에러를 form에러로 반영하기.
           }}
         >
           {(props) => (
@@ -198,28 +153,42 @@ const UserInfoForm = (props) => {
                   </div>
                 )}
               </Field>
-              <Field name="birth">
-                {({ field, form }) => (
-                  <div>
-                    <label> birth</label>
-                    <DatePicker
-                      selected={form.values.birth}
-                      onChange={(date) =>
-                        form.setValues({ ...form.values, birth: date })
-                      }
-                      peekNextMonth
-                      showMonthDropdown
-                      showYearDropdown
-                      dropdownMode="select"
-                    />
-                    <div className="birth-error">
-                      {form.errors.birth && form.touched.birth
-                        ? form.errors.birth
-                        : null}
+              {isSignUp ? (
+                <Field name="birth">
+                  {({ field, form }) => (
+                    <div>
+                      <label>birth</label>
+                      <span
+                        onMouseUp={() => {
+                          form.setTouched({ ...form.touched, birth: true });
+                        }}
+                      >
+                        <DatePicker
+                          name="birth"
+                          selected={form.values.birth}
+                          onChange={(date) =>
+                            form.setValues({ ...form.values, birth: date })
+                          }
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                        />
+                      </span>
+                      <div className="birth-error">
+                        {form.errors.birth && form.touched.birth
+                          ? form.errors.birth
+                          : null}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </Field>
+                  )}
+                </Field>
+              ) : (
+                <div>
+                  <div>birth</div>
+                  <div>{initialValues.birth}</div>
+                </div>
+              )}
               <Field name="nickname">
                 {({ field, form }) => (
                   <div>
@@ -239,27 +208,10 @@ const UserInfoForm = (props) => {
                 )}
               </Field>
 
-              <div id="radio-group"> Gender </div>
-              <div role="group" aria-labelledby="radio-group">
-                <label>
-                  <Field type="radio" name="gender" value="여" />
-                  female
-                </label>
-                <label>
-                  <Field type="radio" name="gender" value="남" />
-                  male
-                </label>
-              </div>
-              <div className="gender-error">
-                {props.errors.gender && props.touched.gender
-                  ? props.errors.gender
-                  : null}
-              </div>
-
               <input
                 type="submit"
                 disabled={props.isSubmitting}
-                value="Sign Up"
+                value={isSignUp ? 'Sign Up' : 'Save'}
               />
               {/* 정보 수정인지, 회원가입인지에 따라 value 다르게 하기 */}
               {/* 수정의 경우 수정 불가능한 정보는 disable 처리 하기 */}

@@ -1,36 +1,19 @@
 import React from 'react';
 import { Field, Form, Formik } from 'formik';
+import { validateEmail, validatePassword } from './formValidations';
 
-const CustomSignIn = () => {
-  const validateEmail = (emailValue) => {
-    let emailError;
-    if (!emailValue) {
-      emailError = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) {
-      emailError = 'Invalid email address';
-    }
-    return emailError;
-  };
+const CustomSignIn = (props) => {
+  const { handleCustomSignIn } = props;
 
-  const validatePassword = (passwordValue) => {
-    let passwordError;
-    if (!passwordValue) {
-      passwordError = 'Password is required';
-    }
-    return passwordError;
-  };
   return (
     <div className="signin-container">
       <h2>Sign In</h2>
       <div className="signin-form">
         <Formik
           initialValues={{ email: '', pw: '' }}
-          onSubmit={(values, actions) => {
-            //로그인 기능 작성
-            console.log('submit');
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-            }, 400);
+          onSubmit={async (values, actions) => {
+            await handleCustomSignIn(values);
+            actions.setSubmitting(false);
           }}
         >
           {(props) => (

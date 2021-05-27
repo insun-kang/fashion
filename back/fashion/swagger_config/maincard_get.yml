@@ -1,0 +1,146 @@
+summary: "메인카드 get"
+description: "메인카드 get api: 유저가 메인카드로 보게 될 10가지 제품 정보 반환"
+tags:
+    - cardgame
+produces:
+- "application/json"
+responses:
+  200:
+    description: ok
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "bgSentence": "게임 40번 플레이 하면 뜨는 문구에요!",
+              "products": [
+                {
+                  "asin": "B01EGHS7RK",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01EGHS7RK&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "title": "women's flower sundress"
+                },
+                {
+                  "asin": "B07VRWQRQJ",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07VRWQRQJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "blue",
+                    "womens",
+                    "shirts",
+                    "popular"
+                  ],
+                  "title": "women's blue popular shirts"
+                },
+                {
+                  "asin": "B0815RPFNK",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0815RPFNK&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "green",
+                    "poledance",
+                    "top",
+                    "sports"
+                  ],
+                  "title": "green poledance sports top - very popular now!"
+                },
+                {
+                  "asin": "B08SWDB36C",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B08SWDB36C&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "pink",
+                    "winter",
+                    "mens"
+                  ],
+                  "title": "men's flower pink winter shoes"
+                },
+                {
+                  "asin": "B07KX22MR7",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07KX22MR7&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "idk",
+                    "what",
+                    "to",
+                    "type",
+                    "anymore"
+                  ],
+                  "title": "There are too many products here...."
+                },
+                {
+                  "asin": "B07P13S7YR",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07P13S7YR&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "five",
+                    "more",
+                    "left",
+                    "omg"
+                  ],
+                  "title": "so now I'm typing whatever things"
+                },
+                {
+                  "asin": "1593786867",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1593786867&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "you",
+                    "might",
+                    "not",
+                    "understand",
+                    "whatIM",
+                    "typing"
+                  ],
+                  "title": "I'm doing my best so plz understand"
+                },
+                {
+                  "asin": "B08GQ9N4DM",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B08GQ9N4DM&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "ok",
+                    "now",
+                    "three",
+                    "products",
+                    "left"
+                  ],
+                  "title": "I'm writing this in the Gongcha"
+                },
+                {
+                  "asin": "B08J67WJJX",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B08J67WJJX&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "Taro",
+                    "milk",
+                    "tea",
+                    "is",
+                    "JMT"
+                  ],
+                  "title": "Boba tea is the love"
+                },
+                {
+                  "asin": "B08HLXN153",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B08HLXN153&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "finally",
+                    "this",
+                    "is",
+                    "last",
+                    "one"
+                  ],
+                  "title": "oh yeah!!!!!!!!!!"
+                }
+              ]
+            }
+  400:
+    description: 유저가 모든 제품을 다 사용해서 더 이상 내보내줄 결과가 없을 때
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'no_product_available','msg': 'User saw all products available already'}
+security:
+  - ApiKeyAuth: []

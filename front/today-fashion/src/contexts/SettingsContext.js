@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { createContext } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
+import { useLocalStorage } from '../customHooks/useLocalStorage';
 import palette from '../theme/palette';
 
 const PRIMARY_COLOR = [

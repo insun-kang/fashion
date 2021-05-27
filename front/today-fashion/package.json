@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@date-io/date-fns": "1.x",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@iconify/icons-ant-design": "^1.1.0",

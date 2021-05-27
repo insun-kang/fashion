@@ -6,7 +6,7 @@ import {
   createTheme,
   StyledEngineProvider,
 } from '@material-ui/core/styles';
-import useSettings from '../hooks/useSettings';
+import useSettings from '../customHooks/useSettings';
 import shape from './shape';
 import palette from './palette';
 import typography from './typography';
