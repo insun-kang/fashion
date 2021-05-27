@@ -6,9 +6,11 @@ import { SERVER_URL } from '../config';
 
 const Main = () => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
   useEffect(() => {
     getRecommendationResults();
   }, []);
+
   const getRecommendationResults = useCallback(async () => {
     try {
       const res = await axios.get(SERVER_URL + '/result-cards', {

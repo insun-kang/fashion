@@ -1,12 +1,18 @@
 const GameCard = (props) => {
-  const { questionData, handleAnswerClick } = props;
+  const { questionData, handleAnswerClick, setIsPending } = props;
   return (
     <div className="question-card">
-      <img alt={questionData.title} src={questionData.image}></img>
-      {/* {questionData.keywords.map((keyword, idx) => (
+      <img
+        alt={questionData.title}
+        src={questionData.image}
+        onLoad={() => {
+          console.log('done load');
+          setIsPending(false);
+        }}
+      ></img>
+      {questionData.keywords.map((keyword, idx) => (
         <div key={idx}>{keyword}</div>
-      ))} */}
-      {/* 백엔드에서 어레이로 넘겨주면 위 주석 해제 */}
+      ))}
       <input
         type="button"
         value="yes"
