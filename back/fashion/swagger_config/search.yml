@@ -18,22 +18,22 @@ requestBody:
                 summary: 존재 키워드 없을때
                 value:
                   keyword: "sh"
-                  existing_keywords: []
+                  existingKeywords: []
               case2:
                 summary: 존재 키워드 있을때
                 value:
                   keyword: "sh"
-                  existing_keywords: [shawl, sholder]
+                  existingKeywords: ["shawl", "sholder"]
               case3:
                 summary: 검색어가 없을때
                 value:
                   keyword: ""
-                  existing_keywords: []
+                  existingKeywords: []
               case4:
                 summary: 일치하는 keyword가 없을때
                 value:
                   keyword: "qwersdafas"
-                  existing_keywords: []
+                  existingKeywords: []
 responses:
   200:
     description: OK

@@ -16,12 +16,14 @@ class UseDB:
         with self.con.cursor() as cursor:
             cursor.execute(sql, (asin, type_keyword, product_keyword))
         self.con.commit()
+
     def search_keyword_insert(self, keyword, count):
         sql = ''' insert into search_keyword(`keyword`, `count`)
               values(%s, %s);  '''
         with self.con.cursor() as cursor:
             cursor.execute(sql, (keyword, count))
         self.con.commit()
+
     def keyword_select(self):
         sql = ''' SELECT product_keyword, COUNT(product_keyword) FROM product_keyword GROUP BY product_keyword;  '''
         with self.con.cursor() as cursor:
@@ -32,3 +34,10 @@ class UseDB:
         for i in result:
             lst.append(i)
         return lst
+    
+    def product_insert(self, asin, title, price, rating, shared):
+        sql = ''' insert into product(`asin`, `title`, `price`, `rating`, `shared`)
+              values(%s, %s, %s, %s, %s);  '''
+        with self.con.cursor() as cursor:
+            cursor.execute(sql, (asin, title, price, rating, shared))
+        self.con.commit()
