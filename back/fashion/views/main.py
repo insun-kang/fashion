@@ -4,7 +4,6 @@ import bcrypt
 from flask_cors import CORS
 from .. import models
 from . import checkvalid
-from sqlalchemy import func
 from datetime import datetime, timedelta
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
@@ -14,11 +13,11 @@ from ast import literal_eval
 from flasgger.utils import swag_from
 from .. import error_code
 
-bp = Blueprint('search', __name__, url_prefix='/')
+bp = Blueprint('main', __name__, url_prefix='/')
 
 @bp.route('/search', methods=['POST'])
 @swag_from('../swagger_config/search.yml')
-def search():
+def Search():
     if not request.is_json:
         return error_code.missing_json_error
 
@@ -26,33 +25,49 @@ def search():
         body=request.get_json()
 
         keyword=body['keyword']
-        existing_keywords=body['existing_keywords']
+        existing_keywords=body['existing_keywords']  #array
 
         return_keyword=[]
 
         search = "{}%".format(keyword.lower())
         find_keyword=models.SearchKeyword.query.filter(models.SearchKeyword.keyword.like(search)).all()
-
-        
+        for i in find_keyword:
+            print(i.keyword)
+        print(existing_keywords)
         if len(keyword) == 0:
             return {'msg': "You haven't entered anything", 'keyword': return_keyword}, 200
         
         if len(find_keyword) == 0:
-            return {'msg': 'No results were found for your search', 'keyword': return_keyword}, 200.1
+            return {'msg': 'No results were found for your search', 'keyword': return_keyword}, 200
 
-        
         if not existing_keywords:
             for i in find_keyword:
                 return_keyword.append((i.keyword))
-            return {'msg': 'success', 'keyword': return_keyword}, 200.2
+            return {'msg': 'success', 'keyword': return_keyword}, 200
 
         else:
             for i in find_keyword:
                 if i.keyword not in existing_keywords:
                     return_keyword.append((i.keyword))
-            return {'msg': 'success', 'keyword': return_keyword}, 200.3
-        
-        
+            return {'msg': 'success', 'keyword': return_keyword}, 200
+
+# @bp.route('/result-search', methods=['GET','POST'])
+# # @swag_from('../swagger_config/result_search.yml')
+# def result_search():
+#     if request.method =='GET':
+#         #초기에는 게임 결과순
+#         #검색시에는 긍정 높은순
+#         return None
 
     
-# SELECT 컬럼명 FROM 테이블 WHERE 컬럼명 LIKE 'A%'
+#     else:
+#         body=request.get_json()
+
+#         existing_keywords=body['existing_keywords']  #array
+
+#         asins = models.ProductKeyword.query.filter(
+#             models.ProductKeyword.product_keyword.in_(existing_keywords)).all()
+#         for i in asins:
+#             print(i.asin)
+
+#         return 'hi'
