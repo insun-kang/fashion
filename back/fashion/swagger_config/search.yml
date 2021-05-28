@@ -1,7 +1,39 @@
 summary: "키워드 검색"
 description: "키워드 검색 api"
 tags:
-    - search
+    - main
+consumes: 
+  - application/json
+produces:
+- "application/json"
+requestBody:
+        description: 검색어
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Search'
+            examples:
+              case1:
+                summary: 존재 키워드 없을때
+                value:
+                  keyword: "sh"
+                  existing_keywords: []
+              case2:
+                summary: 존재 키워드 있을때
+                value:
+                  keyword: "sh"
+                  existing_keywords: [shawl, sholder]
+              case3:
+                summary: 검색어가 없을때
+                value:
+                  keyword: ""
+                  existing_keywords: []
+              case4:
+                summary: 일치하는 keyword가 없을때
+                value:
+                  keyword: "qwersdafas"
+                  existing_keywords: []
 responses:
   200:
     description: OK
@@ -10,6 +42,66 @@ responses:
         schema:
           type: object
           example:
-            {'keyword': '키워드 리스트 반환'}
-security:
-  - ApiKeyAuth: []
+            {
+              "keyword": [
+                
+              ],
+              "msg": "You haven't entered anything"
+            }
+  200.1:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "keyword": [
+                
+              ],
+              "msg": 'No results were found for your search'
+            }
+  200.2:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "keyword": [
+                "shawl",
+                "shirt",
+                "shoe",
+                "shoes",
+                "sholder",
+                "short"
+              ],
+              "msg": "success"
+            }
+  200.3:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "keyword": [
+                "shirt",
+                "shoe",
+                "shoes",
+                "short"
+              ],
+              "msg": "success"
+            }
+definitions:
+  Search:
+    type: object
+    required:
+      - keyword
+    properties:
+      keyword:
+        type: string
+
+
