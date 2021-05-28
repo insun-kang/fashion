@@ -43,7 +43,7 @@ responses:
           type: object
           example:
             {
-              "keyword": [
+              "keywords": [
                 
               ],
               "msg": "You haven't entered anything"
@@ -56,7 +56,7 @@ responses:
           type: object
           example:
             {
-              "keyword": [
+              "keywords": [
                 
               ],
               "msg": 'No results were found for your search'
@@ -69,7 +69,7 @@ responses:
           type: object
           example:
             {
-              "keyword": [
+              "keywords": [
                 "shawl",
                 "shirt",
                 "shoe",
@@ -87,7 +87,7 @@ responses:
           type: object
           example:
             {
-              "keyword": [
+              "keywords": [
                 "shirt",
                 "shoe",
                 "shoes",
@@ -99,7 +99,7 @@ definitions:
   Search:
     type: object
     required:
-      - keyword
+      - keywords
     properties:
       keyword:
         type: string
