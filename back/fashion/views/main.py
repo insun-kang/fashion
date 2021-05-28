@@ -9,11 +9,13 @@ from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
 from ast import literal_eval
 
+
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
 
 bp = Blueprint('main', __name__, url_prefix='/')
+
 
 @bp.route('/search', methods=['POST'])
 @swag_from('../swagger_config/search.yml')
@@ -70,3 +72,5 @@ def ResultSearch():
             print(i.asin)
 
         return 'test'
+
+
