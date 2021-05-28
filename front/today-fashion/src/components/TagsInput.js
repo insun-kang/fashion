@@ -3,6 +3,8 @@ import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Downshift from 'downshift';
+import axios from 'axios';
+import { SERVER_URL } from '../config';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -12,33 +14,38 @@ const useStyles = makeStyles((theme) => ({
 
 const TagsInput = ({ ...props }) => {
   const classes = useStyles();
-  const { selectedTags, placeholder, tags, ...other } = props;
+  const {
+    selectedTags,
+    placeholder,
+    tags,
+    // inputValue,
+    // setInputValue,
+    // selectedItem,
+    // setSelectedItem,
+    // autoCompleteItems,
+    // setAutoCompleteItems,
+    ...other
+  } = props;
   const [inputValue, setInputValue] = useState('');
-  const [selectedItem, setSelectedItem] = useState([]);
-  const [autoCompleteItems, setAutoCompleteItems] = useState([
-    'apple',
-    'pear',
-    'peach',
-    'grape',
-    'orange',
-    'banana',
-  ]);
-
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [autoCompleteItems, setAutoCompleteItems] = useState([]);
+  const [autoCompleteError, setAutoCompleteError] = useState();
+  console.log(autoCompleteItems);
   useEffect(() => {
-    setSelectedItem(tags);
+    setSelectedItems(tags);
   }, [tags]);
 
   useEffect(() => {
-    selectedTags(selectedItem);
+    selectedTags(selectedItems);
     //tag 갱신
-  }, [selectedItem, selectedTags]);
+  }, [selectedItems, selectedTags]);
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      const newSelectedItem = [...selectedItem];
+      const newSelectedItems = [...selectedItems];
       const valueToAdd = event.target.value.toLowerCase().trim();
 
-      const duplicatedValues = newSelectedItem.indexOf(
+      const duplicatedValues = newSelectedItems.indexOf(
         valueToAdd
         //'apple'과 'apple  '을 똑같이 취급한다
       );
@@ -59,41 +66,58 @@ const TagsInput = ({ ...props }) => {
       //위의 예외들에 해당하지 않고,
       //검색어가 자동완성에 포함된다면 새로운 태그를 더한다.
       if (autoCompleteItems.includes(valueToAdd)) {
-        newSelectedItem.push(valueToAdd);
-        setSelectedItem(newSelectedItem);
+        newSelectedItems.push(valueToAdd);
+        setSelectedItems(newSelectedItems);
       }
 
       //자동완성에 포함되지 않는 단어라면 추가를 허용하지 않고, 강제로 비운다.
       //setInputValue('');
     }
     if (
-      selectedItem.length &&
+      selectedItems.length &&
       !inputValue.length &&
       event.key === 'Backspace'
     ) {
       //태그가 있고 inputvalue는 없을때 백스페이스 누르면 태그 삭제
-      setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
+      setSelectedItems(selectedItems.slice(0, selectedItems.length - 1));
     }
   };
   const handleChange = (item) => {
-    let newSelectedItem = [...selectedItem];
-    if (newSelectedItem.indexOf(item) === -1) {
+    let newSelectedItems = [...selectedItems];
+    if (newSelectedItems.indexOf(item) === -1) {
       //newSelectedItem에 item이 없으면
-      newSelectedItem = [...newSelectedItem, item]; //item을 추가
+      newSelectedItems = [...newSelectedItems, item]; //item을 추가
     }
     setInputValue('');
-    setSelectedItem(newSelectedItem);
+    setSelectedItems(newSelectedItems);
   };
 
   const handleDelete = (item) => () => {
-    const newSelectedItem = [...selectedItem];
-    newSelectedItem.splice(newSelectedItem.indexOf(item), 1);
-    setSelectedItem(newSelectedItem);
+    const newSelectedItems = [...selectedItems];
+    newSelectedItems.splice(newSelectedItems.indexOf(item), 1);
+    setSelectedItems(newSelectedItems);
   };
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
     //TODO: 자동완성 결과도 다시 불러오기
+  };
+  useEffect(() => {
+    getAutoComplete({ existingKeywords: selectedItems, keyword: inputValue });
+  }, [inputValue, selectedItems]);
+
+  const getAutoComplete = async (data) => {
+    try {
+      console.log(data);
+      const res = await axios.post(SERVER_URL + '/search', data);
+      console.log(res);
+      setAutoCompleteItems(res.data.keywords);
+      if (!res.data.keywords.length) {
+        setAutoCompleteError(res.data.msg);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -102,7 +126,7 @@ const TagsInput = ({ ...props }) => {
         id="downshift-multiple"
         inputValue={inputValue}
         onChange={handleChange}
-        selectedItem={selectedItem}
+        selectedItem={selectedItems}
       >
         {({
           getInputProps,
@@ -119,7 +143,7 @@ const TagsInput = ({ ...props }) => {
             <div>
               <TextField
                 InputProps={{
-                  startAdornment: selectedItem.map((item) => (
+                  startAdornment: selectedItems.map((item) => (
                     <Chip
                       key={item}
                       tabIndex={-1}
@@ -139,9 +163,7 @@ const TagsInput = ({ ...props }) => {
                 {...inputProps}
               />
               <div {...getMenuProps()}>
-                {isOpen ? (
-                  <div>there is no such keyword...</div>
-                ) : autoCompleteItems.length ? (
+                {isOpen && autoCompleteItems.length ? (
                   autoCompleteItems.map((item, index) => (
                     <div
                       {...getItemProps({
@@ -151,7 +173,8 @@ const TagsInput = ({ ...props }) => {
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'lightgray' : 'white',
-                          fontWeight: selectedItem === item ? 'bold' : 'normal',
+                          fontWeight:
+                            selectedItems === item ? 'bold' : 'normal',
                           cursor: 'pointer',
                         },
                       })}
@@ -159,6 +182,8 @@ const TagsInput = ({ ...props }) => {
                       {item}
                     </div>
                   ))
+                ) : isOpen ? (
+                  <div>{autoCompleteError ? autoCompleteError : null}</div>
                 ) : null}
               </div>
             </div>
