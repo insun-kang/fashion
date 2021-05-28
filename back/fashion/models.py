@@ -1,5 +1,5 @@
 from fashion import db
-from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func, Boolean
+from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func, Boolean, Float
 
 class User(db.Model):  # usertable
     __tablename__ = 'user'
@@ -32,9 +32,8 @@ class Product(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     asin = Column(String(256), nullable=False)
     title = Column(Text(16000000), nullable=False)
-    brand = Column(String(1024), nullable=True)
-    price = Column(Integer, nullable=False)
-    rating = Column(Integer)
+    price = Column(Float, nullable=True)
+    rating = Column(Float, nullable=True)
     shared = Column(Integer, nullable=False, default=0)
 
 
