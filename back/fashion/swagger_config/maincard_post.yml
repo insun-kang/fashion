@@ -16,12 +16,12 @@ requestBody:
                 summary: 강인선
                 value:
                   asin: "1234567"
-                  loveOrHate: 1
+                  loveOrHate: True
               case2:
                 summary: 김다인
                 value:
                   asin: "1023658"
-                  loveOrHate: 0
+                  loveOrHate: False
 responses:
   200:
     description: OK
@@ -32,7 +32,7 @@ responses:
           example:
             {
               "result": {
-                "loveOrHate": 1,
+                "loveOrHate": True,
                 "productAsin": "B00007GDFV",
                 "userId": "1"
               }
