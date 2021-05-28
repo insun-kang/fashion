@@ -15,7 +15,7 @@ requestBody:
                 limitNum:
                     type: integer
               example:
-                limitNum: 5
+                limitNum: 20
 responses:
   200:
     description: limitNum 만큼의 제품이 반환된 경우

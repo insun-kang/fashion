@@ -33,7 +33,46 @@ def backcard():
         bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
         bg_products_list = []
 
-        asin = ['B08GMDTDBC', 'B07TN5K1TZ']
+        asins = ['0764443682',
+                '1291691480',
+                '1940280001',
+                '1940735033',
+                '1940967805',
+                '1942705034',
+                '3293015344',
+                '5378828716',
+                '6041002984',
+                '630456984X',
+                '7106116521',
+                '8037200124',
+                '8037200221',
+                '8279996567',
+                '9239282785',
+                '9239281533',
+                '9269808971',
+                '9654263246',
+                'B00004T3SN',
+                'B00005OTJ8']
+        titles = ['Slime Time Fall Fest [With CDROM and Collector Cards and Neutron Balls, Incredi-Ball and Glow Stick Necklace, Paper Fram',
+                    "XCC Qi promise new spider snake preparing men's accessories alloy fittings magnet buckle bracelet jewelry",
+                    'Magical Things I Really Do Do Too!',
+                    'Ashes to Ashes, Oranges to Oranges',
+                    'Aether & Empire #1 - 2016 First Printing Comic Book Special Edition - Rare! - Blue Juice Comics',
+                    '365 Affirmations for a Year of Love, Peace & Prosperity',
+                    'Blessed by Pope Benedetto XVI Wood Religious Bracelet with Black and White pictures Wood',
+                    'Womens Sexy Sleeveless Camouflage Print Casual High Waist Bodycon Jumpsuit Sportswear',
+                    "Sevendayz Men's Shady Records Eminem Hoodie Hoody Black Medium",
+                    "Dante's Peak - Laserdisc",
+                    'Milliongadgets(TM) Earring Safety Backs For Fish Hook Small Earrings (150)',
+                    'Envirosax Kids Series Jessie & Lulu',
+                    'Envirosax Greengrocer Series Bag 7 Guava',
+                    'Blessed by Pope Benedetto XVI Our Lady of Guadalupe Rose Scented Rosary Rosario Olor a Rosas',
+                    'Tideclothes ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns White 16',
+                    'ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns Grape 26Plus',
+                    'Syma S107C 3channel Coaxial Mini Spy Cam Helicopter (White) **MICRO SD CARD NOT INCLUDED**',
+                    'X. L. Carbon Fiber Money Clip, made in the USA',
+                    'Shimmer Anne Shine Clip On Costume/Halloween Cat Ears',
+                    'SpongeBob Squarepants Comforter - Twin']
         # for bg_product in bg_products:
         #     print(bg_product)
         #     bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin[i])})
@@ -42,20 +81,29 @@ def backcard():
         #         'totalNum': len(bg_products),
         #         'productsList': bg_products_list
         #         }, 200
+
+        for i in range(20):
+            bg_products_list.append({'productTitle': titles[i], 'productImage': address_format.img(asins[i])})
+
         return {
-                "productsList": [
-                    {
-                    "productImage": address_format.img(asin[0]),
-                    "productTitle": "womens blue popular shirts"
-                    },
-                    {
-                    "productImage": address_format.img(asin[1]),
-                    "productTitle": "Womens blue popular shirts"
-                    }
-                ],
-                "requestNum": 5,
-                "totalNum": 2
+                'requestNum': 20,
+                'totalNum': 20,
+                'productsList': bg_products_list
                 }, 200
+        # return {
+        #         "productsList": [
+        #             {
+        #             "productImage": address_format.img(asin[0]),
+        #             "productTitle": "womens blue popular shirts"
+        #             },
+        #             {
+        #             "productImage": address_format.img(asin[1]),
+        #             "productTitle": "Womens blue popular shirts"
+        #             }
+        #         ],
+        #         "requestNum": 5,
+        #         "totalNum": 2
+        #         }, 200
 
 # api 문서화-----------------------------------------------제작은 아직 안 들어감!
 
@@ -103,9 +151,6 @@ def maincard():
         '게임 50번 플레이 하면 뜨는 문구에요! 다영님 최고에요' # 50
         ]
 
-
-        asin = ['B01EGHS7RK', 'B07VRWQRQJ', 'B0815RPFNK', 'B08SWDB36C', 'B07KX22MR7',
-                'B07P13S7YR', '1593786867', 'B08GQ9N4DM', 'B08J67WJJX', 'B08HLXN153']
         # 제품 10개 안될때 예외 처리 해주기
         keywords = [['flower', 'dress', 'red', 'summer', 'womens'],
                     ['blue', 'womens', 'shirts', 'popular'],
@@ -116,22 +161,62 @@ def maincard():
                     ['you', 'might', 'not', 'understand', 'whatIM', 'typing'],
                     ['ok', 'now', 'three', 'products', 'left'],
                     ['Taro', 'milk', 'tea', 'is', 'JMT'],
+                    ['finally', 'this', 'is', 'last', 'one'],
+                    ['flower', 'dress', 'red', 'summer', 'womens'],
+                    ['blue', 'womens', 'shirts', 'popular'],
+                    ['green', 'poledance', 'top', 'sports'],
+                    ['flower', 'pink', 'winter', 'mens'],
+                    ['idk', 'what', 'to', 'type', 'anymore'],
+                    ['five', 'more', 'left', 'omg'],
+                    ['you', 'might', 'not', 'understand', 'whatIM', 'typing'],
+                    ['ok', 'now', 'three', 'products', 'left'],
+                    ['Taro', 'milk', 'tea', 'is', 'JMT'],
                     ['finally', 'this', 'is', 'last', 'one']]
 
-        titles = ['women\'s flower sundress',
-                'women\'s blue popular shirts',
-                'green poledance sports top - very popular now!',
-                'men\'s flower pink winter shoes',
-                'There are too many products here....',
-                'so now I\'m typing whatever things',
-                'I\'m doing my best so plz understand',
-                'I\'m writing this in the Gongcha',
-                'Boba tea is the love',
-                'oh yeah!!!!!!!!!!']
+        asins = ['0764443682',
+                '1291691480',
+                '1940280001',
+                '1940735033',
+                '1940967805',
+                '1942705034',
+                '3293015344',
+                '5378828716',
+                '6041002984',
+                '630456984X',
+                '7106116521',
+                '8037200124',
+                '8037200221',
+                '8279996567',
+                '9239282785',
+                '9239281533',
+                '9269808971',
+                '9654263246',
+                'B00004T3SN',
+                'B00005OTJ8']
+        titles = ['Slime Time Fall Fest [With CDROM and Collector Cards and Neutron Balls, Incredi-Ball and Glow Stick Necklace, Paper Fram',
+                    "XCC Qi promise new spider snake preparing men's accessories alloy fittings magnet buckle bracelet jewelry",
+                    'Magical Things I Really Do Do Too!',
+                    'Ashes to Ashes, Oranges to Oranges',
+                    'Aether & Empire #1 - 2016 First Printing Comic Book Special Edition - Rare! - Blue Juice Comics',
+                    '365 Affirmations for a Year of Love, Peace & Prosperity',
+                    'Blessed by Pope Benedetto XVI Wood Religious Bracelet with Black and White pictures Wood',
+                    'Womens Sexy Sleeveless Camouflage Print Casual High Waist Bodycon Jumpsuit Sportswear',
+                    "Sevendayz Men's Shady Records Eminem Hoodie Hoody Black Medium",
+                    "Dante's Peak - Laserdisc",
+                    'Milliongadgets(TM) Earring Safety Backs For Fish Hook Small Earrings (150)',
+                    'Envirosax Kids Series Jessie & Lulu',
+                    'Envirosax Greengrocer Series Bag 7 Guava',
+                    'Blessed by Pope Benedetto XVI Our Lady of Guadalupe Rose Scented Rosary Rosario Olor a Rosas',
+                    'Tideclothes ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns White 16',
+                    'ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns Grape 26Plus',
+                    'Syma S107C 3channel Coaxial Mini Spy Cam Helicopter (White) **MICRO SD CARD NOT INCLUDED**',
+                    'X. L. Carbon Fiber Money Clip, made in the USA',
+                    'Shimmer Anne Shine Clip On Costume/Halloween Cat Ears',
+                    'SpongeBob Squarepants Comforter - Twin']
 
         products_list = []
-        for i in range(10):
-            products_list.append({'keywords': keywords[i],'image': address_format.img(asin[i]), 'title': titles[i], 'asin': asin[i]})
+        for i in range(20):
+            products_list.append({'keywords': keywords[i],'image': address_format.img(asins[i]), 'title': titles[i], 'asin': asins[i]})
 
         if user_play_num == 0:
             fisrt_play = True
