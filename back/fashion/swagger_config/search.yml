@@ -1,7 +1,7 @@
 summary: "키워드 검색"
 description: "키워드 검색 api"
 tags:
-    - search
+    - main
 consumes: 
   - application/json
 produces:
