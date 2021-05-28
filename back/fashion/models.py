@@ -1,5 +1,5 @@
 from fashion import db
-from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text
+from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func, Boolean, Float
 
 class User(db.Model):  # usertable
     __tablename__ = 'user'
@@ -15,8 +15,8 @@ class User(db.Model):  # usertable
 
 
 #count가 큰 50개의 키워드를 뽑아 검색에 사용할 테이블
-class Keyword(db.Model):
-    __tablename__:'keyword'
+class SearchKeyword(db.Model):
+    __tablename__:'search_keyword'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -32,18 +32,52 @@ class Product(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     asin = Column(String(256), nullable=False)
     title = Column(Text(16000000), nullable=False)
-    brand = Column(String(1024), nullable=True)
-    price = Column(Integer, nullable=False)
-    rating = Column(Integer)
+    price = Column(Float, nullable=True)
+    rating = Column(Float, nullable=True)
     shared = Column(Integer, nullable=False, default=0)
 
 
-class Productkeyword(db.Model):
-    __tablename__:'Productkeyword'
+class ProductKeyword(db.Model):
+    __tablename__:'product_keyword'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     asin = Column(String(256), nullable=False)
+    type_keyword=Column(String(256), nullable=False)
     product_keyword = Column(Text(16000000), nullable=True)#제품키워드
-    good_review_keyword = Column(Text(16000000), nullable=True)#긍정키워드
-    bad_review_keyword = Column(Text(16000000), nullable=True)#부정키워드
+
+
+class ProductReview(db.Model):
+    __tablename__:'product_review'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    asin = Column(String(256), nullable=False)
+
+    positive_review_number = Column(Integer, nullable=False, default=0) # 긍정 리뷰 수
+    negative_review_number = Column(Integer, nullable=False, default=0) # 부정 리뷰 수
+
+    positive_review_summary = Column(Text(16000000), nullable=True) # 긍정 리뷰 요약
+    negative_review_summary = Column(Text(16000000), nullable=True) #부정 리뷰 요약
+
+
+class ProductUserPlayed(db.Model):
+    __tablename__:'product_user_played'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    asin = Column(String(256), nullable=False)
+    user_id = Column(Integer, nullable=False)
+
+    love_or_hate = Column(Boolean, nullable=False, default=0)
+
+
+class Bookmark(db.Model):
+    __tablename__:'bookmark'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    asin = Column(String(256), nullable=False)
+    user_id = Column(Integer, nullable=False)

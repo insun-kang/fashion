@@ -35,6 +35,7 @@ const ButtonStyle = styled(Button)(({ theme, styleProps }) => {
   });
 
   const styleText = (color) => ({
+    width: 'max-content',
     color: theme.palette[color].main,
     '&:hover': {
       color: theme.palette[color].lighter,

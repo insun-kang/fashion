@@ -2,7 +2,7 @@ export const validateEmail = (emailValue) => {
   let emailError;
   if (!emailValue) {
     emailError = 'Email is required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) {
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(emailValue)) {
     emailError = 'Invalid email address';
   }
   return emailError;
@@ -46,7 +46,7 @@ export const validateBirth = (birthValue) => {
   } else {
     const birth = new Date(birthValue);
     const curDate = new Date();
-    if (birth > curDate) {
+    if (birth >= curDate) {
       birthError = 'Invalid Date for Birth';
     }
   }

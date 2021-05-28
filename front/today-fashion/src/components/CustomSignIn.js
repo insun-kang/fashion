@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { validateEmail, validatePassword } from './formValidations';
+import { LinearProgress, TextField, Box } from '@material-ui/core';
+import { PCButton } from '../ui-components/@material-extend';
 
 const CustomSignIn = (props) => {
   const { handleCustomSignIn } = props;
 
   return (
     <div className="signin-container">
-      <h2>Sign In</h2>
       <div className="signin-form">
         <Formik
           initialValues={{ email: '', pw: '' }}
@@ -16,51 +17,82 @@ const CustomSignIn = (props) => {
             actions.setSubmitting(false);
           }}
         >
-          {(props) => (
+          {({ submitForm, isSubmitting }) => (
             <Form>
+              {/* <Field
+                validate={validateEmail}
+                component={TextField}
+                id="email"
+                type="text"
+                label="Email"
+                variant="outlined"
+                fullWidth
+              ></Field> */}
               <Field name="email" validate={validateEmail}>
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="email">E-mail</label>
-                    <input
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Email
+                    </p>
+                    <TextField
                       {...field}
                       id="email"
                       type="text"
-                      placeholder="e-mail"
+                      placeholder="Please Enter Your E-Mail Address"
+                      label="Email"
+                      variant="outlined"
+                      fullWidth
+                      error={
+                        form.errors.email && form.touched.email ? true : false
+                      }
+                      helperText={form.errors.email}
                     />
-                    <div className="email-error">
-                      {form.errors.email && form.touched.email
-                        ? form.errors.email
-                        : null}
-                    </div>
                   </div>
                 )}
               </Field>
+              <Box margin={2}></Box>
               <Field name="pw" validate={validatePassword}>
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="pw">Password</label>
-                    <input
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Password
+                    </p>
+                    <TextField
                       {...field}
                       id="pw"
                       type="password"
-                      placeholder="password"
+                      placeholder="Please Enter Your Password"
+                      label="Password"
+                      variant="outlined"
+                      fullWidth
+                      error={form.errors.pw && form.touched.pw ? true : false}
+                      helperText={form.errors.pw}
                     />
-                    <div className="password-error">
-                      {form.errors.pw && form.touched.pw
-                        ? form.errors.pw
-                        : null}
-                      {/* password input이 touched 되었고 + errors 값에 password의 에러가 있을때만 에러메세지를 보여준다. */}
-                    </div>
                   </div>
                 )}
               </Field>
-              <input
-                type="submit"
-                disabled={props.isSubmitting}
-                // submit 중에는 버튼 disable (같은 방식으로 loading 처리도 가능)
-                value="Sign In"
-              />
+              <Box margin={2}></Box>
+              {isSubmitting ? (
+                <LinearProgress />
+              ) : (
+                <div style={{ textAlign: 'center' }}>
+                  <PCButton
+                    variant="contained"
+                    color="primary"
+                    disabled={isSubmitting}
+                    onClick={submitForm}
+                    style={{
+                      margin: '0 auto',
+                    }}
+                  >
+                    Sign In
+                  </PCButton>
+                </div>
+              )}
             </Form>
           )}
         </Formik>
