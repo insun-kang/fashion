@@ -1,20 +1,20 @@
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const MypageNav = () => {
-  const location = useLocation();
-
   return (
     <>
-      <Link to="/mypage/withdraw">
-        <button disabled={location.pathname === '/mypage/withdraw'}>
-          withdraw
-        </button>
-      </Link>
-      <Link to="/mypage/userinfo">
-        <button disabled={location.pathname === '/mypage/userinfo'}>
-          user info
-        </button>
-      </Link>
+      <NavLink
+        to="/mypage/withdraw"
+        activeStyle={{ color: 'black', textDecoration: 'none' }}
+      >
+        withdraw
+      </NavLink>
+      <NavLink
+        to="/mypage/userinfo"
+        activeStyle={{ color: 'black', textDecoration: 'none' }}
+      >
+        user info
+      </NavLink>
     </>
   );
 };
