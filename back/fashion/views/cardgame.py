@@ -29,19 +29,18 @@ def backcard():
     else:
         body=request.get_json()
         limit_num = body['limitNum']
-        # product 테이블에 shared 추가한 것 땜에 에러 나서 주석처리해놓음
 
-        # bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
-        # bg_products_list = []
+        bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
+        bg_products_list = []
 
         asin = ['B08GMDTDBC', 'B07TN5K1TZ']
         # for bg_product in bg_products:
         #     print(bg_product)
-            # bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin[i])})
+        #     bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin[i])})
         # return {
         #         'requestNum': limit_num,
         #         'totalNum': len(bg_products),
-        #         'productsList': products_list
+        #         'productsList': bg_products_list
         #         }, 200
         return {
                 "productsList": [
@@ -79,17 +78,20 @@ def maincard():
         # 신성님 알고리즘=> 누적된 키워드 보내주면 제품 asin 보내줌(?)
         # => 알고리즘을 자세히 알아야...
         #
-        # if models.Product_user_match.query.filter_by(user_id=user_id).first():
+        # if asin in models.ProductUserPlayed.query.filter_by(user_id=user_id).all():
             # 이미 user가 본 카드는 return 안 함!
             # 새로이 제품 asin 받아오기
             # while로 돌려줘야할 듯
             # 알고리즘이 어떤 식으로 결과가 나와야 완성 가능
         # else: # 본 카드가 아니라면 결과 반환
 
-        # 게임 플레이 횟수 product-user 테이블에서 len(user가 플레이한 product 갯수) 하면 될듯
+        # 게임 플레이 횟수 ProductUserPlayed 테이블에서 len(user가 플레이한 product 갯수) 하면 될듯
+        # len(models.ProductUserPlayed.query.filter_by(user_id=user_id).all())
         # 1,2,3,5,10,20,30,40,50(문구 10개 중 돌리거나)
         # 지금은 랜덤으로 뜨게 해놓음
-        user_play_num = random.randint(0,7)
+        # len(models.ProductUserPlayed.query.filter_by(user_id=user_id).all()) == 0이면 첫 게임
+
+        user_play_num = random.randint(0,8)
         bg_sentence_list = ['당신의 스타일이면 좋아요를 눌러주세요!', # 1
         '이런 스타일은 어떠세요?', # 2
         '스타일 평가를 많이 할 수록 추천이 정확해져요!', # 3
@@ -130,7 +132,14 @@ def maincard():
         products_list = []
         for i in range(10):
             products_list.append({'keywords': keywords[i],'image': address_format.img(asin[i]), 'title': titles[i], 'asin': asin[i]})
+
+        if user_play_num == 0:
+            fisrt_play = True
+        else:
+            first_play = False
+
         return {
+            'firstPlay': first_play,
             'bgSentence': bg_sentence_list[user_play_num],
             'products': products_list
             }, 200
@@ -147,18 +156,19 @@ def maincard():
             body=request.get_json()
 
             user_id = get_jwt_identity()
+            print(user_id)
             product_asin = body['asin']
             love_or_hate = body['loveOrHate']
 
             # 아직 db 없어서 주석 처리
-            # product_user_match = models.Product_user_match(
-            #     user_id = user_id,
-            #     asin = product_asin,
-            #     love_or_hate=love_or_hate,
-            #     bookmark=False
-            # )
-            # models.db.session.add(product_user_match)
-            # models.db.session.commit()
+            product_user_played = models.ProductUserPlayed(
+                user_id = user_id,
+                asin = product_asin,
+                love_or_hate=love_or_hate,
+            )
+            models.db.session.add(product_user_played)
+            models.db.session.commit()
+
             result = {
                 'userId': user_id,
                 'productAsin': product_asin,
@@ -184,15 +194,15 @@ def result_cards():
                     {
                         'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
                         'asin': asin[0],
-                        'price': 300000,
+                        'price': 300000.00,
                         'bookmark': True,
                         'nlpResults': {
-                                            'goodReviews': ['reasonable','pretty','cute'],
-                                            'badReviews': ['small','dirty','smelly']
+                                            'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
+                                            'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
                                         },
-                        'starRating': 5,
-                        'goodReviewRating': '80%',
-                        'badReviewRating': '20%',
+                        'starRating': 3.24,
+                        'posReveiwRate': 0.50,
+                        'negReviewRate': 0.50,
                         'image': address_format.img(asin[0]),
                         'productUrl': address_format.product(asin[0]),
                         'title': 'women\'s flower sundress'
@@ -200,15 +210,15 @@ def result_cards():
                     {
                         'keywords': ['flower', 'pants', 'green', 'winter', 'womens'],
                         'asin': asin[1],
-                        'price': 1000,
+                        'price': 1000.20,
                         'bookmark': False,
                         'nlpResults': {
-                                            'goodReviews': ['clean','good quality','cute'],
-                                            'badReviews': ['expensive','not useful','ugly']
+                                            'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
+                                            'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
                                         },
-                        'starRating': 3,
-                        'goodReviewRating': '55%',
-                        'badReviewRating': '45%',
+                        'starRating': 4.05,
+                        'posReveiwRate': 0.50,
+                        'negReviewRate': 0.50,
                         'image': address_format.img(asin[1]),
                         'productUrl': address_format.product(asin[1]),
                         'title': 'women\'s flower green pants'
@@ -216,15 +226,15 @@ def result_cards():
                     {
                         'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
                         'asin': asin[2],
-                        'price': 300000,
+                        'price': 300000.00,
                         'bookmark': True,
                         'nlpResults': {
-                                        'goodReviews': ['reasonable','pretty','cute'],
-                                        'badReviews': ['small','dirty','smelly']
+                                        'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
+                                        'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
                                      },
-                        'starRating': 5,
-                        'goodReviewRating': '80%',
-                        'badReviewRating': '20%',
+                        'starRating': 5.00,
+                        'posReveiwRate': 0.50,
+                        'negReviewRate': 0.50,
                         'image': address_format.img(asin[2]),
                         'productUrl': address_format.product(asin[2]),
                         'title': 'women\'s flower sundress'

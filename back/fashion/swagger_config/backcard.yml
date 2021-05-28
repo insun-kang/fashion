@@ -27,7 +27,7 @@ responses:
             {
                 'requestNum': 5,
                 'totalNum': 0,
-                'ProductsList': {}
+                'ProductsList': []
             }
   400:
     description: Missing JSON in request

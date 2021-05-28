@@ -13,6 +13,7 @@ responses:
           type: object
           example:
             {
+              "firstPlay": False,
               "bgSentence": "게임 40번 플레이 하면 뜨는 문구에요!",
               "products": [
                 {
