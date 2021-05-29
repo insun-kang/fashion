@@ -34,7 +34,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD:back/fashion/swagger_config/modify_post.yml
               {'msg': 'Succeed to change member info', 'nickname': admin.nickname}
+=======
+              {'nickname': admin.nickname}
+>>>>>>> feature_UI/UX:back/fashion/swagger_config/modify_post.yml
   400.1:
     description: Missing JSON in request
     content:
@@ -42,7 +46,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD:back/fashion/swagger_config/modify_post.yml
             {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+=======
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
+>>>>>>> feature_UI/UX:back/fashion/swagger_config/modify_post.yml
   400.2:
     description: 회원정보 변경 실패
     content:
@@ -50,7 +58,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD:back/fashion/swagger_config/modify_post.yml
             {'errorCode': 'Failed_ChangeInfo', 'msg': 'Failed to change member info'}
+=======
+            {'errorCode': 'failed_change_info', 'msg': 'Failed to change member info'}
+>>>>>>> feature_UI/UX:back/fashion/swagger_config/modify_post.yml
 definitions:
   Modified:
     type: object

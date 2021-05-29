@@ -5,7 +5,7 @@ tags:
 produces:
 - "application/json"
 requestBody:
-        description: 유저에 관한 정보(email,pw,name,nickname,birth,gender)
+        description: 유저에 관한 정보(email,pw,name,nickname,birth)
         required: true
         content:
           application/json:
@@ -20,7 +20,10 @@ requestBody:
                   name: "강인선"
                   nickname: "강인성"
                   birth: "19950310"
+<<<<<<< HEAD
                   gender: "male"
+=======
+>>>>>>> feature_UI/UX
               case2:
                 summary: 김다인
                 value:
@@ -29,7 +32,10 @@ requestBody:
                   name: "김다인"
                   nickname: "익명이"
                   birth: "19960325"
+<<<<<<< HEAD
                   gender: "female"
+=======
+>>>>>>> feature_UI/UX
 responses:
   200:
     description: 회원가입 성공
@@ -39,7 +45,11 @@ responses:
           type: object
           example:
             {
+<<<<<<< HEAD
               'access_token': '액세스토큰',
+=======
+              'accessToken': '액세스토큰',
+>>>>>>> feature_UI/UX
               'nickname': '닉네임'
             }
   400:
@@ -49,7 +59,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+=======
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
+>>>>>>> feature_UI/UX
   400.1:
     description: 정보 중에 빠진 정보가 있음
     content:
@@ -57,7 +71,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Missing_Param', 'msg': 'Missing parameter in request'}
+=======
+            {'errorCode': 'missing_param', 'msg': 'Missing parameter in request'}
+>>>>>>> feature_UI/UX
   400.2:
     description: 이미 있는 email
     content:
@@ -65,7 +83,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Alr_Signed_email', 'msg': 'This email has already been signed up'}
+=======
+            {'errorCode': 'alr_signed_email', 'msg': 'This email has already been signed up'}
+>>>>>>> feature_UI/UX
   400.3:
     description: 이미 있는 닉네임
     content:
@@ -73,7 +95,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Alr_Signed_nickname', 'msg': 'This nickname has already been signed up'}
+=======
+            {'errorCode': 'alr_signed_nickname', 'msg': 'This nickname has already been signed up'}
+>>>>>>> feature_UI/UX
   400.4:
     description: 비밀번호 에러 - 8자 이상 & 숫자+영문+특수문자 포함
     content:
@@ -81,7 +107,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Invalid_pw', 'msg': 'Password must contain at least one number digit, one special character, one English character,and be at least 8 characters'}
+=======
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one number digit, one special character, one English character,and be at least 8 characters'}
+>>>>>>> feature_UI/UX
   400.5:
     description: 비밀번호 에러 - 특수문자 없음
     content:
@@ -89,7 +119,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Invalid_pw', 'msg': 'Password must contain at least one special character'}
+=======
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one special character'}
+>>>>>>> feature_UI/UX
 definitions:
   User:
     type: object
@@ -99,7 +133,6 @@ definitions:
       - name
       - nickname
       - birth
-      - gender
     properties:
       email:
         type: string
@@ -110,6 +143,4 @@ definitions:
       nickname:
         type: string
       birth:
-        type: string
-      gender:
         type: string

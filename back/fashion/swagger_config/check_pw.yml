@@ -28,7 +28,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+=======
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
+>>>>>>> feature_UI/UX
   400.1:
     description: 패스워드 입력 안 함
     content:
@@ -36,7 +40,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}
+=======
+            {'errorCode': 'missing_pw', 'msg': 'Missing password in request'}
+>>>>>>> feature_UI/UX
   400.2:
     description: 패스워드 부정확함
     content:
@@ -44,7 +52,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}
+=======
+            {'errorCode': 'incorrect_pw', 'msg': 'Incorrect Password'}
+>>>>>>> feature_UI/UX
 definitions:
   Checkpw:
     type: object

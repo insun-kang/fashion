@@ -33,7 +33,11 @@ responses:
           type: object
           example:
             {
+<<<<<<< HEAD
               "access_token": "액세스 토큰 내용",
+=======
+              "accessToken": "액세스 토큰 내용",
+>>>>>>> feature_UI/UX
               "nickname": "강인성"
             }
   400:
@@ -43,7 +47,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+=======
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
+>>>>>>> feature_UI/UX
   400.1:
     description: 존재하지 않는 회원
     content:
@@ -51,7 +59,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Not_Exists', 'msg': 'This member does not exist'}
+=======
+            {'errorCode': 'not_exists', 'msg': 'This member does not exist'}
+>>>>>>> feature_UI/UX
   400.2:
     description: 이메일 입력 안함
     content:
@@ -59,7 +71,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Missing_email', 'msg': 'Missing email in request'}
+=======
+            {'errorCode': 'missing_email', 'msg': 'Missing email in request'}
+>>>>>>> feature_UI/UX
   400.3:
     description: 비밀번호 입력 안함
     content:
@@ -67,7 +83,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}
+=======
+            {'errorCode': 'missing_pw', 'msg': 'Missing password in request'}
+>>>>>>> feature_UI/UX
   400.4:
     description: 틀린 비밀번호
     content:
@@ -75,7 +95,11 @@ responses:
         schema:
           type: object
           example:
+<<<<<<< HEAD
             {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}
+=======
+            {'errorCode': 'incorrect_pw', 'msg': 'Incorrect Password'}
+>>>>>>> feature_UI/UX
 definitions:
   Login:
     type: object

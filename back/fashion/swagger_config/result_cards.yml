@@ -13,6 +13,7 @@ responses:
           type: object
           example:
             {
+<<<<<<< HEAD
               "msg": "사용자 취향 맞춤 제품들 반환 성공",
               "products": [
                 {
@@ -24,16 +25,39 @@ responses:
                   "keyword": "flower, dress, red, summer, womens",
                   "nlp_result": {
                     "bad_review": [
+=======
+              "products": [
+                {
+                  "asin": "B00HGRB3CE",
+                  "badReviewRating": "20%",
+                  "bookmark": true,
+                  "goodReviewRating": "80%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HGRB3CE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
+>>>>>>> feature_UI/UX
                       "small",
                       "dirty",
                       "smelly"
                     ],
+<<<<<<< HEAD
                     "good_review": [
+=======
+                    "goodReviews": [
+>>>>>>> feature_UI/UX
                       "reasonable",
                       "pretty",
                       "cute"
                     ]
                   },
+<<<<<<< HEAD
                   "price": "300,000",
                   "product_url": "https://www.amazon.com/dp/B00007GDFV",
                   "star_rating": "5.0",
@@ -48,16 +72,43 @@ responses:
                   "keyword": "flower, pants, green, winter, womens",
                   "nlp_result": {
                     "bad_review": [
+=======
+                  "price": 300000,
+                  "productUrl": "https://www.amazon.com/dp/B00HGRB3CE",
+                  "starRating": 5,
+                  "title": "women's flower sundress"
+                },
+                {
+                  "asin": "B07PGCYWRJ",
+                  "badReviewRating": "45%",
+                  "bookmark": false,
+                  "goodReviewRating": "55%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07PGCYWRJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "pants",
+                    "green",
+                    "winter",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
+>>>>>>> feature_UI/UX
                       "expensive",
                       "not useful",
                       "ugly"
                     ],
+<<<<<<< HEAD
                     "good_review": [
+=======
+                    "goodReviews": [
+>>>>>>> feature_UI/UX
                       "clean",
                       "good quality",
                       "cute"
                     ]
                   },
+<<<<<<< HEAD
                   "price": "1,000",
                   "product_url": "https://www.amazon.com/dp/B00007GDFV",
                   "star_rating": "3.5",
@@ -72,16 +123,43 @@ responses:
                   "keyword": "flower, dress, red, summer, womens",
                   "nlp_result": {
                     "bad_review": [
+=======
+                  "price": 1000,
+                  "productUrl": "https://www.amazon.com/dp/B07PGCYWRJ",
+                  "starRating": 3,
+                  "title": "women's flower green pants"
+                },
+                {
+                  "asin": "1975421663",
+                  "badReviewRating": "20%",
+                  "bookmark": true,
+                  "goodReviewRating": "80%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1975421663&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "nlpResults": {
+                    "badReviews": [
+>>>>>>> feature_UI/UX
                       "small",
                       "dirty",
                       "smelly"
                     ],
+<<<<<<< HEAD
                     "good_review": [
+=======
+                    "goodReviews": [
+>>>>>>> feature_UI/UX
                       "reasonable",
                       "pretty",
                       "cute"
                     ]
                   },
+<<<<<<< HEAD
                   "price": "300,000",
                   "product_url": "https://www.amazon.com/dp/B00007GDFV",
                   "star_rating": "5.0",
@@ -92,5 +170,23 @@ responses:
             }
   400:
     description: There's no recommendation for user at all
+=======
+                  "price": 300000,
+                  "productUrl": "https://www.amazon.com/dp/1975421663",
+                  "starRating": 5,
+                  "title": "women's flower sundress"
+                }
+              ],
+              "productsNum": 3
+            }
+  400:
+    description: 알고리즘으로부터 추천 결과가 없는 경우
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'no_result','msg': "There's no recommendation for user at all"}
+>>>>>>> feature_UI/UX
 security:
   - ApiKeyAuth: []
