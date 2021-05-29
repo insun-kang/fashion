@@ -1,7 +1,7 @@
 summary: "회원정보가져오기"
 description: "마이페이지 유저정보 읽어오기 api"
 tags:
-    - mypage
+  - mypage
 responses:
   200:
     description: 성공적으로 접근했습니다
@@ -13,16 +13,9 @@ responses:
             {
               "birth": "Fri, 10 Mar 1995 00:00:00 GMT",
               "email": "sunink1@naver.com",
-<<<<<<< HEAD
-              "gender": "남",
               "name": "강인선",
               "nickname": "강인성",
-              "sign_up_date": "Thu, 20 May 2021 00:00:00 GMT"
-=======
-              "name": "강인선",
-              "nickname": "강인성",
-              "signUpDate": "Thu, 20 May 2021 00:00:00 GMT"
->>>>>>> feature_UI/UX
+              "signUpDate": "Thu, 20 May 2021 00:00:00 GMT",
             }
 security:
   - ApiKeyAuth: []
