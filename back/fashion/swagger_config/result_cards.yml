@@ -1,0 +1,96 @@
+summary: "결과카드"
+description: "결과카드 get api: 유저에게 추천 정보 인공지능으로 나오는 수만큼 반환"
+tags:
+    - cardgame
+produces:
+- "application/json"
+responses:
+  200:
+    description: ok
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "msg": "사용자 취향 맞춤 제품들 반환 성공",
+              "products": [
+                {
+                  "asin": "B00007GDFV",
+                  "bad_review_rating": "20%",
+                  "bookmarks": true,
+                  "good_review_rating": "80%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keyword": "flower, dress, red, summer, womens",
+                  "nlp_result": {
+                    "bad_review": [
+                      "small",
+                      "dirty",
+                      "smelly"
+                    ],
+                    "good_review": [
+                      "reasonable",
+                      "pretty",
+                      "cute"
+                    ]
+                  },
+                  "price": "300,000",
+                  "product_url": "https://www.amazon.com/dp/B00007GDFV",
+                  "star_rating": "5.0",
+                  "title": "women's flower sundress"
+                },
+                {
+                  "asin": "B00007GDFV",
+                  "bad_review_rating": "45%",
+                  "bookmarks": false,
+                  "good_review_rating": "55%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keyword": "flower, pants, green, winter, womens",
+                  "nlp_result": {
+                    "bad_review": [
+                      "expensive",
+                      "not useful",
+                      "ugly"
+                    ],
+                    "good_review": [
+                      "clean",
+                      "good quality",
+                      "cute"
+                    ]
+                  },
+                  "price": "1,000",
+                  "product_url": "https://www.amazon.com/dp/B00007GDFV",
+                  "star_rating": "3.5",
+                  "title": "women's flower green pants"
+                },
+                {
+                  "asin": "B00007GDFV",
+                  "bad_review_rating": "20%",
+                  "bookmarks": true,
+                  "good_review_rating": "80%",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00007GDFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keyword": "flower, dress, red, summer, womens",
+                  "nlp_result": {
+                    "bad_review": [
+                      "small",
+                      "dirty",
+                      "smelly"
+                    ],
+                    "good_review": [
+                      "reasonable",
+                      "pretty",
+                      "cute"
+                    ]
+                  },
+                  "price": "300,000",
+                  "product_url": "https://www.amazon.com/dp/B00007GDFV",
+                  "star_rating": "5.0",
+                  "title": "women's flower sundress"
+                }
+              ],
+              "products_num": 3
+            }
+  400:
+    description: There's no recommendation for user at all
+security:
+  - ApiKeyAuth: []
