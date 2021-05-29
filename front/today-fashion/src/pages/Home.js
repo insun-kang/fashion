@@ -129,15 +129,12 @@ const Home = ({ location, history }) => {
           TransitionComponent={Transition}
           keepMounted
           onClose={openSignIn}
-          aria-labelledby="alert-dialog-slide-title"
-          aria-describedby="alert-dialog-slide-description"
-          style={{ marginTop: '40vh', textAlign: 'center' }}
+          style={{ marginTop: '37vh' }}
         >
           <DialogTitle
             id="alert-dialog-slide-title"
             style={{
               textAlign: 'center',
-              width: '20vw',
               marginTop: '1rem',
               marginBottom: '2rem',
             }}

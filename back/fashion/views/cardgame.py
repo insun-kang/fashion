@@ -29,34 +29,81 @@ def backcard():
     else:
         body=request.get_json()
         limit_num = body['limitNum']
-        # product 테이블에 shared 추가한 것 땜에 에러 나서 주석처리해놓음
 
-        # bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
-        # bg_products_list = []
+        bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
+        bg_products_list = []
 
-        asin = ['B08GMDTDBC', 'B07TN5K1TZ']
+        asins = ['0764443682',
+                '1291691480',
+                '1940280001',
+                '1940735033',
+                '1940967805',
+                '1942705034',
+                '3293015344',
+                '5378828716',
+                '6041002984',
+                '630456984X',
+                '7106116521',
+                '8037200124',
+                '8037200221',
+                '8279996567',
+                '9239282785',
+                '9239281533',
+                '9269808971',
+                '9654263246',
+                'B00004T3SN',
+                'B00005OTJ8']
+        titles = ['Slime Time Fall Fest [With CDROM and Collector Cards and Neutron Balls, Incredi-Ball and Glow Stick Necklace, Paper Fram',
+                    "XCC Qi promise new spider snake preparing men's accessories alloy fittings magnet buckle bracelet jewelry",
+                    'Magical Things I Really Do Do Too!',
+                    'Ashes to Ashes, Oranges to Oranges',
+                    'Aether & Empire #1 - 2016 First Printing Comic Book Special Edition - Rare! - Blue Juice Comics',
+                    '365 Affirmations for a Year of Love, Peace & Prosperity',
+                    'Blessed by Pope Benedetto XVI Wood Religious Bracelet with Black and White pictures Wood',
+                    'Womens Sexy Sleeveless Camouflage Print Casual High Waist Bodycon Jumpsuit Sportswear',
+                    "Sevendayz Men's Shady Records Eminem Hoodie Hoody Black Medium",
+                    "Dante's Peak - Laserdisc",
+                    'Milliongadgets(TM) Earring Safety Backs For Fish Hook Small Earrings (150)',
+                    'Envirosax Kids Series Jessie & Lulu',
+                    'Envirosax Greengrocer Series Bag 7 Guava',
+                    'Blessed by Pope Benedetto XVI Our Lady of Guadalupe Rose Scented Rosary Rosario Olor a Rosas',
+                    'Tideclothes ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns White 16',
+                    'ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns Grape 26Plus',
+                    'Syma S107C 3channel Coaxial Mini Spy Cam Helicopter (White) **MICRO SD CARD NOT INCLUDED**',
+                    'X. L. Carbon Fiber Money Clip, made in the USA',
+                    'Shimmer Anne Shine Clip On Costume/Halloween Cat Ears',
+                    'SpongeBob Squarepants Comforter - Twin']
         # for bg_product in bg_products:
         #     print(bg_product)
-            # bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin[i])})
+        #     bg_products_list.append({'productTitle': bg_product.title, 'productImage': address_format.img(asin[i])})
         # return {
         #         'requestNum': limit_num,
         #         'totalNum': len(bg_products),
-        #         'productsList': products_list
+        #         'productsList': bg_products_list
         #         }, 200
+
+        for i in range(20):
+            bg_products_list.append({'productTitle': titles[i], 'productImage': address_format.img(asins[i])})
+
         return {
-                "productsList": [
-                    {
-                    "productImage": address_format.img(asin[0]),
-                    "productTitle": "womens blue popular shirts"
-                    },
-                    {
-                    "productImage": address_format.img(asin[1]),
-                    "productTitle": "Womens blue popular shirts"
-                    }
-                ],
-                "requestNum": 5,
-                "totalNum": 2
+                'requestNum': 20,
+                'totalNum': 20,
+                'productsList': bg_products_list
                 }, 200
+        # return {
+        #         "productsList": [
+        #             {
+        #             "productImage": address_format.img(asin[0]),
+        #             "productTitle": "womens blue popular shirts"
+        #             },
+        #             {
+        #             "productImage": address_format.img(asin[1]),
+        #             "productTitle": "Womens blue popular shirts"
+        #             }
+        #         ],
+        #         "requestNum": 5,
+        #         "totalNum": 2
+        #         }, 200
 
 # api 문서화-----------------------------------------------제작은 아직 안 들어감!
 
@@ -79,17 +126,20 @@ def maincard():
         # 신성님 알고리즘=> 누적된 키워드 보내주면 제품 asin 보내줌(?)
         # => 알고리즘을 자세히 알아야...
         #
-        # if models.Product_user_match.query.filter_by(user_id=user_id).first():
+        # if asin in models.ProductUserPlayed.query.filter_by(user_id=user_id).all():
             # 이미 user가 본 카드는 return 안 함!
             # 새로이 제품 asin 받아오기
             # while로 돌려줘야할 듯
             # 알고리즘이 어떤 식으로 결과가 나와야 완성 가능
         # else: # 본 카드가 아니라면 결과 반환
 
-        # 게임 플레이 횟수 product-user 테이블에서 len(user가 플레이한 product 갯수) 하면 될듯
+        # 게임 플레이 횟수 ProductUserPlayed 테이블에서 len(user가 플레이한 product 갯수) 하면 될듯
+        # len(models.ProductUserPlayed.query.filter_by(user_id=user_id).all())
         # 1,2,3,5,10,20,30,40,50(문구 10개 중 돌리거나)
         # 지금은 랜덤으로 뜨게 해놓음
-        user_play_num = random.randint(0,7)
+        # len(models.ProductUserPlayed.query.filter_by(user_id=user_id).all()) == 0이면 첫 게임
+
+        user_play_num = random.randint(0,8)
         bg_sentence_list = ['당신의 스타일이면 좋아요를 눌러주세요!', # 1
         '이런 스타일은 어떠세요?', # 2
         '스타일 평가를 많이 할 수록 추천이 정확해져요!', # 3
@@ -101,9 +151,6 @@ def maincard():
         '게임 50번 플레이 하면 뜨는 문구에요! 다영님 최고에요' # 50
         ]
 
-
-        asin = ['B01EGHS7RK', 'B07VRWQRQJ', 'B0815RPFNK', 'B08SWDB36C', 'B07KX22MR7',
-                'B07P13S7YR', '1593786867', 'B08GQ9N4DM', 'B08J67WJJX', 'B08HLXN153']
         # 제품 10개 안될때 예외 처리 해주기
         keywords = [['flower', 'dress', 'red', 'summer', 'womens'],
                     ['blue', 'womens', 'shirts', 'popular'],
@@ -114,23 +161,70 @@ def maincard():
                     ['you', 'might', 'not', 'understand', 'whatIM', 'typing'],
                     ['ok', 'now', 'three', 'products', 'left'],
                     ['Taro', 'milk', 'tea', 'is', 'JMT'],
+                    ['finally', 'this', 'is', 'last', 'one'],
+                    ['flower', 'dress', 'red', 'summer', 'womens'],
+                    ['blue', 'womens', 'shirts', 'popular'],
+                    ['green', 'poledance', 'top', 'sports'],
+                    ['flower', 'pink', 'winter', 'mens'],
+                    ['idk', 'what', 'to', 'type', 'anymore'],
+                    ['five', 'more', 'left', 'omg'],
+                    ['you', 'might', 'not', 'understand', 'whatIM', 'typing'],
+                    ['ok', 'now', 'three', 'products', 'left'],
+                    ['Taro', 'milk', 'tea', 'is', 'JMT'],
                     ['finally', 'this', 'is', 'last', 'one']]
 
-        titles = ['women\'s flower sundress',
-                'women\'s blue popular shirts',
-                'green poledance sports top - very popular now!',
-                'men\'s flower pink winter shoes',
-                'There are too many products here....',
-                'so now I\'m typing whatever things',
-                'I\'m doing my best so plz understand',
-                'I\'m writing this in the Gongcha',
-                'Boba tea is the love',
-                'oh yeah!!!!!!!!!!']
+        asins = ['0764443682',
+                '1291691480',
+                '1940280001',
+                '1940735033',
+                '1940967805',
+                '1942705034',
+                '3293015344',
+                '5378828716',
+                '6041002984',
+                '630456984X',
+                '7106116521',
+                '8037200124',
+                '8037200221',
+                '8279996567',
+                '9239282785',
+                '9239281533',
+                '9269808971',
+                '9654263246',
+                'B00004T3SN',
+                'B00005OTJ8']
+        titles = ['Slime Time Fall Fest [With CDROM and Collector Cards and Neutron Balls, Incredi-Ball and Glow Stick Necklace, Paper Fram',
+                    "XCC Qi promise new spider snake preparing men's accessories alloy fittings magnet buckle bracelet jewelry",
+                    'Magical Things I Really Do Do Too!',
+                    'Ashes to Ashes, Oranges to Oranges',
+                    'Aether & Empire #1 - 2016 First Printing Comic Book Special Edition - Rare! - Blue Juice Comics',
+                    '365 Affirmations for a Year of Love, Peace & Prosperity',
+                    'Blessed by Pope Benedetto XVI Wood Religious Bracelet with Black and White pictures Wood',
+                    'Womens Sexy Sleeveless Camouflage Print Casual High Waist Bodycon Jumpsuit Sportswear',
+                    "Sevendayz Men's Shady Records Eminem Hoodie Hoody Black Medium",
+                    "Dante's Peak - Laserdisc",
+                    'Milliongadgets(TM) Earring Safety Backs For Fish Hook Small Earrings (150)',
+                    'Envirosax Kids Series Jessie & Lulu',
+                    'Envirosax Greengrocer Series Bag 7 Guava',
+                    'Blessed by Pope Benedetto XVI Our Lady of Guadalupe Rose Scented Rosary Rosario Olor a Rosas',
+                    'Tideclothes ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns White 16',
+                    'ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns Grape 26Plus',
+                    'Syma S107C 3channel Coaxial Mini Spy Cam Helicopter (White) **MICRO SD CARD NOT INCLUDED**',
+                    'X. L. Carbon Fiber Money Clip, made in the USA',
+                    'Shimmer Anne Shine Clip On Costume/Halloween Cat Ears',
+                    'SpongeBob Squarepants Comforter - Twin']
 
         products_list = []
-        for i in range(10):
-            products_list.append({'keywords': keywords[i],'image': address_format.img(asin[i]), 'title': titles[i], 'asin': asin[i]})
+        for i in range(20):
+            products_list.append({'keywords': keywords[i],'image': address_format.img(asins[i]), 'title': titles[i], 'asin': asins[i]})
+
+        if user_play_num == 0:
+            fisrt_play = True
+        else:
+            first_play = False
+
         return {
+            'firstPlay': first_play,
             'bgSentence': bg_sentence_list[user_play_num],
             'products': products_list
             }, 200
@@ -147,18 +241,19 @@ def maincard():
             body=request.get_json()
 
             user_id = get_jwt_identity()
+            print(user_id)
             product_asin = body['asin']
             love_or_hate = body['loveOrHate']
 
             # 아직 db 없어서 주석 처리
-            # product_user_match = models.Product_user_match(
-            #     user_id = user_id,
-            #     asin = product_asin,
-            #     love_or_hate=love_or_hate,
-            #     bookmark=False
-            # )
-            # models.db.session.add(product_user_match)
-            # models.db.session.commit()
+            product_user_played = models.ProductUserPlayed(
+                user_id = user_id,
+                asin = product_asin,
+                love_or_hate=love_or_hate,
+            )
+            models.db.session.add(product_user_played)
+            models.db.session.commit()
+
             result = {
                 'userId': user_id,
                 'productAsin': product_asin,
@@ -184,15 +279,15 @@ def result_cards():
                     {
                         'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
                         'asin': asin[0],
-                        'price': 300000,
+                        'price': 300000.00,
                         'bookmark': True,
                         'nlpResults': {
-                                            'goodReviews': ['reasonable','pretty','cute'],
-                                            'badReviews': ['small','dirty','smelly']
+                                            'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
+                                            'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
                                         },
-                        'starRating': 5,
-                        'goodReviewRating': '80%',
-                        'badReviewRating': '20%',
+                        'starRating': 3.24,
+                        'posReveiwRate': 0.50,
+                        'negReviewRate': 0.50,
                         'image': address_format.img(asin[0]),
                         'productUrl': address_format.product(asin[0]),
                         'title': 'women\'s flower sundress'
@@ -200,15 +295,15 @@ def result_cards():
                     {
                         'keywords': ['flower', 'pants', 'green', 'winter', 'womens'],
                         'asin': asin[1],
-                        'price': 1000,
+                        'price': 1000.20,
                         'bookmark': False,
                         'nlpResults': {
-                                            'goodReviews': ['clean','good quality','cute'],
-                                            'badReviews': ['expensive','not useful','ugly']
+                                            'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
+                                            'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
                                         },
-                        'starRating': 3,
-                        'goodReviewRating': '55%',
-                        'badReviewRating': '45%',
+                        'starRating': 4.05,
+                        'posReveiwRate': 0.50,
+                        'negReviewRate': 0.50,
                         'image': address_format.img(asin[1]),
                         'productUrl': address_format.product(asin[1]),
                         'title': 'women\'s flower green pants'
@@ -216,15 +311,15 @@ def result_cards():
                     {
                         'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
                         'asin': asin[2],
-                        'price': 300000,
+                        'price': 300000.00,
                         'bookmark': True,
                         'nlpResults': {
-                                        'goodReviews': ['reasonable','pretty','cute'],
-                                        'badReviews': ['small','dirty','smelly']
+                                        'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
+                                        'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
                                      },
-                        'starRating': 5,
-                        'goodReviewRating': '80%',
-                        'badReviewRating': '20%',
+                        'starRating': 5.00,
+                        'posReveiwRate': 0.50,
+                        'negReviewRate': 0.50,
                         'image': address_format.img(asin[2]),
                         'productUrl': address_format.product(asin[2]),
                         'title': 'women\'s flower sundress'

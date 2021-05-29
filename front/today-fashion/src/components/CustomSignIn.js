@@ -19,15 +19,6 @@ const CustomSignIn = (props) => {
         >
           {({ submitForm, isSubmitting }) => (
             <Form>
-              {/* <Field
-                validate={validateEmail}
-                component={TextField}
-                id="email"
-                type="text"
-                label="Email"
-                variant="outlined"
-                fullWidth
-              ></Field> */}
               <Field name="email" validate={validateEmail}>
                 {({ field, form }) => (
                   <div>
@@ -75,7 +66,7 @@ const CustomSignIn = (props) => {
                   </div>
                 )}
               </Field>
-              <Box margin={2}></Box>
+              <Box margin={4}></Box>
               {isSubmitting ? (
                 <LinearProgress />
               ) : (
