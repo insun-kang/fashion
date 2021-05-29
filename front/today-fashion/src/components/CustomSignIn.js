@@ -38,7 +38,11 @@ const CustomSignIn = (props) => {
                       error={
                         form.errors.email && form.touched.email ? true : false
                       }
-                      helperText={form.errors.email}
+                      helperText={
+                        form.errors.email && form.touched.email
+                          ? form.errors.email
+                          : null
+                      }
                     />
                   </div>
                 )}
@@ -61,7 +65,11 @@ const CustomSignIn = (props) => {
                       variant="outlined"
                       fullWidth
                       error={form.errors.pw && form.touched.pw ? true : false}
-                      helperText={form.errors.pw}
+                      helperText={
+                        form.errors.pw && form.touched.pw
+                          ? form.errors.pw
+                          : null
+                      }
                     />
                   </div>
                 )}

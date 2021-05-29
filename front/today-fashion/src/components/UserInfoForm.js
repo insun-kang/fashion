@@ -102,7 +102,11 @@ const UserInfoForm = (props) => {
                       error={
                         form.errors.name && form.touched.name ? true : false
                       }
-                      helperText={form.errors.name}
+                      helperText={
+                        form.errors.name && form.touched.name
+                          ? form.errors.name
+                          : null
+                      }
                     />
                   </div>
                 )}
@@ -127,7 +131,11 @@ const UserInfoForm = (props) => {
                       error={
                         form.errors.email && form.touched.email ? true : false
                       }
-                      helperText={form.errors.email}
+                      helperText={
+                        form.errors.email && form.touched.email
+                          ? form.errors.email
+                          : null
+                      }
                     />
                   </div>
                 )}
@@ -150,7 +158,11 @@ const UserInfoForm = (props) => {
                       variant="outlined"
                       fullWidth
                       error={form.errors.pw && form.touched.pw ? true : false}
-                      helperText={form.errors.pw}
+                      helperText={
+                        form.errors.pw && form.touched.pw
+                          ? form.errors.pw
+                          : null
+                      }
                     />
                   </div>
                 )}
@@ -177,7 +189,11 @@ const UserInfoForm = (props) => {
                           ? true
                           : false
                       }
-                      helperText={form.errors.confirmPw}
+                      helperText={
+                        form.errors.confirmPw && form.touched.confirmPw
+                          ? form.errors.confirmPw
+                          : null
+                      }
                     />
                   </div>
                 )}
@@ -204,7 +220,11 @@ const UserInfoForm = (props) => {
                           ? true
                           : false
                       }
-                      helperText={form.errors.nickname}
+                      helperText={
+                        form.errors.nickname && form.touched.nickname
+                          ? form.errors.nickname
+                          : null
+                      }
                     />
                   </div>
                 )}
@@ -227,16 +247,16 @@ const UserInfoForm = (props) => {
                         orientation="landscape"
                         openTo="day"
                         value={form.values.birth}
+                        helperText={
+                          form.errors.birth && form.touched.birth
+                            ? form.errors.birth
+                            : null
+                        }
                         onChange={(date) =>
                           form.setValues({ ...form.values, birth: date })
                         }
                         renderInput={(params) => <TextField {...params} />}
                       />
-                      <div className="birth-error">
-                        {form.errors.birth && form.touched.birth
-                          ? form.errors.birth
-                          : null}
-                      </div>
                     </div>
                   )}
                 </Field>
