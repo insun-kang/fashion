@@ -1,43 +1,27 @@
 summary: "메인카드 post"
 description: "메인카드 post api: 유저가 본 상품을 좋아요 했는지 싫어요 했는지 저장"
 tags:
-    - cardgame
+  - cardgame
 produces:
-- "application/json"
+  - "application/json"
 requestBody:
-<<<<<<< HEAD
-        description: 유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부
-=======
-        description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:1, 싫어요: 0)"
->>>>>>> feature_UI/UX
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/Maincard'
-            examples:
-              case1:
-                summary: 강인선
-                value:
-<<<<<<< HEAD
-                  user_id: "1"
-                  asin: "1234567"
-                  love_or_hate: 1
-              case2:
-                summary: 김다인
-                value:
-                  user_id: "2"
-                  asin: "1023658"
-                  love_or_hate: 0
-=======
-                  asin: "1234567"
-                  loveOrHate: 1
-              case2:
-                summary: 김다인
-                value:
-                  asin: "1023658"
-                  loveOrHate: 0
->>>>>>> feature_UI/UX
+  description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:1, 싫어요: 0)"
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "#/definitions/Maincard"
+      examples:
+        case1:
+          summary: 강인선
+          value:
+            asin: "1234567"
+            loveOrHate: 1
+        case2:
+          summary: 김다인
+          value:
+            asin: "1023658"
+            loveOrHate: 0
 responses:
   200:
     description: OK
@@ -47,19 +31,8 @@ responses:
           type: object
           example:
             {
-<<<<<<< HEAD
-              "msg": "결과 db 추가 성공",
-              "result": {
-                "love_or_hate": 1,
-                "product_asin": "1234567",
-                "user_id": "1"
-=======
-              "result": {
-                "loveOrHate": 1,
-                "productAsin": "B00007GDFV",
-                "userId": "1"
->>>>>>> feature_UI/UX
-              }
+              "result":
+                { "loveOrHate": 1, "productAsin": "B00007GDFV", "userId": "1" },
             }
   400:
     description: Missing JSON in request
@@ -68,26 +41,11 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
-=======
-            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
->>>>>>> feature_UI/UX
+            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
 definitions:
   Maincard:
     type: object
     required:
-<<<<<<< HEAD
-      - user_id
-      - asin
-      - love_or_hate
-    properties:
-      user_id:
-        type: string
-      asin:
-        type: string
-      love_or_hate:
-=======
       - userId
       - asin
       - loveOrHate
@@ -97,7 +55,6 @@ definitions:
       asin:
         type: string
       loveOrHate:
->>>>>>> feature_UI/UX
         type: boolean
 security:
   - ApiKeyAuth: []
