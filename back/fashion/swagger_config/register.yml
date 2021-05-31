@@ -5,29 +5,29 @@ tags:
 produces:
   - "application/json"
 requestBody:
-  description: 유저에 관한 정보(email,pw,name,nickname,birth)
-  required: true
-  content:
-    application/json:
-      schema:
-        $ref: "#/definitions/User"
-      examples:
-        case1:
-          summary: 강인선
-          value:
-            email: "sunink1@naver.com"
-            pw: "qwer!@6789"
-            name: "강인선"
-            nickname: "강인성"
-            birth: "19950310"
-        case2:
-          summary: 김다인
-          value:
-            email: "dainlinda@naver.com"
-            pw: "dainlinda!@1234"
-            name: "김다인"
-            nickname: "익명이"
-            birth: "19960325"
+        description: 유저에 관한 정보(email,pw,name,nickname,birth)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/User'
+            examples:
+              case1:
+                summary: 강인선
+                value:
+                  email: "sunink1@naver.com"
+                  pw: "qwer!@6789"
+                  name: "강인선"
+                  nickname: "강인성"
+                  birth: "19950310"
+              case2:
+                summary: 김다인
+                value:
+                  email: "dainlinda@naver.com"
+                  pw: "dainlinda!@1234"
+                  name: "김다인"
+                  nickname: "익명이"
+                  birth: "19960325"
 responses:
   200:
     description: 회원가입 성공
@@ -35,7 +35,11 @@ responses:
       application/json:
         schema:
           type: object
-          example: { "accessToken": "액세스토큰", "nickname": "닉네임" }
+          example:
+            {
+              'accessToken': '액세스토큰',
+              'nickname': '닉네임'
+            }
   400:
     description: Missing JSON in request
     content:
@@ -43,7 +47,7 @@ responses:
         schema:
           type: object
           example:
-            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
   400.1:
     description: 정보 중에 빠진 정보가 있음
     content:
@@ -51,10 +55,7 @@ responses:
         schema:
           type: object
           example:
-            {
-              "errorCode": "missing_param",
-              "msg": "Missing parameter in request",
-            }
+            {'errorCode': 'missing_param', 'msg': 'Missing parameter in request'}
   400.2:
     description: 이미 있는 email
     content:
@@ -62,10 +63,7 @@ responses:
         schema:
           type: object
           example:
-            {
-              "errorCode": "alr_signed_email",
-              "msg": "This email has already been signed up",
-            }
+            {'errorCode': 'alr_signed_email', 'msg': 'This email has already been signed up'}
   400.3:
     description: 이미 있는 닉네임
     content:
@@ -73,10 +71,7 @@ responses:
         schema:
           type: object
           example:
-            {
-              "errorCode": "alr_signed_nickname",
-              "msg": "This nickname has already been signed up",
-            }
+            {'errorCode': 'alr_signed_nickname', 'msg': 'This nickname has already been signed up'}
   400.4:
     description: 비밀번호 에러 - 8자 이상 & 숫자+영문+특수문자 포함
     content:
@@ -84,10 +79,7 @@ responses:
         schema:
           type: object
           example:
-            {
-              "errorCode": "invalid_pw",
-              "msg": "Password must contain at least one number digit, one special character, one English character,and be at least 8 characters",
-            }
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one number digit, one special character, one English character,and be at least 8 characters'}
   400.5:
     description: 비밀번호 에러 - 특수문자 없음
     content:
@@ -95,10 +87,7 @@ responses:
         schema:
           type: object
           example:
-            {
-              "errorCode": "invalid_pw",
-              "msg": "Password must contain at least one special character",
-            }
+            {'errorCode': 'invalid_pw', 'msg': 'Password must contain at least one special character'}
 definitions:
   User:
     type: object
