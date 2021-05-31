@@ -1,7 +1,7 @@
 summary: "회원정보가져오기"
 description: "마이페이지 유저정보 읽어오기 api"
 tags:
-    - mypage
+  - mypage
 responses:
   200:
     description: 성공적으로 접근했습니다

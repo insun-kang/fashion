@@ -41,6 +41,33 @@ responses:
       application/json:
         schema:
           type: object
+          example: { "keywords": [], "msg": "You haven't entered anything" }
+  200.1:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            { "keywords": [], "msg": "No results were found for your search" }
+  200.2:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "keywords":
+                ["shawl", "shirt", "shoe", "shoes", "sholder", "short"],
+              "msg": "success",
+            }
+  200.3:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
           example:
             {
               "keywords": [

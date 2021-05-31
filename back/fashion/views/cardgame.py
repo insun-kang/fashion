@@ -214,9 +214,19 @@ def maincard():
                     'Shimmer Anne Shine Clip On Costume/Halloween Cat Ears',
                     'SpongeBob Squarepants Comforter - Twin']
 
-        products_list = []
-        for i in range(20):
-            products_list.append({'keywords': keywords[i],'image': address_format.img(asins[i]), 'title': titles[i], 'asin': asins[i]})
+        # products_list = []
+        # for i in range(20):
+            # products_list.append({'keywords': keywords[i],'image': address_format.img(asins[i]), 'title': titles[i], 'asin': asins[i]})
+
+        # Pythonic한 문법
+        products_list = [
+            {
+                'keywords': keywords[i],
+                'image': address_format.img(asins[i]),
+                'title': titles[i],
+                'asin': asins[i]
+            } for i in range(20)
+        ]
 
         if user_play_num == 0:
             fisrt_play = True
