@@ -1,12 +1,10 @@
 import axios from 'axios';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import GameCard from '../components/GameCard';
 import { SERVER_URL } from '../config';
 
 const Game = () => {
-  //게임 한번 진행할때마다 post로 결과 보내주기
-
   //TODO: 첫 게임일 경우 게임 3번 이상부터 결과보기 버튼 생성
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const limitNum = 5;
@@ -19,61 +17,43 @@ const Game = () => {
   const [fetchQuestionCount, setFetchQuestionCount] = useState(0);
   // maincard api에 get 요청 한 횟수
 
+  axios.defaults.baseURL = SERVER_URL;
+  axios.defaults.headers.common['Authorization'] = AuthStr;
+
   const getBackGroundData = useCallback(async () => {
     try {
-      const res = await axios.post(
-        SERVER_URL + '/back-card',
-        { limitNum: limitNum },
-        {
-          headers: {
-            Authorization: AuthStr,
-          },
-        }
-      );
+      const res = await axios.post('/back-card', { limitNum });
       setBackground(res.data.productsList);
     } catch (error) {
       console.log(error.response);
     }
-  }, [AuthStr, limitNum]);
+  }, [limitNum]);
 
   const getQuestions = useCallback(async () => {
     try {
-      const res = await axios.get(SERVER_URL + '/maincard', {
-        headers: {
-          Authorization: AuthStr,
-        },
-      });
+      const res = await axios.get('/maincard');
       setQuestions(res.data);
       console.log(res);
     } catch (error) {
       console.log(error);
     }
-  }, [AuthStr]);
+  }, []);
 
-  const sendAnswer = useCallback(
-    async (data) => {
-      try {
-        const res = await axios.post(SERVER_URL + '/maincard', data, {
-          headers: {
-            Authorization: AuthStr,
-          },
-        });
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [AuthStr]
-  );
+  const sendAnswer = useCallback(async (data) => {
+    try {
+      const res = await axios.post('/maincard', data);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const handleAnswerClick = useCallback(
     (asin, preference) => {
       setQuestionIdx(questionIdx + 1);
       sendAnswer({ asin: asin, loveOrHate: preference });
-      //questionIdx 갱신
-      //(먼저 하는게 중요하다 유저는 post 로딩 시간 기다릴 필요 없음)
-      //sendAnswer로 대답내용 post 요청 보내기
       if (questionIdx === 9) {
+        //if (questionIdx === questions?.products?.length - 1) { 로 고치고 싶은데..
         setIsPending(true);
         setQuestions();
         setQuestionIdx(0);
@@ -89,10 +69,7 @@ const Game = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const totalPlayNum = useMemo(
-    () => fetchQuestionCount * 10 + questionIdx + 1,
-    [fetchQuestionCount, questionIdx]
-  );
+  const totalPlayNum = fetchQuestionCount * 10 + questionIdx + 1;
 
   return (
     <div className="game-container">

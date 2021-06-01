@@ -6,9 +6,11 @@ import TagsInput from '../components/TagsInput';
 import { SERVER_URL } from '../config';
 import { Container, Grid } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
+import ProductCard from '../components/ProductCard';
 
 const Main = () => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+  const [mainProducts, setMainProducts] = useState();
   // const [inputValue, setInputValue] = useState('');
   // const [selectedItem, setSelectedItem] = useState([]);
   // const [autoCompleteItems, setAutoCompleteItems] = useState([
@@ -19,19 +21,17 @@ const Main = () => {
   //   'orange',
   //   'banana',
   // ]);
+  axios.defaults.baseURL = SERVER_URL;
+  axios.defaults.headers.common['Authorization'] = AuthStr;
 
   const getRecommendationResults = useCallback(async () => {
     try {
-      const res = await axios.get(SERVER_URL + '/result-cards', {
-        headers: {
-          Authorization: AuthStr,
-        },
-      });
-      console.log(res);
+      const res = await axios.get('/result-cards');
+      setMainProducts(res.data.products);
     } catch (error) {
       console.log(error);
     }
-  }, [AuthStr]);
+  }, []);
 
   const handleSelectedTags = (items) => {
     console.log(items);
@@ -81,6 +81,15 @@ const Main = () => {
         // autoCompleteItems={autoCompleteItems}
         // setAutoCompleteItems={setAutoCompleteItems}
       />
+
+      <div className="products-container">
+        {mainProducts &&
+          mainProducts.map((product, index) => (
+            <div key={index}>
+              <ProductCard productData={product} />
+            </div>
+          ))}
+      </div>
     </>
   );
 };

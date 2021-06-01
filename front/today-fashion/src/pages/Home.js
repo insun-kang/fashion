@@ -25,13 +25,15 @@ const Home = ({ location, history }) => {
 
   const { from } = location.state || { from: { pathname: '/main' } };
 
+  axios.defaults.baseURL = SERVER_URL;
+
   const handleSignUp = useCallback(
     async (data) => {
       try {
-        const res = await axios.post(SERVER_URL + '/sign-up', data);
+        const res = await axios.post('/sign-up', data);
         setToken(res.data.accessToken);
         setOpenSignUp(false);
-        history.push('/main');
+        history.push('/game');
         //로그인 시켜준 후 게임 화면으로 이동
       } catch (error) {
         if (error.response.data.errorCode === 'alr_signed_email') {
@@ -54,7 +56,7 @@ const Home = ({ location, history }) => {
   const handleCustomSignIn = useCallback(
     async (data) => {
       try {
-        const res = await axios.post(SERVER_URL + '/sign-in', data);
+        const res = await axios.post('/sign-in', data);
         setToken(res.data.accessToken);
         setOpenSignIn(false);
         history.push('/main');
@@ -95,8 +97,6 @@ const Home = ({ location, history }) => {
         src="/image/logo.png"
         style={{ marginTop: '10vh', marginLeft: '35vw', height: '20vw' }}
       />
-      {/* 이부분 꼭 있어야하는 부분인가요? */}
-      {/* {!openSignIn && !openSignUp && ( */}
       <div>
         <div style={{ height: '40vh' }}></div>
         <div className="home-button-group">
@@ -122,7 +122,6 @@ const Home = ({ location, history }) => {
           </PCButton>
         </div>
       </div>
-      {/* )} */}
       {openSignIn && (
         <Dialog
           open={openSignIn}
@@ -156,10 +155,6 @@ const Home = ({ location, history }) => {
             </PCButton>
           </DialogActions>
         </Dialog>
-
-        // <div className="signin-modal">
-
-        // </div>
       )}
       {openSignUp && (
         <Dialog
@@ -195,18 +190,6 @@ const Home = ({ location, history }) => {
             </PCButton>
           </DialogActions>
         </Dialog>
-
-        // <div className="signup-modal">
-        //   <UserInfoForm handleUserInfoForm={handleSignUp} />
-        //   <button
-        //     type="button"
-        //     onClick={() => {
-        //       setOpenSignUp(!openSignUp);
-        //     }}
-        //   >
-        //     &#10006;
-        //   </button>
-        // </div>
       )}
     </div>
   );
