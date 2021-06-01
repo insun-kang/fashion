@@ -229,7 +229,7 @@ def maincard():
         ]
 
         if user_play_num == 0:
-            fisrt_play = True
+            first_play = True
         else:
             first_play = False
 
