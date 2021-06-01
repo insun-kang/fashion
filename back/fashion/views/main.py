@@ -65,7 +65,7 @@ def ResultSearch():
         body=request.get_json()
 
         count=body['count']
-        data_num=body[dataNum]
+        data_num=body['dataNum']
         existing_keywords=body['existingKeywords']  #array
 
         size=len(existing_keywords)
@@ -74,7 +74,7 @@ def ResultSearch():
         
         asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword).label('cnt')).filter(
             models.ProductKeyword.product_keyword.in_(existing_keywords)).group_by(models.ProductKeyword.asin)
-        
+        print(asins)
         for i in asins[(count-1)*data_num:count*data_num]:
             asin=i.asin
             card={}
