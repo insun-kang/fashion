@@ -7,7 +7,6 @@ from . import checkvalid
 from datetime import datetime, timedelta
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
-from sqlalchemy import func
 
 
 # Flasgger
@@ -72,37 +71,66 @@ def ResultSearch():
 
         cards=[]
         
-        asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword).label('cnt')).filter(
-            models.ProductKeyword.product_keyword.in_(existing_keywords)).group_by(models.ProductKeyword.asin)
-        print(asins)
-        for i in asins[(count-1)*data_num:count*data_num]:
-            asin=i.asin
-            card={}
-            keywords=[]
-            
-            #card['keywords']
-            keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
-            for keyword in keywords_by_asin:
-                keywords.append(keyword.product_keyword)
-            #card['price'],card['title']
-            product=models.Product.query.filter_by(asin=asin).first()
+        #limit, offset
+        asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword))
+        .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))
+        .group_by("asin")
+        .having(models.func.count(models.ProductKeyword.product_keyword)==size)
+        .all()
 
-            card['keywords']=keywords
-            card['asin']=asin
-            card['price']=product.price
-            card['bookmark']=0
-            card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
-            card['starRating']=product.rating
-            card['posReveiwRate']=0
-            card['negReviewRate']=0
-            card['image']=address_format.img(asin)
-            card['productUrl']=address_format.product(asin)
-            card['title']=product.title
-            
-            cards.append(card)
-            
+        if len(asins) > data_num:
+            for i in asins[(count-1)*data_num:count*data_num]:
+                asin=i.asin
+                card={}
+                keywords=[]
+                
+                #card['keywords']
+                keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
+                for keyword in keywords_by_asin:
+                    keywords.append(keyword.product_keyword)
+                #card['price'],card['title']
+                product=models.Product.query.filter_by(asin=asin).first()
 
-        return {'cards' : cards}
+                card['keywords']=keywords
+                card['asin']=asin
+                card['price']=product.price
+                card['bookmark']=0
+                card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
+                card['starRating']=product.rating
+                card['posReveiwRate']=0
+                card['negReviewRate']=0
+                card['image']=address_format.img(asin)
+                card['productUrl']=address_format.product(asin)
+                card['title']=product.title
+                
+                cards.append(card)
+        else:  
+            for i in asins:
+                asin=i.asin
+                card={}
+                keywords=[]
+                
+                #card['keywords']
+                keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
+                for keyword in keywords_by_asin:
+                    keywords.append(keyword.product_keyword)
+                #card['price'],card['title']
+                product=models.Product.query.filter_by(asin=asin).first()
+
+                card['keywords']=keywords
+                card['asin']=asin
+                card['price']=product.price
+                card['bookmark']=0
+                card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
+                card['starRating']=product.rating
+                card['posReveiwRate']=0
+                card['negReviewRate']=0
+                card['image']=address_format.img(asin)
+                card['productUrl']=address_format.product(asin)
+                card['title']=product.title
+                
+                cards.append(card)
+        return {'cards':cards}
 
 
 # select asin, count(product_keyword) as count from product_keyword 
