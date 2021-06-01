@@ -13,62 +13,75 @@ responses:
           type: object
           example:
             {
-              "products":
-                [
-                  {
-                    "asin": "B00HGRB3CE",
-                    "badReviewRating": "20%",
-                    "bookmark": true,
-                    "goodReviewRating": "80%",
-                    "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HGRB3CE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "keywords": ["flower", "dress", "red", "summer", "womens"],
-                    "nlpResults":
-                      {
-                        "badReviews": ["small", "dirty", "smelly"],
-                        "goodReviews": ["reasonable", "pretty", "cute"],
-                      },
-                    "price": 300000,
-                    "productUrl": "https://www.amazon.com/dp/B00HGRB3CE",
-                    "starRating": 5,
-                    "title": "women's flower sundress",
+              "products": [
+                {
+                  "asin": "B00HGRB3CE",
+                  "bookmark": true,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HGRB3CE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "negReviewRate": 0.5,
+                  "nlpResults": {
+                    "negReviewSummary": "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .",
+                    "posReviewSummary": "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France ."
                   },
-                  {
-                    "asin": "B07PGCYWRJ",
-                    "badReviewRating": "45%",
-                    "bookmark": false,
-                    "goodReviewRating": "55%",
-                    "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07PGCYWRJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "keywords":
-                      ["flower", "pants", "green", "winter", "womens"],
-                    "nlpResults":
-                      {
-                        "badReviews": ["expensive", "not useful", "ugly"],
-                        "goodReviews": ["clean", "good quality", "cute"],
-                      },
-                    "price": 1000,
-                    "productUrl": "https://www.amazon.com/dp/B07PGCYWRJ",
-                    "starRating": 3,
-                    "title": "women's flower green pants",
+                  "posReveiwRate": 0.5,
+                  "price": 300000,
+                  "productUrl": "https://www.amazon.com/dp/B00HGRB3CE",
+                  "starRating": 3.24,
+                  "title": "women's flower sundress"
+                },
+                {
+                  "asin": "B07PGCYWRJ",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07PGCYWRJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "pants",
+                    "green",
+                    "winter",
+                    "womens"
+                  ],
+                  "negReviewRate": 0.5,
+                  "nlpResults": {
+                    "negReviewSummary": "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .",
+                    "posReviewSummary": "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France ."
                   },
-                  {
-                    "asin": "1975421663",
-                    "badReviewRating": "20%",
-                    "bookmark": true,
-                    "goodReviewRating": "80%",
-                    "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1975421663&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "keywords": ["flower", "dress", "red", "summer", "womens"],
-                    "nlpResults":
-                      {
-                        "badReviews": ["small", "dirty", "smelly"],
-                        "goodReviews": ["reasonable", "pretty", "cute"],
-                      },
-                    "price": 300000,
-                    "productUrl": "https://www.amazon.com/dp/1975421663",
-                    "starRating": 5,
-                    "title": "women's flower sundress",
+                  "posReveiwRate": 0.5,
+                  "price": 1000.2,
+                  "productUrl": "https://www.amazon.com/dp/B07PGCYWRJ",
+                  "starRating": 4.05,
+                  "title": "women's flower green pants"
+                },
+                {
+                  "asin": "1975421663",
+                  "bookmark": true,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1975421663&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "flower",
+                    "dress",
+                    "red",
+                    "summer",
+                    "womens"
+                  ],
+                  "negReviewRate": 0.5,
+                  "nlpResults": {
+                    "negReviewSummary": "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .",
+                    "posReviewSummary": "The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France ."
                   },
-                ],
-              "productsNum": 3,
+                  "posReveiwRate": 0.5,
+                  "price": 300000,
+                  "productUrl": "https://www.amazon.com/dp/1975421663",
+                  "starRating": 5,
+                  "title": "women's flower sundress"
+                }
+              ],
+              "productsNum": 3
             }
   400:
     description: 알고리즘으로부터 추천 결과가 없는 경우
@@ -77,9 +90,6 @@ responses:
         schema:
           type: object
           example:
-            {
-              "errorCode": "no_result",
-              "msg": "There's no recommendation for user at all",
-            }
+            {'errorCode': 'no_result','msg': "There's no recommendation for user at all"}
 security:
   - ApiKeyAuth: []
