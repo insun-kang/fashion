@@ -1,9 +1,9 @@
 summary: "회원가입"
 description: "회원가입 api"
 tags:
-    - auth
+  - auth
 produces:
-- "application/json"
+  - "application/json"
 requestBody:
         description: 유저에 관한 정보(email,pw,name,nickname,birth)
         required: true

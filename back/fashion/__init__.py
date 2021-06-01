@@ -39,6 +39,7 @@ def create_app():
     
 
 
+
     app.config['JWT_SECRET_KEY'] = 'fashion'
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(hours=20)
