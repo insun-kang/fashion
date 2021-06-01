@@ -219,7 +219,7 @@ def maincard():
             products_list.append({'keywords': keywords[i],'image': address_format.img(asins[i]), 'title': titles[i], 'asin': asins[i]})
 
         if user_play_num == 0:
-            fisrt_play = True
+            first_play = True
         else:
             first_play = False
 
