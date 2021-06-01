@@ -44,7 +44,7 @@ const TagsInput = ({ ...props }) => {
   }, [selectedItems, selectedTags]);
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === 'Tab') {
       const newSelectedItems = [...selectedItems];
       const valueToAdd = event.target.value.toLowerCase().trim();
       //'apple'과 'apple  '을 똑같이 취급한다

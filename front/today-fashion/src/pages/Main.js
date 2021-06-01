@@ -22,6 +22,11 @@ const Main = () => {
   //   'orange',
   //   'banana',
   // ]);
+
+  // TODO:
+  // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
+  // 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
+
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
 
