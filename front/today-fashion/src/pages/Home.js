@@ -34,18 +34,19 @@ const Home = ({ location, history }) => {
         setToken(res.data.accessToken);
         setOpenSignUp(false);
         history.push('/game');
-        //로그인 시켜준 후 게임 화면으로 이동
+        //회원가입이 되면 바로 로그인 + 게임 화면으로 이동
       } catch (error) {
-        if (error.response.data.errorCode === 'alr_signed_email') {
-          alert(error.response.data.msg);
-          setOpenSignUp(false);
-          setOpenSignIn(true);
-        } else if (error.response.data.errorCode === 'alr_signed_nickname') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'invalid_pw') {
-          alert(error.response.data.msg);
-        } else {
-          alert(error);
+        switch (error.response.data.errorCode) {
+          case 'alr_signed_email':
+            alert(error.response.data.msg);
+            setOpenSignUp(false);
+            setOpenSignIn(true);
+            break;
+          case 'alr_signed_nickname':
+            alert(error.response.data.msg);
+            break;
+          default:
+            alert(error);
         }
       }
     },
@@ -61,16 +62,21 @@ const Home = ({ location, history }) => {
         setOpenSignIn(false);
         history.push('/main');
       } catch (error) {
-        if (error.response.data.errorCode === 'not_exists') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'missing_email') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'missing_pw') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'incorrect_pw') {
-          alert(error.response.data.msg);
-        } else {
-          alert(error);
+        switch (error.response.data.errorCode) {
+          case 'not_exists':
+            alert(error.response.data.msg); //적절하게 메세지 수정하기
+            break;
+          case 'missing_email':
+            alert(error.response.data.msg);
+            break;
+          case 'missing_pw':
+            alert(error.response.data.msg);
+            break;
+          case 'incorrect_pw':
+            alert(error.response.data.msg);
+            break;
+          default:
+            alert(error);
         }
       }
     },

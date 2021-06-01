@@ -16,18 +16,19 @@ const MyPageIntro = () => {
 
   const confirmUser = useCallback(async () => {
     try {
-      const res = await axios.post('/mypage', { pw: password });
-      console.log(res);
+      await axios.post('/mypage', { pw: password });
       history.push('/mypage/userinfo');
     } catch (error) {
-      if (error.response.data.errorCode === 'incorrect_pw') {
-        alert(error.response.data.msg);
-      } else if (error.response.data.errorCode === 'missing_pw') {
-        alert(error.response.data.msg);
-      } else {
-        alert(error);
+      switch (error.response.data.errorCode) {
+        case 'incorrect_pw':
+          alert(error.response.data.msg);
+          break;
+        case 'missing_pw':
+          alert(error.response.data.msg);
+          break;
+        default:
+          alert(error);
       }
-      console.log(error);
     }
   }, [history, password]);
 
@@ -42,7 +43,7 @@ const MyPageIntro = () => {
           }}
           value={password}
         />
-        <input type="button" value="확인" onClick={confirmUser} />
+        <input type="button" value="Confirm" onClick={confirmUser} />
       </div>
     </div>
   );

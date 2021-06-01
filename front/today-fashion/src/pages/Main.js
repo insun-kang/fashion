@@ -7,6 +7,7 @@ import { SERVER_URL } from '../config';
 import { Container, Grid } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
 import ProductCard from '../components/ProductCard';
+import InfiniteProducts from '../components/InfiniteProducts';
 
 const Main = () => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -35,12 +36,26 @@ const Main = () => {
 
   const handleSelectedTags = (items) => {
     console.log(items);
-    //items 목록에 따라 키워드 검색 결과 보여주기
+    //items 목록에 따라 키워드 검색 결과 재호출해서 보여주기
+  };
+
+  const infiniteScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight) {
+      console.log('scroll end');
+      //새로운 데이터 불러오기
+    }
   };
 
   useEffect(() => {
     getRecommendationResults();
-    //onmount 시점에 추천결과 보여주기
+    window.addEventListener('scroll', infiniteScroll, true);
+    return () => {
+      window.removeEventListener('scroll', infiniteScroll);
+    };
   }, []);
 
   return (
@@ -81,7 +96,6 @@ const Main = () => {
         // autoCompleteItems={autoCompleteItems}
         // setAutoCompleteItems={setAutoCompleteItems}
       />
-
       <div className="products-container">
         {mainProducts &&
           mainProducts.map((product, index) => (
