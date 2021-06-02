@@ -88,7 +88,8 @@ def ResultSearch():
             #card['keywords']
             keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
             for keyword in keywords_by_asin:
-                keywords.append(keyword.product_keyword)
+                if keyword not in keywords:
+                    keywords.append(keyword.product_keyword)
             #card['price'],card['title']
             product=models.Product.query.filter_by(asin=asin).first()
 

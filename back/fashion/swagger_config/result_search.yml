@@ -15,7 +15,10 @@ requestBody:
               case1:
                 summary: 존재 키워드 없을때
                 value:
-                  existing_keywords: []
+                  pageNum : 3230
+                  dataSize : 10
+                  existingKeywords: ["jeans", "blue"]
+}
 responses:
   200:
     description: OK
@@ -25,8 +28,208 @@ responses:
           type: object
           example:
             {
-              "keyword": [
-                
-              ],
-              "msg": "You haven't entered anything"
+              "cards": [
+                {
+                  "asin": "B00M0C4DTA",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0C4DTA&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "jeans",
+                    "girls"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0C4DTA",
+                  "starRating": 1,
+                  "title": "Dinamit Jeans Girls Fun Printed Leggings Animal Bliss S"
+                },
+                {
+                  "asin": "B00M0C511E",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0C511E&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "jeans",
+                    "girls"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0C511E",
+                  "starRating": 4,
+                  "title": "Dinamit Jeans Girls Fun Printed Leggings Pop Art XL"
+                },
+                {
+                  "asin": "B00M0DVWCU",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0DVWCU&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "cotton",
+                    "blue"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 12.95,
+                  "productUrl": "https://www.amazon.com/dp/B00M0DVWCU",
+                  "starRating": 4,
+                  "title": "Koloa Surf.(tm) Ladies Classic Wave Logo Cotton T-Shirts-S-Ice Blue"
+                },
+                {
+                  "asin": "B00M0F7MR2",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0F7MR2&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "women",
+                    "pockets",
+                    "denim",
+                    "shirt",
+                    "blue"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0F7MR2",
+                  "starRating": 3.5,
+                  "title": "Chendvol Women's Korean Style Pockets Medium Slim-fit Denim Shirt (XL, Light Blue Shoulder Sequins)"
+                },
+                {
+                  "asin": "B00M0FS136",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0FS136&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "women",
+                    "lingerie",
+                    "blue"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0FS136",
+                  "starRating": 2.5,
+                  "title": "Wexinbuy Women Sling Lingerie Silk Nightgown 2Set Suit Nightdress Light Blue"
+                },
+                {
+                  "asin": "B00M0FZR92",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0FZR92&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "women",
+                    "bodycon",
+                    "dress",
+                    "blue"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0FZR92",
+                  "starRating": 3.8125,
+                  "title": "PAKULA Women's Fashion Midi Contrast Bodycon Pencil Evening Dress,Small Petite,Blue"
+                },
+                {
+                  "asin": "B00M0FZSUU",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0FZSUU&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "women",
+                    "bodycon",
+                    "dress",
+                    "blue"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0FZSUU",
+                  "starRating": 4.1,
+                  "title": "PAKULA Women's Fashion Contrast Bodycon Pencil Evening Dress,Blue,Medium"
+                },
+                {
+                  "asin": "B00M0FZV7U",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0FZV7U&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "women",
+                    "bodycon",
+                    "dress",
+                    "blue"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0FZV7U",
+                  "starRating": 4.0625,
+                  "title": "PAKULA Women's Fashion Contrast Bodycon Pencil Evening Dress,Blue,X-Large"
+                },
+                {
+                  "asin": "B00M0OTWWQ",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M0OTWWQ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "women",
+                    "blue",
+                    "sleeveless",
+                    "dress"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M0OTWWQ",
+                  "starRating": 4,
+                  "title": "Women's Blue Caribbean Sleeveless Maxi Sun Dress - Hand Batik Print - Large"
+                },
+                {
+                  "asin": "B00M1A3JK0",
+                  "bookmark": 0,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M1A3JK0&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "blue",
+                    "leather"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00M1A3JK0",
+                  "starRating": 4.16667,
+                  "title": "BMC Womens Fashionable Midnight Navy Blue Faux Leather Large Envelope Style Statement Clutch"
+                }
+              ]
             }
