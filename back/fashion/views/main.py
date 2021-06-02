@@ -7,13 +7,15 @@ from . import checkvalid
 from datetime import datetime, timedelta
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
-from ast import literal_eval
+
 
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
+from .. import address_format
 
 bp = Blueprint('main', __name__, url_prefix='/')
+
 
 @bp.route('/search', methods=['POST'])
 @swag_from('../swagger_config/search.yml')
@@ -61,12 +63,52 @@ def ResultSearch():
     else:
         body=request.get_json()
 
+        page_num=body['pageNum']
+        data_size=body['dataSize']
         existing_keywords=body['existingKeywords']  #array
 
-        print(existing_keywords)
-        asins = models.ProductKeyword.query.filter(
-            ~models.ProductKeyword.product_keyword.in_(existing_keywords)).all()
-        for i in asins:
-            print(i.asin)
+        size=len(existing_keywords)
 
-        return 'test'
+        cards=[]
+        
+        #limit, offset
+        asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword))\
+        .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))\
+        .group_by("asin")\
+        .having(models.func.count(models.ProductKeyword.product_keyword)<=size)\
+        .offset(page_num)\
+        .limit(data_size)\
+        .all()
+
+        for i in asins:
+            asin=i.asin
+            card={}
+            keywords=[]
+            
+            #card['keywords']
+            keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
+            for keyword in keywords_by_asin:
+                keywords.append(keyword.product_keyword)
+            #card['price'],card['title']
+            product=models.Product.query.filter_by(asin=asin).first()
+
+            card['keywords']=keywords
+            card['asin']=asin
+            card['price']=product.price
+            card['bookmark']=0
+            card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
+            card['starRating']=product.rating
+            card['posReveiwRate']=0
+            card['negReviewRate']=0
+            card['image']=address_format.img(asin)
+            card['productUrl']=address_format.product(asin)
+            card['title']=product.title
+            
+            cards.append(card)
+
+        return {'cards':cards}
+
+
+# select asin, count(product_keyword) as count from product_keyword 
+# where product_keyword="black" or product_keyword="red" group by asin having count = 2;
+
