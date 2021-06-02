@@ -35,9 +35,7 @@ const CustomSignIn = (props) => {
                       label="Email"
                       variant="outlined"
                       fullWidth
-                      error={
-                        form.errors.email && form.touched.email ? true : false
-                      }
+                      error={form.errors.email && form.touched.email}
                       helperText={
                         form.errors.email && form.touched.email
                           ? form.errors.email
@@ -47,7 +45,7 @@ const CustomSignIn = (props) => {
                   </div>
                 )}
               </Field>
-              <Box margin={2}></Box>
+              <Box margin={2} />
               <Field name="pw" validate={validatePassword}>
                 {({ field, form }) => (
                   <div>
@@ -64,7 +62,7 @@ const CustomSignIn = (props) => {
                       label="Password"
                       variant="outlined"
                       fullWidth
-                      error={form.errors.pw && form.touched.pw ? true : false}
+                      error={form.errors.pw && form.touched.pw}
                       helperText={
                         form.errors.pw && form.touched.pw
                           ? form.errors.pw
