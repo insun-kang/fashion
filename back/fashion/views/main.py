@@ -63,8 +63,8 @@ def ResultSearch():
     else:
         body=request.get_json()
 
-        count=body['count']
-        data_num=body['dataNum']
+        page_num=body['pageNum']
+        data_size=body['dataSize']
         existing_keywords=body['existingKeywords']  #array
 
         size=len(existing_keywords)
@@ -72,64 +72,40 @@ def ResultSearch():
         cards=[]
         
         #limit, offset
-        asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword))
-        .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))
-        .group_by("asin")
-        .having(models.func.count(models.ProductKeyword.product_keyword)==size)
+        asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword))\
+        .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))\
+        .group_by("asin")\
+        .having(models.func.count(models.ProductKeyword.product_keyword)<=size)\
+        .offset(page_num)\
+        .limit(data_size)\
         .all()
 
-        if len(asins) > data_num:
-            for i in asins[(count-1)*data_num:count*data_num]:
-                asin=i.asin
-                card={}
-                keywords=[]
-                
-                #card['keywords']
-                keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
-                for keyword in keywords_by_asin:
-                    keywords.append(keyword.product_keyword)
-                #card['price'],card['title']
-                product=models.Product.query.filter_by(asin=asin).first()
+        for i in asins:
+            asin=i.asin
+            card={}
+            keywords=[]
+            
+            #card['keywords']
+            keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
+            for keyword in keywords_by_asin:
+                keywords.append(keyword.product_keyword)
+            #card['price'],card['title']
+            product=models.Product.query.filter_by(asin=asin).first()
 
-                card['keywords']=keywords
-                card['asin']=asin
-                card['price']=product.price
-                card['bookmark']=0
-                card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
-                card['starRating']=product.rating
-                card['posReveiwRate']=0
-                card['negReviewRate']=0
-                card['image']=address_format.img(asin)
-                card['productUrl']=address_format.product(asin)
-                card['title']=product.title
-                
-                cards.append(card)
-        else:  
-            for i in asins:
-                asin=i.asin
-                card={}
-                keywords=[]
-                
-                #card['keywords']
-                keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
-                for keyword in keywords_by_asin:
-                    keywords.append(keyword.product_keyword)
-                #card['price'],card['title']
-                product=models.Product.query.filter_by(asin=asin).first()
+            card['keywords']=keywords
+            card['asin']=asin
+            card['price']=product.price
+            card['bookmark']=0
+            card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
+            card['starRating']=product.rating
+            card['posReveiwRate']=0
+            card['negReviewRate']=0
+            card['image']=address_format.img(asin)
+            card['productUrl']=address_format.product(asin)
+            card['title']=product.title
+            
+            cards.append(card)
 
-                card['keywords']=keywords
-                card['asin']=asin
-                card['price']=product.price
-                card['bookmark']=0
-                card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
-                card['starRating']=product.rating
-                card['posReveiwRate']=0
-                card['negReviewRate']=0
-                card['image']=address_format.img(asin)
-                card['productUrl']=address_format.product(asin)
-                card['title']=product.title
-                
-                cards.append(card)
         return {'cards':cards}
 
 
