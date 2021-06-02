@@ -12,6 +12,7 @@ import InfiniteProducts from '../components/InfiniteProducts';
 const Main = () => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const [mainProducts, setMainProducts] = useState();
+  const [itemNums, setItemNums] = useState(10);
   // const [inputValue, setInputValue] = useState('');
   // const [selectedItem, setSelectedItem] = useState([]);
   // const [autoCompleteItems, setAutoCompleteItems] = useState([
@@ -55,11 +56,54 @@ const Main = () => {
     }
   };
 
+  const checkScrollSpeed = (function (settings) {
+    settings = settings || {};
+
+    let lastPos,
+      newPos,
+      timer,
+      delta,
+      delay = settings.delay || 50;
+
+    function clear() {
+      lastPos = null;
+      delta = 0;
+    }
+
+    clear();
+
+    return function () {
+      newPos = window.scrollY;
+      if (lastPos != null) {
+        // && newPos < maxScroll
+        delta = newPos - lastPos;
+      }
+      lastPos = newPos;
+      clearTimeout(timer);
+      timer = setTimeout(clear, delay);
+      return delta;
+    };
+  })();
+
+  const handleScrollSpeed = () => {
+    const speed = checkScrollSpeed();
+    //console.log(speed);
+    if (speed >= 150 && itemNums !== 20) {
+      setItemNums(20);
+    } else if (speed < 150 && itemNums !== 10) {
+      setItemNums(10);
+    }
+  };
+
+  console.log(itemNums);
+
   useEffect(() => {
     getRecommendationResults();
     window.addEventListener('scroll', infiniteScroll, true);
+    window.addEventListener('scroll', handleScrollSpeed, true);
     return () => {
       window.removeEventListener('scroll', infiniteScroll);
+      window.removeEventListener('scroll', handleScrollSpeed);
     };
   }, []);
 
