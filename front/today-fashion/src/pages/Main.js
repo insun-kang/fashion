@@ -29,9 +29,10 @@ const Main = () => {
   //     console.log(error);
   //   }
   // }, []);
+  const [searchKeywords, setSearchKeywords] = useState([]);
 
   const handleSelectedTags = (items) => {
-    console.log(items);
+    setSearchKeywords(items);
     //items 목록에 따라 키워드 검색 결과 재호출해서 보여주기
   };
 
@@ -83,7 +84,7 @@ const Main = () => {
         placeholder="Search Item by Keyword"
       />
 
-      <InfiniteProducts />
+      <InfiniteProducts searchKeywords={searchKeywords} />
       {/* <div className="products-container">
         {mainProducts &&
           mainProducts.map((product, index) => (

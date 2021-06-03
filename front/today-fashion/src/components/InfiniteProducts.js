@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 
-const InfiniteProducts = () => {
+const InfiniteProducts = ({ searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
@@ -20,15 +20,27 @@ const InfiniteProducts = () => {
   const getRecommendationResults = useCallback(async () => {
     try {
       const res = await axios.get('/result-cards');
-      // setTimeout(() => {
-      //   setMainProducts([...mainProducts].concat([...mainProducts]));
-      // }, 500);
       setMainProducts([...mainProducts].concat(res.data.products));
       setIsBottom(false);
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [mainProducts, requestData]);
+
+  const getSearchResults = useCallback(async () => {
+    try {
+      const res = await axios.get('/result-cards');
+      if (requestData.pageNum === 0) {
+        setMainProducts(res.data.products);
+      } else {
+        setMainProducts([...mainProducts].concat(res.data.products));
+      }
+
+      setIsBottom(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [mainProducts, requestData]);
 
   const infiniteScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -73,11 +85,6 @@ const InfiniteProducts = () => {
   //즉시 실행을 해서 익명함수의 리턴 부분에 정의된 함수를 checkScrollSpeed에 할당
 
   const handleScrollSpeed = () => {
-    // requestData.dataSize의 변화가 있어도 handleScrollSpeed는 못 알아챔
-    // useCallback도 사용해봤으나 소용없음
-
-    // speed를 state로 설정하면? 너무 자주 re-render 될 것 같아서 안됨,
-    // 동기적으로 작동하므로 즉시 speed 변화를 알아채지 못하지 않나?
     const speed = checkScrollSpeed();
     console.log(speed, requestData.dataSize);
     if (speed >= 200 && requestData.dataSize === 10) {
@@ -91,11 +98,11 @@ const InfiniteProducts = () => {
   };
 
   useEffect(() => {
-    //새로고침 없이 re-render만 되면 scroll 이벤트가 계속 붙음...
-    // 코딩할때만 나타나고 실사용할때는 안 나타나는 현상일까?
-    //mdn에 의하면 같은 event는 discard 된다는데 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#multiple_identical_event_listeners
-    //getEventListeners(window) 하면 4개로 보임. 출력되는 값도 중복개수만큼 중복됨
-    getRecommendationResults();
+    if (searchKeywords.length === 0) {
+      getRecommendationResults();
+    } else {
+      //getSearchResults();
+    }
     window.addEventListener('scroll', handleScrollSpeed, true);
     window.addEventListener('scroll', infiniteScroll, true);
     return () => {
@@ -114,6 +121,7 @@ const InfiniteProducts = () => {
           [...mainProducts].concat([...mainProducts].slice(0, 3))
         );
       }, 500);
+      //mock data 더해주기
       setIsBottom(false);
     }
   }, [isBottom]);
