@@ -5,7 +5,7 @@ from flask_cors import CORS
 from .. import models
 from . import checkvalid
 from datetime import datetime, timedelta
-from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
+from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, decode_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
 
 
@@ -34,10 +34,10 @@ def Search():
         search = "{}%".format(keyword.lower())
         find_keyword=models.SearchKeyword.query.filter(models.SearchKeyword.keyword.like(search)).all()
 
-        if len(keyword) == 0:
+        if not keyword:
             return {'msg': "You haven't entered anything", 'keywords': return_keywords}, 200
         
-        if len(find_keyword) == 0:
+        if not find_keyword:
             return {'msg': 'No results were found for your search', 'keywords': return_keywords}, 200
 
         if not existing_keywords:
@@ -51,21 +51,24 @@ def Search():
                     return_keywords.append((i.keyword))
             return {'msg': 'success', 'keywords': return_keywords}, 200
 
-@bp.route('/result-search', methods=['GET','POST'])
+@bp.route('/result-search', methods=['POST'])
+@jwt_required()
 @swag_from('../swagger_config/result_search.yml')
 def ResultSearch():
-    if request.method =='GET':
-        #초기에는 게임 결과순
-        #검색시에는 긍정 높은순
-        return None
+    if not request.is_json:
+        return error_code.missing_json_error
 
-    
     else:
         body=request.get_json()
 
         page_num=body['pageNum']
         data_size=body['dataSize']
         existing_keywords=body['existingKeywords']  #array
+
+        header = request.headers.get('Authorization')
+
+        user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+
 
         size=len(existing_keywords)
 
@@ -80,6 +83,7 @@ def ResultSearch():
         .limit(data_size)\
         .all()
 
+        
         for i in asins:
             asin=i.asin
             card={}
@@ -93,10 +97,16 @@ def ResultSearch():
             #card['price'],card['title']
             product=models.Product.query.filter_by(asin=asin).first()
 
+            #card['bookmark']
+            bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin=asin).first()
+
             card['keywords']=keywords
             card['asin']=asin
             card['price']=product.price
-            card['bookmark']=0
+            if not bookmark:
+                card['bookmark']=False
+            else:
+                card['bookmark']=True
             card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
             card['starRating']=product.rating
             card['posReveiwRate']=0
