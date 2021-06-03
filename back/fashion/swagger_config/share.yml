@@ -9,6 +9,8 @@ requestBody:
   required: true
   content:
     application/json:
+      schema:
+        $ref: '#/definitions/Share'
       examples:
         case1:
           summary: post request
@@ -24,5 +26,13 @@ responses:
           type: object
           example:
             {'msg' : 'Share success'}
+definitions:
+  Share:
+    type: object
+    required:
+      - asin
+    properties:
+      keyword:
+        type: string
 security:
   - ApiKeyAuth: []

@@ -32,15 +32,15 @@ def Share():
         product = models.Product.query.filter_by(asin=asin).first()
 
         shared=product.shared
-
+        print(asin)
         share = models.Share(
                 
-                asin=product.id,
+                asin=product.asin,
                 user_id=user_id,
                 shared_date=datetime.now()
             )
-            models.db.session.add(share)
-            models.db.session.commit()
+        models.db.session.add(share)
+        models.db.session.commit()
 
         product.shared = shared+1
         models.db.session.commit()
