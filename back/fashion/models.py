@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship, backref
 
 class User(db.Model):  # usertable
     __tablename__ = 'user'
-    __table_args__ = {'mysql_collate': 'utf8_general_ci'}   
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nickname = Column(String(64), unique=True)
@@ -14,7 +14,7 @@ class User(db.Model):  # usertable
     pw = Column(String(64), nullable=False)
     birth = Column(DATE, nullable=False)
     sign_up_date = Column(DATE, nullable=False)
-    
+
 
 #count가 큰 50개의 키워드를 뽑아 검색에 사용할 테이블
 class SearchKeyword(db.Model):
@@ -53,7 +53,7 @@ class ProductReview(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    asin = Column(String(256), ForeignKey('product.asin'))
+    asin = Column(String(256))
 
     positive_review_number = Column(Integer, nullable=False, default=0) # 긍정 리뷰 수
     negative_review_number = Column(Integer, nullable=False, default=0) # 부정 리뷰 수
