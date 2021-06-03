@@ -1,25 +1,25 @@
 summary: "회원 비번 확인"
 description: "회원 비번 확인 api"
 tags:
-    - mypage
+  - mypage
 produces:
-- "application/json"
+  - "application/json"
 requestBody:
-        description: 확인할 정보(id,pw)
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/Checkpw'
-            examples:
-              case1:
-                summary: 강인선
-                value:
-                  pw: "qwer!@6789"
-              case2:
-                summary: 김다인
-                value:
-                  pw: "dainlinda!@1234"
+  description: 확인할 정보(id,pw)
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "#/definitions/Checkpw"
+      examples:
+        case1:
+          summary: 강인선
+          value:
+            pw: "qwer!@6789"
+        case2:
+          summary: 김다인
+          value:
+            pw: "dainlinda!@1234"
 responses:
   400:
     description: Missing JSON in request
@@ -28,7 +28,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
   400.1:
     description: 패스워드 입력 안 함
     content:
@@ -36,7 +36,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_pw', 'msg': 'Missing password in request'}
+            {'errorCode': 'missing_pw', 'msg': 'Missing password in request'}
   400.2:
     description: 패스워드 부정확함
     content:
@@ -44,7 +44,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Incorrect_pw', 'msg': 'Incorrect Password'}
+            {'errorCode': 'incorrect_pw', 'msg': 'Incorrect Password'}
 definitions:
   Checkpw:
     type: object

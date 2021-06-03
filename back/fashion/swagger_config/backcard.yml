@@ -1,9 +1,9 @@
 summary: "카드게임 - 배경"
 description: "카드게임 배경에 필요한 제품들을 요청한 숫자만큼 반환하는 api"
 tags:
-    - cardgame
+  - cardgame
 produces:
-- "application/json"
+  - "application/json"
 requestBody:
         description: 배경으로 원하는 제품의 숫자
         required: true
@@ -12,23 +12,30 @@ requestBody:
             schema:
               type: object
               property:
-                limit_num:
+                limitNum:
                     type: integer
               example:
-                limit_num: 5
+                limitNum: 20
 responses:
   200:
-    description: limit_num 만큼의 제품이 반환된 경우
+    description: limitNum 만큼의 제품이 반환된 경우
     content:
       application/json:
         schema:
           type: object
           example:
             {
-                'request_num': '5',
-                'total_num': '0',
-                'msg': '제품 반환 성공',
-                'bg_products_list': {}
+                'requestNum': 5,
+                'totalNum': 0,
+                'ProductsList': []
             }
+  400:
+    description: Missing JSON in request
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
 security:
   - ApiKeyAuth: []

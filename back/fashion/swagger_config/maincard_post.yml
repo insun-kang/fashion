@@ -1,11 +1,11 @@
 summary: "메인카드 post"
 description: "메인카드 post api: 유저가 본 상품을 좋아요 했는지 싫어요 했는지 저장"
 tags:
-    - cardgame
+  - cardgame
 produces:
-- "application/json"
+  - "application/json"
 requestBody:
-        description: 유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부
+        description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:1, 싫어요: 0)"
         required: true
         content:
           application/json:
@@ -15,15 +15,13 @@ requestBody:
               case1:
                 summary: 강인선
                 value:
-                  user_id: "1"
                   asin: "1234567"
-                  love_or_hate: 1
+                  loveOrHate: True
               case2:
                 summary: 김다인
                 value:
-                  user_id: "2"
                   asin: "1023658"
-                  love_or_hate: 0
+                  loveOrHate: False
 responses:
   200:
     description: OK
@@ -33,11 +31,10 @@ responses:
           type: object
           example:
             {
-              "msg": "결과 db 추가 성공",
               "result": {
-                "love_or_hate": 1,
-                "product_asin": "1234567",
-                "user_id": "1"
+                "loveOrHate": True,
+                "productAsin": "B00007GDFV",
+                "userId": "1"
               }
             }
   400:
@@ -47,20 +44,20 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'Missing_JSON', 'msg': 'Missing JSON in request'}
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
 definitions:
   Maincard:
     type: object
     required:
-      - user_id
+      - userId
       - asin
-      - love_or_hate
+      - loveOrHate
     properties:
-      user_id:
+      userId:
         type: string
       asin:
         type: string
-      love_or_hate:
+      loveOrHate:
         type: boolean
 security:
   - ApiKeyAuth: []

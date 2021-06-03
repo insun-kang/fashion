@@ -10,8 +10,6 @@ const UserInfoField = ({ userValues }) => {
       <div>{userValues.email}</div>
       <label>Date of Birth</label>
       <div>{userValues.birth}</div>
-      <label>Gender</label>
-      <div>{userValues.gender}</div>
     </div>
   );
 };
