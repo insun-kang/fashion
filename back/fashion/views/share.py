@@ -31,6 +31,8 @@ def Share():
         user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
         product = models.Product.query.filter_by(asin=asin).first()
 
+        shared=product.shared
+
         share = models.Share(
                 
                 asin=product.id,
@@ -40,7 +42,7 @@ def Share():
             models.db.session.add(share)
             models.db.session.commit()
 
-        product.shared += 1
+        product.shared = shared+1
         models.db.session.commit()
 
         return {'msg' : 'Share success'}, 200
