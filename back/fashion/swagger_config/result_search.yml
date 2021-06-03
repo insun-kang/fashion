@@ -1,21 +1,24 @@
 summary: "검색결과카드"
 description: "검색결과카드 post api"
 tags:
-    - main
+  - main
 produces:
-- "application/json"
+  - "application/json"
 requestBody:
-        description: 검색어
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/ResultSearch'
-            examples:
-              case1:
-                summary: 존재 키워드 없을때
-                value:
-                  existing_keywords: []
+  description: 검색어
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/ResultSearch'
+      examples:
+        case1:
+          summary: 키워드 존재
+          value:
+            pageNum: 20
+            dataSize: 4
+            existingKeywords: ["jeans", "blue"]
+
 responses:
   200:
     description: OK
@@ -25,8 +28,136 @@ responses:
           type: object
           example:
             {
-              "keyword": [
-                
-              ],
-              "msg": "You haven't entered anything"
+              "cards": [
+                {
+                  "asin": "B00030EZLM",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00030EZLM&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "men",
+                    "steel",
+                    "gold",
+                    "man",
+                    "black",
+                    "blue",
+                    "bracelet",
+                    "watch",
+                    "men",
+                    "steel",
+                    "gold",
+                    "man",
+                    "black",
+                    "blue",
+                    "bracelet",
+                    "watch"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00030EZLM",
+                  "starRating": 4,
+                  "title": "ESQ 550 SLX_Watch Watch 07300598"
+                },
+                {
+                  "asin": "B0006J31WY",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0006J31WY&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "glasses",
+                    "blue",
+                    "red",
+                    "lenses",
+                    "black"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 39.95,
+                  "productUrl": "https://www.amazon.com/dp/B0006J31WY",
+                  "starRating": 4.4,
+                  "title": "CliC Adjustable Front Connect Universal Sport Goggle, Black Frame"
+                },
+                {
+                  "asin": "B0006MZWKU",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0006MZWKU&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "jeans"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B0006MZWKU",
+                  "starRating": 3.625,
+                  "title": "DKNY Jeans Stretch Soho Jean, Vintage Blast"
+                },
+                {
+                  "asin": "B0006PLERC",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B0006PLERC&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "blue",
+                    "steel",
+                    "watch"
+                  ],
+                  "negReviewRate": 0,
+                  "nlpResults": {
+                    "negReviewSummary": 0,
+                    "posReviewSummary": 0
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B0006PLERC",
+                  "starRating": 5,
+                  "title": "Blue Dial Stainless Steel Watch"
+                }
+              ]
             }
+definitions:
+  ResultSearch:
+    type: object
+    required:
+      - keywords
+      - asin
+      - price
+      - bookmark
+      - starRating
+      - posReveiwRate
+      - negReviewRate
+      - image
+      - productUrl
+      - title
+    properties:
+      keywords:
+        type: string
+      asin:
+        type: string
+      price:
+        type: string
+      bookmark:
+        type: string
+      starRating:
+        type: string
+      posReveiwRate:
+        type: string
+      negReviewRate:
+        type: string
+      image:
+        type: string
+      productUrl:
+        type: string
+      title:
+        type: string
+security:
+  - ApiKeyAuth: []

@@ -5,17 +5,17 @@ tags:
 produces:
   - "application/json"
 requestBody:
-  description: 배경으로 원하는 제품의 숫자
-  required: true
-  content:
-    application/json:
-      schema:
-        type: object
-        property:
-          limitNum:
-            type: integer
-        example:
-          limitNum: 5
+        description: 배경으로 원하는 제품의 숫자
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              property:
+                limitNum:
+                    type: integer
+              example:
+                limitNum: 20
 responses:
   200:
     description: limitNum 만큼의 제품이 반환된 경우
@@ -23,7 +23,12 @@ responses:
       application/json:
         schema:
           type: object
-          example: { "requestNum": 5, "totalNum": 0, "ProductsList": {} }
+          example:
+            {
+                'requestNum': 5,
+                'totalNum': 0,
+                'ProductsList': []
+            }
   400:
     description: Missing JSON in request
     content:
@@ -31,6 +36,6 @@ responses:
         schema:
           type: object
           example:
-            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
+            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
 security:
   - ApiKeyAuth: []
