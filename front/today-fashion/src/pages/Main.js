@@ -10,102 +10,45 @@ import ProductCard from '../components/ProductCard';
 import InfiniteProducts from '../components/InfiniteProducts';
 
 const Main = () => {
-  const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
-  const [mainProducts, setMainProducts] = useState();
-  const [itemNums, setItemNums] = useState(10);
-  // const [inputValue, setInputValue] = useState('');
-  // const [selectedItem, setSelectedItem] = useState([]);
-  // const [autoCompleteItems, setAutoCompleteItems] = useState([
-  //   'apple',
-  //   'pear',
-  //   'peach',
-  //   'grape',
-  //   'orange',
-  //   'banana',
-  // ]);
+  // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+  // const [mainProducts, setMainProducts] = useState([]);
+  // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
+  // // const [itemNums, setItemNums] = useState(10);
+  // // TODO:
+  // // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
+  // // 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
 
-  // TODO:
-  // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
-  // 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
+  // axios.defaults.baseURL = SERVER_URL;
+  // axios.defaults.headers.common['Authorization'] = AuthStr;
 
-  axios.defaults.baseURL = SERVER_URL;
-  axios.defaults.headers.common['Authorization'] = AuthStr;
-
-  const getRecommendationResults = useCallback(async () => {
-    try {
-      const res = await axios.get('/result-cards');
-      setMainProducts(res.data.products);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // const getRecommendationResults = useCallback(async () => {
+  //   try {
+  //     const res = await axios.get('/result-cards');
+  //     setMainProducts([...mainProducts].concat(res.data.products));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   const handleSelectedTags = (items) => {
     console.log(items);
     //items 목록에 따라 키워드 검색 결과 재호출해서 보여주기
   };
 
-  const infiniteScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
+  // const infiniteScroll = () => {
+  //   const scrollHeight = document.documentElement.scrollHeight;
+  //   const scrollTop = document.documentElement.scrollTop;
+  //   const clientHeight = document.documentElement.clientHeight;
 
-    if (scrollTop + clientHeight >= scrollHeight) {
-      console.log('scroll end');
-      //새로운 데이터 불러오기
-    }
-  };
+  //   if (scrollTop + clientHeight >= scrollHeight) {
+  //     console.log('scroll end');
+  //     //새로운 데이터 불러오기
+  //   }
+  // };
 
-  const checkScrollSpeed = (function (settings) {
-    settings = settings || {};
-
-    let lastPos,
-      newPos,
-      timer,
-      delta,
-      delay = settings.delay || 50;
-
-    function clear() {
-      lastPos = null;
-      delta = 0;
-    }
-
-    clear();
-
-    return function () {
-      newPos = window.scrollY;
-      if (lastPos != null) {
-        // && newPos < maxScroll
-        delta = newPos - lastPos;
-      }
-      lastPos = newPos;
-      clearTimeout(timer);
-      timer = setTimeout(clear, delay);
-      return delta;
-    };
-  })();
-
-  const handleScrollSpeed = () => {
-    const speed = checkScrollSpeed();
-    //console.log(speed);
-    if (speed >= 150 && itemNums !== 20) {
-      setItemNums(20);
-    } else if (speed < 150 && itemNums !== 10) {
-      setItemNums(10);
-    }
-  };
-
-  console.log(itemNums);
-
-  useEffect(() => {
-    getRecommendationResults();
-    window.addEventListener('scroll', infiniteScroll, true);
-    window.addEventListener('scroll', handleScrollSpeed, true);
-    return () => {
-      window.removeEventListener('scroll', infiniteScroll);
-      window.removeEventListener('scroll', handleScrollSpeed);
-    };
-  }, []);
+  // useEffect(() => {
+  //   getRecommendationResults();
+  // }, []);
 
   return (
     <>
@@ -138,21 +81,17 @@ const Main = () => {
         id="tags"
         name="tags"
         placeholder="Search Item by Keyword"
-        // inputValue={inputValue}
-        // setInputValue={setInputValue}
-        // selectedItem={selectedItem}
-        // setSelectedItem={setSelectedItem}
-        // autoCompleteItems={autoCompleteItems}
-        // setAutoCompleteItems={setAutoCompleteItems}
       />
-      <div className="products-container">
+
+      <InfiniteProducts />
+      {/* <div className="products-container">
         {mainProducts &&
           mainProducts.map((product, index) => (
             <div key={index}>
               <ProductCard productData={product} />
             </div>
           ))}
-      </div>
+      </div> */}
     </>
   );
 };
