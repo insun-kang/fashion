@@ -34,6 +34,23 @@ def Search():
         search = "{}%".format(keyword.lower())
         find_keyword=models.SearchKeyword.query.filter(models.SearchKeyword.keyword.like(search)).all()
 
+        #이스터애그
+        if keyword=='dayong':
+            # return {'msg': "신성하게 남다르게 강인하게 황송하게(황정하게) 이게 다인가 싶을 때 김건우, 이범석(코치님들) 화이팅", 'keywords': '혼내기 담당: 남나영'}, 200
+            return '혼내기 담당: 남나영'
+        elif keyword=='dain':
+            # return {'msg': "신성하게 남다르게 강인하게 황송하게(황정하게) 이게 다인가 싶을 때 김건우, 이범석(코치님들) 화이팅", 'keywords': '쪼렙 담당: 김하인'}, 200
+            return '쪼렙 담당: 김하인'
+        elif keyword=='jongwoo':
+            # return {'msg': "신성하게 남다르게 강인하게 황송하게(황정하게) 이게 다인가 싶을 때 김건우, 이범석(코치님들) 화이팅", 'keywords': '밤새기 담당: 패션황'}, 200
+            return '밤새기 담당: 패션황'
+        elif keyword=='sinsung':
+            # return {'msg': "신성하게 남다르게 강인하게 황송하게(황정하게) 이게 다인가 싶을 때 김건우, 이범석(코치님들) 화이팅", 'keywords': '리더 담당: 홀리킴'}, 200
+            return '리더 담당: 홀리킴'
+        elif keyword== 'insun':
+            # return {'msg': "신성하게 남다르게 강인하게 황송하게(황정하게) 이게 다인가 싶을 때 김건우, 이범석(코치님들) 화이팅", 'keywords': '인성 담당: 강인성'}, 200
+            return '인성 담당: 강인성'
+
         if not keyword:
             return {'msg': "You haven't entered anything", 'keywords': return_keywords}, 200
         
@@ -100,6 +117,10 @@ def ResultSearch():
             #card['bookmark']
             bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin=asin).first()
 
+            #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
+            review = models.ProductReview.query.filter_by(asin=asin).first()
+
+
             card['keywords']=keywords
             card['asin']=asin
             card['price']=product.price
@@ -107,17 +128,26 @@ def ResultSearch():
                 card['bookmark']=False
             else:
                 card['bookmark']=True
-            card['nlpResults']={'posReviewSummary': 0, 'negReviewSummary':0}
+            if not review:
+                card['nlpResults']={
+                                'posReviewSummary': review.positive_review_summary, 
+                                'negReviewSummary': review.negative_review_summary
+                                }
+                card['posReveiwRate']=0
+            else:
+                card['nlpResults']={
+                                    'posReviewSummary': review.positive_review_summary, 
+                                    'negReviewSummary': review.negative_review_summary
+                                    }
+                card['posReveiwRate']=review.positive_review_number/(review.positive_review_number+review.negative_review_number)                        
             card['starRating']=product.rating
-            card['posReveiwRate']=0
-            card['negReviewRate']=0
             card['image']=address_format.img(asin)
             card['productUrl']=address_format.product(asin)
             card['title']=product.title
             
             cards.append(card)
 
-        return {'cards':cards}
+        return {'cards':cards}, 200
 
 
 # select asin, count(product_keyword) as count from product_keyword 

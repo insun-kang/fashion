@@ -32,11 +32,12 @@ def create_app():
     CORS(app, supports_credentials=True)
     # 블루프린트
 # --------------------------------------------------------------------------- #
-    from .views import auth, main, cardgame
+    from .views import auth, main, cardgame, share, bookmark
     app.register_blueprint(auth.bp)
     app.register_blueprint(main.bp)
     app.register_blueprint(cardgame.bp)
-    # app.register_blueprint(share.bp)
+    app.register_blueprint(share.bp)
+    app.register_blueprint(bookmark.bp)
     
 
 
