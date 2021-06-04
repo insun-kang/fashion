@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 
@@ -8,7 +8,9 @@ const InfiniteProducts = ({ searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
-  const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
+  // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
+  const [pageNum, setPageNum] = useState(0);
+  const [dataSize, setDataSize] = useState(10);
 
   // const [itemNums, setItemNums] = useState(10);
   // TODO:
@@ -27,26 +29,29 @@ const InfiniteProducts = ({ searchKeywords }) => {
     } catch (error) {
       console.log(error);
     }
-  }, [mainProducts, requestData]);
+  }, [mainProducts, dataSize]);
+  // }, [mainProducts, requestData]);
 
   const getSearchResults = useCallback(async () => {
     try {
-      const data = { ...requestData };
-      data['existingKeywords'] = searchKeywords;
-      const res = await axios.post('/result-search', data);
+      const res = await axios.post('/result-search', {
+        pageNum: pageNum,
+        dataSize: dataSize,
+        existingKeywords: searchKeywords,
+      });
       console.log(res);
-      console.log(requestData);
-      if (requestData.pageNum === 0) {
+      if (pageNum === 0) {
         setMainProducts(res.data.cards);
       } else {
         setMainProducts([...mainProducts].concat(res.data.cards));
       }
-      setRequestData({ ...requestData, pageNum: requestData.pageNum + 1 });
+      // setRequestData({ ...requestData, pageNum: requestData.pageNum + 1 });
+      setPageNum(pageNum + 1);
       setIsBottom(false);
     } catch (error) {
       console.log(error);
     }
-  }, [mainProducts, requestData, searchKeywords]);
+  }, [mainProducts, pageNum, dataSize, searchKeywords]);
 
   const infiniteScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -92,15 +97,17 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
-    console.log(speed, requestData.dataSize);
-    if (speed >= 200 && requestData.dataSize === 10) {
-      console.log('dataSize 증가');
-      setRequestData({ ...requestData, dataSize: 20 });
-    }
-    if (speed < 200 && requestData.dataSize === 20) {
-      console.log('dataSize 감소');
-      setRequestData({ ...requestData, dataSize: 10 });
-    }
+    console.log(speed, dataSize);
+    setDataSize((speed) => {
+      if (speed >= 200 && dataSize === 10) {
+        console.log('dataSize 증가');
+        return 20;
+      }
+      if (speed < 200 && dataSize === 20) {
+        console.log('dataSize 감소');
+        return 10;
+      }
+    });
   };
 
   useEffect(() => {
@@ -127,7 +134,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
     if (isBottom) {
       //더 불러오기
       //setIsBottom(false); // api 호출할 수 있게되면 삭제!!
-      console.log(requestData);
+      console.log(dataSize.current);
       setTimeout(() => {
         setMainProducts(
           [...mainProducts].concat([...mainProducts].slice(0, 3))
