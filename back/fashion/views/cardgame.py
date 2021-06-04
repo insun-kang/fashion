@@ -161,8 +161,8 @@ def result_cards():
             'price': product.price,
             'bookmark' : True if bookmark else False, # 존재하면 True 아니면 False
             'nlpResults': {
-                            'posReviewSummary': product_review.positive_review_summary,
-                            'negReviewSummary': product_review.negative_review_summary
+                            'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'OMG! There is no negative review at all!;)',
+                            'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'Oh no....there is no positive review at all...;('
                         },
             'starRating': round(product.rating, 2),
             'posReveiwRate': round(pos_review_rate, 2),
