@@ -1,0 +1,46 @@
+summary: "찜하기"
+description: "찜하기 post api"
+tags:
+  - bookmark
+produces:
+  - "application/json"
+requestBody:
+  description: 찜
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/bookmark'
+      examples:
+        case1:
+          summary: post request
+          value:
+            asin: 'B00FB155LC'
+
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'msg' : 'Make bookmark'}
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'msg' : 'Delete bookmark'}
+definitions:
+  Share:
+    type: object
+    required:
+      - asin
+    properties:
+      keyword:
+        type: string
+security:
+  - ApiKeyAuth: []

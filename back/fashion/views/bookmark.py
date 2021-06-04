@@ -13,12 +13,12 @@ from ast import literal_eval
 from flasgger.utils import swag_from
 from .. import error_code
 
-bp = Blueprint('share', __name__, url_prefix='/')
+bp = Blueprint('bookmark', __name__, url_prefix='/')
 
-@bp.route('/share', methods=['POST'])
+@bp.route('/bookmark', methods=['POST'])
 @jwt_required()
-@swag_from('../swagger_config/share.yml')
-def Share():
+@swag_from('../swagger_config/bookmark.yml')
+def Bookmark():
     if not request.is_json:
         return error_code.missing_json_error
 
@@ -29,20 +29,21 @@ def Share():
         header = request.headers.get('Authorization')
 
         user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-        product = models.Product.query.filter_by(asin=asin).first()
+        bookmark = models.Bookmark.query.filter_by(asin=asin, user_id=user_id).first()
 
-        shared=product.shared
-        
-        share = models.Share(
-                
-                asin=asin,
-                user_id=user_id,
-                shared_date=datetime.now()
-            )
-        models.db.session.add(share)
-        models.db.session.commit()
+        if bookmark is not None:
+            models.db.session.delete(bookmark)
+            models.db.session.commit()
 
-        product.shared = shared+1
-        models.db.session.commit()
+            return {'msg' : 'Delete bookmark'}, 200
+            
+        else:
+            bookmark = models.Bookmark(
+                            asin=asin,
+                            user_id=user_id,
+                            date=datetime.now()
+                        )
+            models.db.session.add(bookmark)
+            models.db.session.commit()
 
-        return {'msg' : 'Share success'}, 200
+            return {'msg' : 'Make bookmark'}, 200
