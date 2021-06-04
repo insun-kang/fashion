@@ -51,12 +51,11 @@ responses:
                     "bracelet",
                     "watch"
                   ],
-                  "negReviewRate": 0,
                   "nlpResults": {
-                    "negReviewSummary": 0,
-                    "posReviewSummary": 0
+                    "negReviewSummary": "",
+                    "posReviewSummary": " The case case is a little thinner than my automatic watches but it is a nice sleek look . I was especially impressed by the bracelet on this watch . This looks and feels like a watch at x the price. I was looking for a nice dressy watch to wear with my suits ."
                   },
-                  "posReveiwRate": 0,
+                  "posReveiwRate": 1,
                   "price": 0,
                   "productUrl": "https://www.amazon.com/dp/B00030EZLM",
                   "starRating": 4,
@@ -73,12 +72,11 @@ responses:
                     "lenses",
                     "black"
                   ],
-                  "negReviewRate": 0,
                   "nlpResults": {
-                    "negReviewSummary": 0,
-                    "posReviewSummary": 0
+                    "negReviewSummary": " I ll keep this review clean enough to see if you actually read it . My purpose it is to let your customers know that these goggles are not worth buying as they are being sold . I don t respond well to robots. I don't respond to robots, I'm not sure if you read it. My purpose is to tell your customers that they aren't worth buying .",
+                    "posReviewSummary": " These have stayed fog free even in humidity while I have sweat pouring down over my face.. AMAZING.. n nI bought sets.. I plan on buying another set or .. These actually have lenses per side.. And has to do with the ability to stay condesation free ."
                   },
-                  "posReveiwRate": 0,
+                  "posReveiwRate": 0.9,
                   "price": 39.95,
                   "productUrl": "https://www.amazon.com/dp/B0006J31WY",
                   "starRating": 4.4,
@@ -91,12 +89,11 @@ responses:
                   "keywords": [
                     "jeans"
                   ],
-                  "negReviewRate": 0,
                   "nlpResults": {
-                    "negReviewSummary": 0,
-                    "posReviewSummary": 0
+                    "negReviewSummary": " I have pairs of these jeans that are wonderful fits. The ones I just received are awful. They did not fit and the material had to be ironed . They were not at all like the others and did not . fit properly. The material was not like the ones I had ironed on .",
+                    "posReviewSummary": " The only negative about these jeans is that they stretch way to much after wearing x or x but after each wash they are back to normal . Hope DKNY doesn't discontinue these... These jeans are the only jeans I have ever worn that fit me perfectly . I have them in every color and like all of them. I also bought the DKNY Skinny Jeans which are great for boots ."
                   },
-                  "posReveiwRate": 0,
+                  "posReveiwRate": 0.875,
                   "price": 0,
                   "productUrl": "https://www.amazon.com/dp/B0006MZWKU",
                   "starRating": 3.625,
@@ -111,12 +108,11 @@ responses:
                     "steel",
                     "watch"
                   ],
-                  "negReviewRate": 0,
                   "nlpResults": {
-                    "negReviewSummary": 0,
-                    "posReviewSummary": 0
+                    "negReviewSummary": "",
+                    "posReviewSummary": " I loved this watch when I bought it at the store. I lost it and now I have it again and I couldn t be happier. Waterproof and brilliant. I love this watch. I couldn't be happier with it. I loved it. It was waterproof and brilliant ."
                   },
-                  "posReveiwRate": 0,
+                  "posReveiwRate": 1,
                   "price": 0,
                   "productUrl": "https://www.amazon.com/dp/B0006PLERC",
                   "starRating": 5,
