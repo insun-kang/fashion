@@ -35,7 +35,7 @@ responses:
           example:
             {'msg' : 'Delete bookmark'}
 definitions:
-  Share:
+  bookmark:
     type: object
     required:
       - asin
