@@ -4,12 +4,11 @@ import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 
 const InfiniteProducts = ({ searchKeywords }) => {
-  console.log(searchKeywords);
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
   // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
-  const [pageNum, setPageNum] = useState(0);
+  const [pageNum, setPageNum] = useState(1);
   const [dataSize, setDataSize] = useState(10);
 
   // const [itemNums, setItemNums] = useState(10);
@@ -40,13 +39,13 @@ const InfiniteProducts = ({ searchKeywords }) => {
         existingKeywords: searchKeywords,
       });
       console.log(res);
-      if (pageNum === 0) {
+      if (pageNum === 1) {
         setMainProducts(res.data.cards);
       } else {
         setMainProducts([...mainProducts].concat(res.data.cards));
       }
       // setRequestData({ ...requestData, pageNum: requestData.pageNum + 1 });
-      setPageNum(pageNum + 1);
+
       setIsBottom(false);
     } catch (error) {
       console.log(error);
@@ -97,14 +96,12 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
-    console.log(speed, dataSize);
-    setDataSize((speed) => {
-      if (speed >= 200 && dataSize === 10) {
-        console.log('dataSize 증가');
+    console.log(speed);
+    setDataSize(() => {
+      if (speed >= 200) {
         return 20;
       }
-      if (speed < 200 && dataSize === 20) {
-        console.log('dataSize 감소');
+      if (speed < 200) {
         return 10;
       }
     });
@@ -134,14 +131,17 @@ const InfiniteProducts = ({ searchKeywords }) => {
     if (isBottom) {
       //더 불러오기
       //setIsBottom(false); // api 호출할 수 있게되면 삭제!!
-      console.log(dataSize.current);
-      setTimeout(() => {
-        setMainProducts(
-          [...mainProducts].concat([...mainProducts].slice(0, 3))
-        );
-      }, 500);
-      //mock data 더해주기
-      setIsBottom(false);
+      console.log(dataSize);
+      setPageNum(pageNum + 1);
+      if (searchKeywords.length === 0) {
+        setTimeout(() => {
+          setMainProducts([...mainProducts].concat([...mainProducts]));
+        }, 500);
+      } else {
+        console.log(pageNum, dataSize);
+        getSearchResults();
+      }
+      // setIsBottom(false);
     }
   }, [isBottom]);
 
