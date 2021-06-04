@@ -17,6 +17,27 @@ from .. import address_format
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
+# -------------------------------------------------------------------------------------
+def event_stream():
+    pub = redis.pubsub()
+    pub.subscribe('sse_example_channel')
+    for msg in pub.listen():
+        if msg['type'] != 'subscribe':
+            event, data = json.loads(msg['data'])
+            yield u'event: {0}\ndata: {1}\n\n'.format(event, data)
+        else:
+            yield u'data: {0}\n\n'.format(msg['data'])
+
+@app.route('/stream')
+def get_pushes():
+    return Response(event_stream(), mimetype="text/event-stream")
+
+@app.route('/post')
+def publish_data():
+    # ...
+    redis.publish('sse_example_channel', json.dumps([event, data]))
+
+# -------------------------------------------------------------------------------------
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
@@ -45,14 +66,6 @@ def backcard():
                 'totalNum': len(products_list),
                 'productsList': products_list
                 }, 200
-
-
-# api 문서화-----------------------------------------------제작은 아직 안 들어감!
-# 3번 뒤 상품 준비가 됐다고 팝업이 뜸
-# 백엔드에서 유저에게 맞는 상품리스트 만들면 프론트에 push를 줄건지 프론트에서 rule base
-# 게임 플레이 누적 횟수
-# 메인카드 10개 단위로
-# 결과보기 했을 때 발전시키게
 
 # 메인 카드 api
 @bp.route('/maincard', methods=['GET','POST'])
@@ -161,8 +174,8 @@ def result_cards():
             'price': product.price,
             'bookmark' : True if bookmark else False, # 존재하면 True 아니면 False
             'nlpResults': {
-                            'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'OMG! There is no negative review at all!;)',
-                            'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'Oh no....there is no positive review at all...;('
+                            'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
                         },
             'starRating': round(product.rating, 2),
             'posReveiwRate': round(pos_review_rate, 2),
@@ -174,3 +187,6 @@ def result_cards():
             'productsNum': len(products_list),
             'products': products_list
             }, 200
+# 코드 위에 다 삽입해서 한번에 돌리기
+# json으로 이 위에 다 만들고
+# get 요청 오면 json import해서 보내주기
