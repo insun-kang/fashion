@@ -36,21 +36,6 @@ const Main = () => {
     //items 목록에 따라 키워드 검색 결과 재호출해서 보여주기
   };
 
-  // const infiniteScroll = () => {
-  //   const scrollHeight = document.documentElement.scrollHeight;
-  //   const scrollTop = document.documentElement.scrollTop;
-  //   const clientHeight = document.documentElement.clientHeight;
-
-  //   if (scrollTop + clientHeight >= scrollHeight) {
-  //     console.log('scroll end');
-  //     //새로운 데이터 불러오기
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getRecommendationResults();
-  // }, []);
-
   return (
     <>
       <Container>

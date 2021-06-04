@@ -11,9 +11,9 @@ const Game = () => {
   const [background, setBackground] = useState(); //배경 이미지
   const [questions, setQuestions] = useState(); //배경문구 , 게임문항
   const [questionIdx, setQuestionIdx] = useState(0);
-  //현재 요청한 게임중에서 몇번째 게임 진행중인지 (0-9)
+  // 현재 요청한 게임중에서 몇번째 게임 진행중인지 (0-9)
   const [isPending, setIsPending] = useState(true);
-  //isPending === true 이면 로딩중
+  // isPending === true 이면 로딩중
   const [fetchQuestionCount, setFetchQuestionCount] = useState(0);
   // maincard api에 get 요청 한 횟수
 

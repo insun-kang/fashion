@@ -4,6 +4,7 @@ import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 
 const InfiniteProducts = ({ searchKeywords }) => {
+  console.log(searchKeywords);
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
@@ -13,6 +14,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
   // TODO:
   // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
   // 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
+  // 더이상 요청할 데이터가 없는 상황 관리하기
 
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
@@ -29,18 +31,22 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const getSearchResults = useCallback(async () => {
     try {
-      const res = await axios.get('/result-cards');
+      const data = { ...requestData };
+      data['existingKeywords'] = searchKeywords;
+      const res = await axios.post('/result-search', data);
+      console.log(res);
+      console.log(requestData);
       if (requestData.pageNum === 0) {
-        setMainProducts(res.data.products);
+        setMainProducts(res.data.cards);
       } else {
-        setMainProducts([...mainProducts].concat(res.data.products));
+        setMainProducts([...mainProducts].concat(res.data.cards));
       }
-
+      setRequestData({ ...requestData, pageNum: requestData.pageNum + 1 });
       setIsBottom(false);
     } catch (error) {
       console.log(error);
     }
-  }, [mainProducts, requestData]);
+  }, [mainProducts, requestData, searchKeywords]);
 
   const infiniteScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -101,7 +107,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
     if (searchKeywords.length === 0) {
       getRecommendationResults();
     } else {
-      //getSearchResults();
+      getSearchResults();
     }
     window.addEventListener('scroll', handleScrollSpeed, true);
     window.addEventListener('scroll', infiniteScroll, true);
@@ -110,6 +116,12 @@ const InfiniteProducts = ({ searchKeywords }) => {
       window.removeEventListener('scroll', handleScrollSpeed, false);
     };
   }, []);
+
+  useEffect(() => {
+    if (searchKeywords.length !== 0) {
+      getSearchResults();
+    }
+  }, [searchKeywords]);
 
   useEffect(() => {
     if (isBottom) {
@@ -126,7 +138,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
     }
   }, [isBottom]);
 
-  if (mainProducts.length === 0) {
+  if (!mainProducts || mainProducts.length === 0) {
     return null;
   }
 
