@@ -103,3 +103,39 @@ useCallback에 대한 공부가 더 필요할 것 같다. 함수에 대�
 로딩 관리를 해주기 전에는 이미지를 불러오는 시간이 약 900ms 정도 걸렸는데, 최적화를 한 뒤에는 0~1ms 내에 다음 게임을 화면에 표시해줄 수 있었다!
 
 브라우저와 리엑트의 렌더링 방식에 대해 깊게 고민해보는 시간이 되었다.
+
+---
+
+## week4 - 남다영
+
+**addEventListener의 사용**
+
+무한스크롤 관련 포스팅을 찾던 중에 componentDidMount 시점에 "scroll" 이벤트에 대하여 addEventListener을 계속해서 추가하는 코드를 발견했다. 함수형 컴포넌트였기 때문에 다음과 같은 코드였다. (deps array가 아예 없는 useEffect)
+
+```
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+      return () => {window.removeEventListener('scroll', handleScroll)
+}
+  })
+
+```
+
+보통은 componentOnMount 시점에 추가하는데 왜 이런 식으로 코드를 작성했을까 고민을 하다가 이유를 찾지 못해서 코치님께 여쭤봤고, DidMount 시점에 addEventListener을 실행하면 같은 대상의 같은 이벤트에 대해서 같은 함수를 계속 추가하게 된다는 사실을 알게 되었다. return 안의 함수는 여전히 unmount 시점에 한번만 실행되기 때문. 이렇게 되면 이벤트끼리 충돌할 수도 있고...여하튼 좋지 않다. 해당 포스팅을 작성한 사람이 잘못 코딩한 것 같다.
+
+덕분에 알게 된 사실도 있는데,
+
+- 고의적으로 같은 이벤트에 대해서 여러 함수를 추가할 수도 있다. (두 함수가 완전히 다른 기능을 가지고 있는 경우 함수 분리 차원에서 이런 일이 있을 수 있다.)
+- 여러 함수를 추가한다면 순차적으로 실행하고 싶은 상황이 생길 것 같은데, 무조건 먼저 추가된 함수가 먼저 실행된다.
+
+**이벤트 리스너가 useState의 state값 변경을 인식하지 못하는 문제**
+
+다시 붙는 건 함수가 달라서인데, 그럼 바뀐 직전의 함수는 없어지지 않는 이유는 뭘까? 브라우저마다 동작방식이 다른걸까?
+
+eventlistener 함수 내에서 useState의 변수에 접근하는 경우, 초기 state 변수에 따라 함수가 생성되고, 생성시점의 state값만 가지고 있는다. (onMount 시점에 붙은 eventlistener 함수의 경우 컴포넌트처럼 새롭게 렌더링되지 않기 때문에 갱신되는 state값을 알지 못한다.)
+useRef를 사용해서 state값에 접근할 수 있다.
+[참고링크](https://medium.com/geographit/accessing-react-state-in-event-listeners-with-usestate-and-useref-hooks-8cceee73c559)
+
+**무한스크롤 적용**
+https://medium.com/suyeonme/react-how-to-implement-an-infinite-scroll-749003e9896a
+위 방법을 사용해서 코드를 리팩토링 하고 싶다. 커스텀 훅을 사용하면 코드가 많이 깔끔해지는데, 커스텀 훅을 만들자 라고 생각하면 왠지 어렵게 느껴져서 그럴 생각조차 못 하는 경우가 많은 것 같다.
