@@ -8,8 +8,11 @@ const InfiniteProducts = ({ searchKeywords }) => {
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
   // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
-  const [pageNum, setPageNum] = useState(1);
+  const [pageNum, setPageNum] = useState(0);
   const [dataSize, setDataSize] = useState(10);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  //const [curScrollHeight, setScrollHeigth] =
 
   // const [itemNums, setItemNums] = useState(10);
   // TODO:
@@ -39,14 +42,17 @@ const InfiniteProducts = ({ searchKeywords }) => {
         existingKeywords: searchKeywords,
       });
       console.log(res);
-      if (pageNum === 1) {
+      if (pageNum === 0) {
         setMainProducts(res.data.cards);
       } else {
+        console.log(mainProducts);
+        console.log(res.data.cards);
+        console.log([...mainProducts].concat(res.data.cards));
         setMainProducts([...mainProducts].concat(res.data.cards));
       }
       // setRequestData({ ...requestData, pageNum: requestData.pageNum + 1 });
 
-      setIsBottom(false);
+      // setIsBottom(false);
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +66,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
     if (scrollTop + clientHeight + 500 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
       console.log('scroll end');
-      setIsBottom(true);
+      // setIsBottom(true);
     }
   };
 
@@ -130,9 +136,9 @@ const InfiniteProducts = ({ searchKeywords }) => {
   useEffect(() => {
     if (isBottom) {
       //더 불러오기
-      //setIsBottom(false); // api 호출할 수 있게되면 삭제!!
+      setIsBottom(false); // api 호출할 수 있게되면 삭제!!
       console.log(dataSize);
-      setPageNum(pageNum + 1);
+      //
       if (searchKeywords.length === 0) {
         setTimeout(() => {
           setMainProducts([...mainProducts].concat([...mainProducts]));
@@ -141,9 +147,9 @@ const InfiniteProducts = ({ searchKeywords }) => {
         console.log(pageNum, dataSize);
         getSearchResults();
       }
-      // setIsBottom(false);
+      setPageNum(pageNum + 1);
     }
-  }, [isBottom]);
+  }, [isBottom, pageNum, mainProducts]);
 
   if (!mainProducts || mainProducts.length === 0) {
     return null;
