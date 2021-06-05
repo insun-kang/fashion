@@ -71,7 +71,7 @@ class ProductUserPlayed(db.Model):
     asin = Column(String(256), ForeignKey('product.asin'))
     user_id = Column(Integer, ForeignKey('user.id'))
 
-    love_or_hate = Column(Boolean, default=0)
+    love_or_hate = Column(Integer, nullable=False)
 
 
 class Bookmark(db.Model):
