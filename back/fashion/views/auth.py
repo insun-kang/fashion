@@ -12,8 +12,10 @@ from ast import literal_eval
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
-
 bp = Blueprint('auth', __name__, url_prefix='/')
+@bp.route('/', methods=['GET'])
+def d():
+    return 'test'
 
 @bp.route('/sign-up', methods=['POST'])
 @swag_from('../swagger_config/register.yml', validation=True)
