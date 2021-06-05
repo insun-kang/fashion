@@ -71,7 +71,7 @@ class ProductUserPlayed(db.Model):
     asin = Column(String(256), ForeignKey('product.asin'))
     user_id = Column(Integer, ForeignKey('user.id'))
 
-    love_or_hate = Column(Boolean, nullable=False, default=0)
+    love_or_hate = Column(Boolean, default=0)
 
 
 class Bookmark(db.Model):
@@ -82,7 +82,7 @@ class Bookmark(db.Model):
 
     asin = Column(String(256), ForeignKey('product.asin'))
     user_id = Column(Integer, ForeignKey('user.id'))
-    date = Column(DATE, nullable=False)
+    date = Column(DATE)
 
 
 class Share(db.Model):
@@ -93,4 +93,4 @@ class Share(db.Model):
 
     asin = Column(String(256), ForeignKey('product.asin'))
     user_id = Column(Integer, ForeignKey('user.id'))
-    shared_date = Column(DATE, nullable=False)
+    shared_date = Column(DATE)
