@@ -10,14 +10,20 @@ const InfiniteProducts = ({ searchKeywords }) => {
   // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
   const [pageNum, setPageNum] = useState(0);
   const [dataSize, setDataSize] = useState(10);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const dataSizeRef = useRef(dataSize);
+
+  const [loading, setLoading] = useState(false);
+
+  const setdataSizeRef = (cur) => {
+    dataSizeRef.current = cur;
+    setDataSize(cur);
+  };
   //const [curScrollHeight, setScrollHeigth] =
 
   // const [itemNums, setItemNums] = useState(10);
   // TODO:
   // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
-  // 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
+  // O 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
   // 더이상 요청할 데이터가 없는 상황 관리하기
 
   axios.defaults.baseURL = SERVER_URL;
@@ -36,6 +42,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const getSearchResults = useCallback(async () => {
     try {
+      await setLoading(true);
       const res = await axios.post('/result-search', {
         pageNum: pageNum,
         dataSize: dataSize,
@@ -43,16 +50,12 @@ const InfiniteProducts = ({ searchKeywords }) => {
       });
       console.log(res);
       if (pageNum === 0) {
-        setMainProducts(res.data.cards);
+        await setMainProducts(res.data.cards);
       } else {
-        console.log(mainProducts);
-        console.log(res.data.cards);
-        console.log([...mainProducts].concat(res.data.cards));
-        setMainProducts([...mainProducts].concat(res.data.cards));
+        await setMainProducts([...mainProducts].concat(res.data.cards));
       }
-      // setRequestData({ ...requestData, pageNum: requestData.pageNum + 1 });
-
-      // setIsBottom(false);
+      await setPageNum(pageNum + 1);
+      await setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +69,8 @@ const InfiniteProducts = ({ searchKeywords }) => {
     if (scrollTop + clientHeight + 500 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
       console.log('scroll end');
-      // setIsBottom(true);
+      console.log(dataSize, dataSizeRef);
+      setIsBottom(true);
     }
   };
 
@@ -97,20 +101,19 @@ const InfiniteProducts = ({ searchKeywords }) => {
       return delta;
     };
   })();
-  // const checkScrollSpeed = initializeScroll();
   //즉시 실행을 해서 익명함수의 리턴 부분에 정의된 함수를 checkScrollSpeed에 할당
 
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
     console.log(speed);
-    setDataSize(() => {
-      if (speed >= 200) {
-        return 20;
-      }
-      if (speed < 200) {
-        return 10;
-      }
-    });
+    if (speed >= 200 && dataSizeRef.current === 10) {
+      console.log('증가');
+      setdataSizeRef(20);
+    }
+    if (speed < 200 && dataSizeRef.current === 20) {
+      console.log('감소');
+      setdataSizeRef(10);
+    }
   };
 
   useEffect(() => {
@@ -130,14 +133,17 @@ const InfiniteProducts = ({ searchKeywords }) => {
   useEffect(() => {
     if (searchKeywords.length !== 0) {
       getSearchResults();
+    } else {
+      getRecommendationResults();
     }
   }, [searchKeywords]);
 
   useEffect(() => {
-    if (isBottom) {
+    console.log(loading);
+    if (isBottom && !loading) {
       //더 불러오기
       setIsBottom(false); // api 호출할 수 있게되면 삭제!!
-      console.log(dataSize);
+      console.log(dataSize, dataSizeRef);
       //
       if (searchKeywords.length === 0) {
         setTimeout(() => {
@@ -147,9 +153,9 @@ const InfiniteProducts = ({ searchKeywords }) => {
         console.log(pageNum, dataSize);
         getSearchResults();
       }
-      setPageNum(pageNum + 1);
+      // setPageNum(pageNum + 1);
     }
-  }, [isBottom, pageNum, mainProducts]);
+  }, [isBottom, pageNum, mainProducts, loading, searchKeywords]);
 
   if (!mainProducts || mainProducts.length === 0) {
     return null;
