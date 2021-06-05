@@ -65,6 +65,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const getSearchResults = useCallback(async () => {
     try {
+      console.log(pageNum);
       await setLoading(true);
       const res = await axios.post('/result-search', {
         pageNum: pageNum,
@@ -171,6 +172,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
         getSearchResults();
       }
     };
+    console.log('키워드 갱신');
     fetchWithKeywordUpdate();
   }, [searchKeywords]);
 

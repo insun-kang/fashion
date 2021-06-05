@@ -10,6 +10,7 @@ import ProductCard from '../components/ProductCard';
 import InfiniteProducts from '../components/InfiniteProducts';
 
 const Main = () => {
+  const [isOpenModal, setIsOpenModal] = useState(false);
   // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   // const [mainProducts, setMainProducts] = useState([]);
   // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
@@ -70,14 +71,6 @@ const Main = () => {
       />
 
       <InfiniteProducts searchKeywords={searchKeywords} />
-      {/* <div className="products-container">
-        {mainProducts &&
-          mainProducts.map((product, index) => (
-            <div key={index}>
-              <ProductCard productData={product} />
-            </div>
-          ))}
-      </div> */}
     </>
   );
 };
