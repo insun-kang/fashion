@@ -62,9 +62,6 @@ def register():
             models.db.session.commit()
             # 추천 디폴트 json 파일 생성----------------------------------------------------------------------------------------------
             queried = models.User.query.filter_by(email=email).first()
-            print('-'*50)
-            print(queried.id)
-            print('-'*50)
 
             try:
                 shutil.copy2("fashion/user_recommendations/default.json", f"fashion/user_recommendations/{queried.id}.json")
