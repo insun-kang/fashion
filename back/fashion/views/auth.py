@@ -12,6 +12,11 @@ from ast import literal_eval
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
+import json
+from .. import address_format
+import shutil
+import os
+
 bp = Blueprint('auth', __name__, url_prefix='/')
 @bp.route('/', methods=['GET'])
 def d():
@@ -58,10 +63,20 @@ def register():
             )
             models.db.session.add(user)
             models.db.session.commit()
+            # 추천 디폴트 json 파일 생성----------------------------------------------------------------------------------------------
+            queried = models.User.query.filter_by(email=email).first()
 
+            try:
+                shutil.copy2("fashion/user_recommendations/default.json", f"fashion/user_recommendations/{queried.id}.json")
+            except:
+                admin=models.User.query.filter_by(id=queried.id).first()
+                models.db.session.delete(admin)
+                models.db.session.commit()
+                return error_code.error_body('failed_copying','Failed copying default json file')
+            # ----------------------------------------------------------------------------------------------------------------------------------
 
             #바로 로그인 실행
-            queried = models.User.query.filter_by(email=email).first()
+            # queried = models.User.query.filter_by(email=email).first() # 위로 이동함
 
             accessToken = create_access_token(identity=queried.id, fresh=True)
 
@@ -207,6 +222,12 @@ def withdrawal():
     admin=models.User.query.filter_by(id=user_id).first()
     models.db.session.delete(admin)
     models.db.session.commit()
+
+    file = f'fashion/user_recommendations/{user_id}.json'
+
+    if os.path.isfile(file):
+        os.remove(file)
+
     return {'msg': 'Succeed deleting members account'}, 200
 
 
