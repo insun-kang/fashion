@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask import Flask, request
 import bcrypt
 from flask_cors import CORS
@@ -8,12 +8,11 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, decode_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
 
-
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
 from .. import address_format
-
+from ast import literal_eval
 bp = Blueprint('main', __name__, url_prefix='/')
 
 
@@ -101,16 +100,18 @@ def ResultSearch():
         .all()
 
         
+
+        
         for i in asins:
             
             asin=i.asin
             card={}
             keywords=[]
             #card['keywords']
-            keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
-            for keyword in keywords_by_asin:
-                if keyword not in keywords:
-                    keywords.append(keyword.product_keyword)
+            keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin=asin).all()
+            # for keyword in keywords_by_asin:
+            #     if keyword not in keywords:
+            #         keywords.append(keyword.product_keyword)
             #card['price'],card['title']
             product=models.Product.query.filter_by(asin=asin).first()
 
@@ -121,7 +122,7 @@ def ResultSearch():
             review = models.ProductReview.query.filter_by(asin=asin).first()
 
 
-            card['keywords']=keywords
+            card['keywords']=literal_eval(str(keywords_by_asin))
             card['asin']=asin
             card['price']=product.price
             if not bookmark:
