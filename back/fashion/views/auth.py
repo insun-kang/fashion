@@ -64,7 +64,8 @@ def register():
             queried = models.User.query.filter_by(email=email).first()
 
             try:
-                shutil.copy2("fashion/user_recommendations/default.json", f"fashion/user_recommendations/{queried.id}.json")
+                shutil.copy2("fashion/user_recommendations/game_default.json", f"fashion/user_recommendations/game_{queried.id}.json")
+                shutil.copy2("fashion/user_recommendations/result_default.json", f"fashion/user_recommendations/result_{queried.id}.json")
             except:
                 admin=models.User.query.filter_by(id=queried.id).first()
                 models.db.session.delete(admin)
@@ -113,8 +114,6 @@ def login():
 
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             accessToken = create_access_token(identity=queried.id, fresh=True)
-
-
             return {
                      'accessToken': accessToken,
                      'nickname': queried.nickname
@@ -220,10 +219,12 @@ def withdrawal():
     models.db.session.delete(admin)
     models.db.session.commit()
 
-    file = f'fashion/user_recommendations/{user_id}.json'
+    file = f'fashion/user_recommendations/game_{user_id}.json'
+    file2 = f'fashion/user_recommendations/result_{user_id}.json'
 
-    if os.path.isfile(file):
+    if os.path.isfile(file) or os.path.isfile(file2):
         os.remove(file)
+        os.remove(file2)
 
     return {'msg': 'Succeed deleting members account'}, 200
 
