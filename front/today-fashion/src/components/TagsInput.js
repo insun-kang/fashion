@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chip from '@material-ui/core/Chip';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
 import Downshift from 'downshift';
 import axios from 'axios';

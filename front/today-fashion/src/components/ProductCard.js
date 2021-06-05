@@ -5,8 +5,8 @@ import {
   Card,
   CardMedia,
   IconButton,
-  makeStyles,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
