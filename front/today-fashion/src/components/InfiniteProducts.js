@@ -10,17 +10,16 @@ const InfiniteProducts = ({ searchKeywords }) => {
   // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
   const [pageNum, setPageNum] = useState(0);
   const [dataSize, setDataSize] = useState(10);
-  const dataSizeRef = useRef(dataSize);
-
   const [loading, setLoading] = useState(false);
+  const [isMore, setIsMore] = useState(true);
+
+  const dataSizeRef = useRef(dataSize);
 
   const setdataSizeRef = (cur) => {
     dataSizeRef.current = cur;
     setDataSize(cur);
   };
-  //const [curScrollHeight, setScrollHeigth] =
 
-  // const [itemNums, setItemNums] = useState(10);
   // TODO:
   // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
   // O 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
@@ -37,8 +36,32 @@ const InfiniteProducts = ({ searchKeywords }) => {
     } catch (error) {
       console.log(error);
     }
+    // 추천 api 고쳐지면 이부분 주석 해제하고 사용
+    // try {
+    //   await setLoading(true);
+    //   const res = await axios.post('/result-cards',{
+    //     pageNum: pageNum,
+    //     dataSize: dataSize,});
+    //   console.log(res);
+
+    //   if (res.data.products.length ===0){
+    //     setIsMore(false)
+    //     setLoading(false);
+    //     return
+    //   }
+
+    //   if (pageNum === 0) {
+    //     await setMainProducts(res.data.products);
+    //   } else {
+    //     await setMainProducts([...mainProducts].concat(res.data.products));
+    //   }
+    //   await setPageNum(pageNum + 1);
+    //   await setLoading(false);
+
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }, [mainProducts, dataSize]);
-  // }, [mainProducts, requestData]);
 
   const getSearchResults = useCallback(async () => {
     try {
@@ -49,6 +72,11 @@ const InfiniteProducts = ({ searchKeywords }) => {
         existingKeywords: searchKeywords,
       });
       console.log(res);
+      if (res.data.cards.length === 0) {
+        setIsMore(false);
+        setLoading(false);
+        return;
+      }
       if (pageNum === 0) {
         await setMainProducts(res.data.cards);
       } else {
@@ -122,6 +150,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
     } else {
       getSearchResults();
     }
+    //추천결과만 보여줘도 됨 나중에 확인해보고 수정
     window.addEventListener('scroll', handleScrollSpeed, true);
     window.addEventListener('scroll', infiniteScroll, true);
     return () => {
@@ -131,16 +160,23 @@ const InfiniteProducts = ({ searchKeywords }) => {
   }, []);
 
   useEffect(() => {
-    if (searchKeywords.length !== 0) {
-      getSearchResults();
-    } else {
-      getRecommendationResults();
-    }
+    const fetchWithKeywordUpdate = async () => {
+      await setPageNum(0);
+      //키워드가 갱신되면 무조건 0페이지부터 데이터를 요청하게 된다
+      if (searchKeywords.length === 0) {
+        // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
+        // -> 캐싱 안되나? 나중에 기능 추가
+        getRecommendationResults();
+      } else {
+        getSearchResults();
+      }
+    };
+    fetchWithKeywordUpdate();
   }, [searchKeywords]);
 
   useEffect(() => {
     console.log(loading);
-    if (isBottom && !loading) {
+    if (isBottom && !loading && isMore) {
       //더 불러오기
       setIsBottom(false); // api 호출할 수 있게되면 삭제!!
       console.log(dataSize, dataSizeRef);
@@ -148,12 +184,11 @@ const InfiniteProducts = ({ searchKeywords }) => {
       if (searchKeywords.length === 0) {
         setTimeout(() => {
           setMainProducts([...mainProducts].concat([...mainProducts]));
-        }, 500);
+        }, 500); // 추천 api 갱신되면 삭제하고 추천결과 호출
       } else {
         console.log(pageNum, dataSize);
         getSearchResults();
       }
-      // setPageNum(pageNum + 1);
     }
   }, [isBottom, pageNum, mainProducts, loading, searchKeywords]);
 
