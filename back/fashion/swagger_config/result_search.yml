@@ -1,0 +1,32 @@
+summary: "검색결과카드"
+description: "검색결과카드 post api"
+tags:
+    - main
+produces:
+- "application/json"
+requestBody:
+        description: 검색어
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ResultSearch'
+            examples:
+              case1:
+                summary: 존재 키워드 없을때
+                value:
+                  existing_keywords: []
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "keyword": [
+                
+              ],
+              "msg": "You haven't entered anything"
+            }

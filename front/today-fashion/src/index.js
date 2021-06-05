@@ -4,14 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import { SettingsProvider } from './contexts/SettingsContext';
 import { RecoilRoot } from 'recoil';
+import ThemeConfig from './theme';
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <SettingsProvider>
+          <ThemeConfig>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ThemeConfig>
+        </SettingsProvider>
+      </LocalizationProvider>
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')

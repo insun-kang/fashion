@@ -11,3 +11,39 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'Spoqa';
+  font-weight: 100;
+  font-style: normal;
+  src: local('Spoqa'),
+    url('./fonts/SpoqaHanSansNeo-Thin.wotf2') format('opentype');
+}
+@font-face {
+  font-family: 'Spoqa';
+  font-weight: 300;
+  font-style: normal;
+  src: local('Spoqa'),
+    url('./fonts/SpoqaHanSansNeo-Light.wotf2') format('opentype');
+}
+@font-face {
+  font-family: 'Spoqa';
+  font-weight: 400;
+  font-style: normal;
+  src: local('Spoqa'),
+    url('./fonts/SpoqaHanSansNeo-Regular.wotf2') format('opentype');
+}
+@font-face {
+  font-family: 'Spoqa';
+  font-weight: 500;
+  font-style: normal;
+  src: local('Spoqa'),
+    url('./fonts/SpoqaHanSansNeo-Medium.wotf2') format('opentype');
+}
+@font-face {
+  font-family: 'Spoqa';
+  font-weight: 700;
+  font-style: normal;
+  src: local('Spoqa'),
+    url('./fonts/SpoqaHanSansNeo-Bold.wotf2') format('opentype');
+}
