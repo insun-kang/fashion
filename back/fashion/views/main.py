@@ -96,16 +96,16 @@ def ResultSearch():
         .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))\
         .group_by("asin")\
         .having(models.func.count(models.ProductKeyword.product_keyword)<=size)\
-        .offset(page_num)\
+        .offset(page_num*data_size)\
         .limit(data_size)\
         .all()
 
         
         for i in asins:
+            
             asin=i.asin
             card={}
             keywords=[]
-            
             #card['keywords']
             keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
             for keyword in keywords_by_asin:
@@ -130,9 +130,10 @@ def ResultSearch():
                 card['bookmark']=True
             if not review:
                 card['nlpResults']={
-                                'posReviewSummary': review.positive_review_summary, 
-                                'negReviewSummary': review.negative_review_summary
+                                'posReviewSummary': 'Oh no....there is no positive review at all...;(', 
+                                'negReviewSummary': 'OMG! There is no negative review at all!;)'
                                 }
+            
                 card['posReveiwRate']=0
             else:
                 card['nlpResults']={
@@ -146,7 +147,7 @@ def ResultSearch():
             card['title']=product.title
             
             cards.append(card)
-
+        
         return {'cards':cards}, 200
 
 
