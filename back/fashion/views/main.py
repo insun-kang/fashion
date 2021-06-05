@@ -102,6 +102,7 @@ def ResultSearch():
 
         
         for i in asins:
+            
             asin=i.asin
             card={}
             keywords=[]
