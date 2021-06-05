@@ -385,12 +385,12 @@ responses:
               "productsNum": 20
             }
   400:
-    description: 알고리즘으로부터 추천 결과가 없는 경우
+    description: user가 5번 미만으로 게임했을때
     content:
       application/json:
         schema:
           type: object
           example:
-            {'errorCode': 'no_result','msg': "There's no recommendation for user at all"}
+            {'errorCode': 'play_too_little','msg': 'This user played game less than 5 times'}
 security:
   - ApiKeyAuth: []
