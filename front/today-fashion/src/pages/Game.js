@@ -22,8 +22,6 @@ const Game = () => {
   // 현재 요청한 게임중에서 몇번째 게임 진행중인지 (0-9)
   const [isPending, setIsPending] = useState(true);
   // isPending === true 이면 로딩중
-  const [fetchQuestionCount, setFetchQuestionCount] = useState(0);
-  // maincard api에 get 요청 한 횟수
   const [isMore, setIsMore] = useState(true);
 
   axios.defaults.baseURL = SERVER_URL;
@@ -70,11 +68,12 @@ const Game = () => {
         //if (questionIdx === questions?.products?.length - 1) { 로 고치고 싶은데..
         setIsPending(true);
         setQuestions();
+        setInitPlayNum(totalPlayNum);
         setQuestionIdx(0);
         getQuestions();
       }
     },
-    [questionIdx, sendAnswer, getQuestions]
+    [questionIdx, sendAnswer, getQuestions, totalPlayNum]
   );
   useEffect(() => {
     getBackGroundData();
@@ -83,7 +82,7 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    if (initPlayNum && questionIdx) {
+    if (initPlayNum !== undefined && questionIdx !== undefined) {
       setTotalPlayNum(initPlayNum + questionIdx + 1);
     }
   }, [initPlayNum, questionIdx]);
