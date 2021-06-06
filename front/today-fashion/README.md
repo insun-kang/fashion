@@ -139,3 +139,12 @@ useRef를 사용해서 state값에 접근할 수 있다.
 **무한스크롤 적용**
 https://medium.com/suyeonme/react-how-to-implement-an-infinite-scroll-749003e9896a
 위 방법을 사용해서 코드를 리팩토링 하고 싶다. 커스텀 훅을 사용하면 코드가 많이 깔끔해지는데, 커스텀 훅을 만들자 라고 생각하면 왠지 어렵게 느껴져서 그럴 생각조차 못 하는 경우가 많은 것 같다.
+
+**setState 동기처리**
+setState은 비동기적으로 작용한다고 알고 있었기 때문에, 동기적으로 작동하게 하기 위해 async await을 썼다. 하지만 의도한대로 동작하지 않았다. 이에 관해 찾아본 [링크](https://stackoverflow.com/questions/51968714/is-it-correct-to-use-await-setstate) 에는 이렇게 나와있다.
+
+setState() does not return a Promise, so you cannot use it with await as you intend. (Although you can await synchronous code as well).
+
+When it's said that setState() is asynchronous, what's meant is that the effect of setState() may happen at a later time.
+
+즉, setState은 promise를 반환하지 않기 때문에 async await으로 동기처리를 할 수 없다. async await을 그럼 절대 쓸 수 없냐! 그건 아니다. 직접 promise로 감싸서 프로미스를 반환하게 한 다음. async await을 적용하면 사용이 가능하다.

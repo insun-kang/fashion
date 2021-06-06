@@ -103,18 +103,20 @@ const TagsInput = ({ ...props }) => {
   }, [inputValue, selectedItems]);
 
   const getAutoComplete = async (data) => {
-    try {
-      const res = await axios.post(SERVER_URL + '/search', data);
-      console.log(res);
-      setAutoCompleteItems(res.data.keywords);
-      if (!res.data.keywords.length) {
-        setAutoCompleteError(res.data.msg);
+    if (data.keyword !== '') {
+      try {
+        const res = await axios.post(SERVER_URL + '/search', data);
+        console.log(res);
+        setAutoCompleteItems(res.data.keywords);
+        if (!res.data.keywords.length) {
+          setAutoCompleteError(res.data.msg);
+        }
+        setSearchRows(
+          autoCompleteItems.length + (autoCompleteError.length > 0 ? 0 : 1)
+        );
+      } catch (error) {
+        console.log(error);
       }
-      setSearchRows(
-        autoCompleteItems.length + (autoCompleteError.length > 0 ? 0 : 1)
-      );
-    } catch (error) {
-      console.log(error);
     }
   };
 

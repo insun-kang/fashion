@@ -2,20 +2,21 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
+import useTrait from '../customHooks/useTrait';
 
 const InfiniteProducts = ({ searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
   // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
-  const [pageNum, setPageNum] = useState(0);
-  const [dataSize, setDataSize] = useState(10);
+  const pageNum = useTrait(0);
+  const [dataSize, setDataSize] = useState(24);
   const [loading, setLoading] = useState(false);
   const [isMore, setIsMore] = useState(true);
 
   const dataSizeRef = useRef(dataSize);
 
-  const setdataSizeRef = (cur) => {
+  const setDataSizeRef = (cur) => {
     dataSizeRef.current = cur;
     setDataSize(cur);
   };
@@ -23,7 +24,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
   // TODO:
   // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
   // O 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
-  // 더이상 요청할 데이터가 없는 상황 관리하기
+  // O 더이상 요청할 데이터가 없는 상황 관리하기
 
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
@@ -65,10 +66,10 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const getSearchResults = useCallback(async () => {
     try {
-      console.log(pageNum);
+      console.log(pageNum.get());
       await setLoading(true);
       const res = await axios.post('/result-search', {
-        pageNum: pageNum,
+        pageNum: pageNum.get(),
         dataSize: dataSize,
         existingKeywords: searchKeywords,
       });
@@ -78,12 +79,12 @@ const InfiniteProducts = ({ searchKeywords }) => {
         setLoading(false);
         return;
       }
-      if (pageNum === 0) {
+      if (pageNum.get() === 0) {
         await setMainProducts(res.data.cards);
       } else {
         await setMainProducts([...mainProducts].concat(res.data.cards));
       }
-      await setPageNum(pageNum + 1);
+      await pageNum.set(pageNum.get() + 1);
       await setLoading(false);
     } catch (error) {
       console.log(error);
@@ -95,7 +96,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
 
-    if (scrollTop + clientHeight + 500 >= scrollHeight) {
+    if (scrollTop + clientHeight * 2 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
       console.log('scroll end');
       console.log(dataSize, dataSizeRef);
@@ -134,14 +135,17 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
+    const curDataSize = dataSizeRef.current;
     console.log(speed);
-    if (speed >= 200 && dataSizeRef.current === 10) {
-      console.log('증가');
-      setdataSizeRef(20);
-    }
-    if (speed < 200 && dataSizeRef.current === 20) {
-      console.log('감소');
-      setdataSizeRef(10);
+    if (speed <= 100 && curDataSize !== 24) {
+      setDataSizeRef(24);
+      console.log('조금');
+    } else if (speed <= 200 && curDataSize !== 36) {
+      setDataSizeRef(36);
+      console.log('중간');
+    } else if (speed > 200 && curDataSize !== 48) {
+      setDataSizeRef(48);
+      console.log('많이');
     }
   };
 
@@ -161,19 +165,17 @@ const InfiniteProducts = ({ searchKeywords }) => {
   }, []);
 
   useEffect(() => {
-    const fetchWithKeywordUpdate = async () => {
-      await setPageNum(0);
-      //키워드가 갱신되면 무조건 0페이지부터 데이터를 요청하게 된다
-      if (searchKeywords.length === 0) {
-        // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
-        // -> 캐싱 안되나? 나중에 기능 추가
-        getRecommendationResults();
-      } else {
-        getSearchResults();
-      }
-    };
-    console.log('키워드 갱신');
-    fetchWithKeywordUpdate();
+    pageNum.set(0);
+    //키워드가 갱신되면 무조건 0페이지부터 데이터를 요청하게 된다
+    if (searchKeywords.length === 0) {
+      // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
+      // -> 캐싱 안되나? 나중에 기능 추가
+      getRecommendationResults();
+    } else {
+      getSearchResults();
+    }
+
+    console.log(searchKeywords);
   }, [searchKeywords]);
 
   useEffect(() => {
@@ -188,7 +190,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
           setMainProducts([...mainProducts].concat([...mainProducts]));
         }, 500); // 추천 api 갱신되면 삭제하고 추천결과 호출
       } else {
-        console.log(pageNum, dataSize);
+        console.log(pageNum.get(), dataSize);
         getSearchResults();
       }
     }
