@@ -1,9 +1,7 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import MypageNav from '../components/MypageNav';
-
 import UserInfoField from '../components/UserInfoField';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
@@ -11,18 +9,15 @@ import { SERVER_URL } from '../config';
 const UserInfo = () => {
   const [editInfo, setEditInfo] = useState(false);
   const [userValues, setUserValues] = useState();
-
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
+  axios.defaults.baseURL = SERVER_URL;
+  axios.defaults.headers.common['Authorization'] = AuthStr;
 
   const getUserInfo = useCallback(async () => {
     //userValues 여기서 구하기
-
     try {
-      const res = await axios.get(SERVER_URL + '/modification', {
-        headers: {
-          Authorization: AuthStr,
-        },
-      });
+      const res = await axios.get('/modification');
       const value = res.data;
       value['pw'] = '';
       value['confirmPw'] = '';
@@ -32,30 +27,20 @@ const UserInfo = () => {
     } catch (error) {
       alert('Unable to bring user information');
     }
-
   }, [AuthStr]);
 
-  const handleUpdateUserInfo = useCallback(
-    async (data) => {
-      try {
-        const res = await axios.post(SERVER_URL + '/modification', data, {
-          headers: {
-            Authorization: AuthStr,
-          },
-        });
-        console.log(res);
-      } catch (error) {
-        if (error.response.data.errorCode === 'failed_change_info') {
-          alert(error.response.data.msg);
-        } else {
-          alert(error);
-        }
+  const handleUpdateUserInfo = useCallback(async (data) => {
+    try {
+      await axios.post('/modification', data);
+    } catch (error) {
+      if (error.response.data.errorCode === 'failed_change_info') {
+        alert(error.response.data.msg);
+      } else {
+        alert(error);
       }
-      setEditInfo(false);
-    },
-    [AuthStr]
-  );
-
+    }
+    setEditInfo(false);
+  }, []);
 
   useEffect(() => {
     getUserInfo();
@@ -67,9 +52,7 @@ const UserInfo = () => {
 
   return (
     <>
-
       <MypageNav />
-
       {editInfo ? (
         <>
           <UserInfoForm
