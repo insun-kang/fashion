@@ -1,0 +1,19 @@
+summary: "ai_model api"
+description: "ai_model api: 유저 선택 결과 바탕으로 추천 asin list 반환"
+tags:
+  - cardgame
+produces:
+  - "application/json"
+responses:
+  200:
+    description: ok
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "result":[]
+            }
+security:
+  - ApiKeyAuth: []
