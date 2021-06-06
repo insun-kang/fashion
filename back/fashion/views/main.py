@@ -31,7 +31,7 @@ def Search():
         return_keywords=[]
 
         search = "{}%".format(keyword.lower())
-        find_keyword=models.SearchKeyword.query.filter(models.SearchKeyword.keyword.like(search)).all()
+        find_keyword=models.db.session.query(models.SearchKeyword.keyword).filter(models.SearchKeyword.keyword.like(search)).all()
 
         #이스터애그
         if keyword=='dayong':
@@ -57,15 +57,10 @@ def Search():
             return {'msg': 'No results were found for your search', 'keywords': return_keywords}, 200
 
         if not existing_keywords:
-            for i in find_keyword:
-                return_keywords.append((i.keyword))
-            return {'msg': 'success', 'keywords': return_keywords}, 200
+            return {'msg': 'success', 'keywords': literal_eval(str(find_keyword))}, 200
 
         else:
-            for i in find_keyword:
-                if i.keyword not in existing_keywords:
-                    return_keywords.append((i.keyword))
-            return {'msg': 'success', 'keywords': return_keywords}, 200
+            return {'msg': 'success', 'keywords': literal_eval(str(find_keyword))}, 200
 
 @bp.route('/result-search', methods=['POST'])
 @jwt_required()
