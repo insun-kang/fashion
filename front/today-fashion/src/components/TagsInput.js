@@ -77,7 +77,7 @@ const TagsInput = ({ ...props }) => {
   };
   const handleChange = (item) => {
     let newSelectedItems = [...selectedItems];
-    if (!newSelectedItems.includes(item)) {
+    if (!newSelectedItems.includes([item])) {
       //newSelectedItem에 item이 없으면
       newSelectedItems = [...newSelectedItems, item]; //item을 추가
     }
@@ -112,11 +112,14 @@ const TagsInput = ({ ...props }) => {
           setAutoCompleteError(res.data.msg);
         }
         setSearchRows(
-          autoCompleteItems.length + (autoCompleteError.length > 0 ? 0 : 1)
+          autoCompleteItems.length + (autoCompleteError?.length ? 0 : 1)
         );
       } catch (error) {
         console.log(error);
       }
+    } else {
+      setAutoCompleteItems([]);
+      setAutoCompleteError();
     }
   };
 
@@ -175,9 +178,9 @@ const TagsInput = ({ ...props }) => {
                   autoCompleteItems.map((item, index) => (
                     <div
                       {...getItemProps({
-                        key: item,
+                        key: item[0],
                         index,
-                        item,
+                        item: item[0],
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'lightgray' : 'white',
@@ -185,7 +188,7 @@ const TagsInput = ({ ...props }) => {
                         },
                       })}
                     >
-                      {item}
+                      {item[0]}
                     </div>
                   ))
                 ) : isOpen ? (

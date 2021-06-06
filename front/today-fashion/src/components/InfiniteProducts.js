@@ -3,16 +3,19 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
+import { useHistory } from 'react-router-dom';
 
 const InfiniteProducts = ({ searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
-  // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
-  const pageNum = useTrait(0);
   const [dataSize, setDataSize] = useState(24);
   const [loading, setLoading] = useState(false);
   const [isMore, setIsMore] = useState(true);
+
+  const history = useHistory();
+  const pageNum = useTrait(0);
 
   const dataSizeRef = useRef(dataSize);
 
@@ -21,53 +24,41 @@ const InfiniteProducts = ({ searchKeywords }) => {
     setDataSize(cur);
   };
 
-  // TODO:
-  // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
-  // O 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
-  // O 더이상 요청할 데이터가 없는 상황 관리하기
-
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
 
   const getRecommendationResults = useCallback(async () => {
     try {
-      const res = await axios.get('/result-cards');
-      setMainProducts([...mainProducts].concat(res.data.products));
-      setIsBottom(false);
+      const res = await axios.post('/result-cards', {
+        pageNum: pageNum.get(),
+        dataSize: dataSize,
+      });
+      console.log(res);
+
+      if (res.data.products.length === 0) {
+        setIsMore(false);
+        setLoading(false);
+        return;
+      }
+      if (pageNum.get() === 0) {
+        await setMainProducts(res.data.products);
+      } else {
+        await setMainProducts([...mainProducts].concat(res.data.products));
+      }
+      pageNum.set(pageNum.get() + 1);
+      setLoading(false);
     } catch (error) {
+      if (error.response.data.errorCode === 'play_too_little') {
+        //게임 진행 수가 없어서 게임화면으로 이동한다는 alert 띄워주기
+        history.push('/game');
+      }
       console.log(error);
     }
-    // 추천 api 고쳐지면 이부분 주석 해제하고 사용
-    // try {
-    //   await setLoading(true);
-    //   const res = await axios.post('/result-cards',{
-    //     pageNum: pageNum,
-    //     dataSize: dataSize,});
-    //   console.log(res);
-
-    //   if (res.data.products.length ===0){
-    //     setIsMore(false)
-    //     setLoading(false);
-    //     return
-    //   }
-
-    //   if (pageNum === 0) {
-    //     await setMainProducts(res.data.products);
-    //   } else {
-    //     await setMainProducts([...mainProducts].concat(res.data.products));
-    //   }
-    //   await setPageNum(pageNum + 1);
-    //   await setLoading(false);
-
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }, [mainProducts, dataSize]);
 
   const getSearchResults = useCallback(async () => {
     try {
       console.log(pageNum.get());
-      await setLoading(true);
       const res = await axios.post('/result-search', {
         pageNum: pageNum.get(),
         dataSize: dataSize,
@@ -84,8 +75,8 @@ const InfiniteProducts = ({ searchKeywords }) => {
       } else {
         await setMainProducts([...mainProducts].concat(res.data.cards));
       }
-      await pageNum.set(pageNum.get() + 1);
-      await setLoading(false);
+      pageNum.set(pageNum.get() + 1);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -96,10 +87,11 @@ const InfiniteProducts = ({ searchKeywords }) => {
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
 
-    if (scrollTop + clientHeight * 2 >= scrollHeight) {
+    if (scrollTop + clientHeight * 3 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
-      console.log('scroll end');
-      console.log(dataSize, dataSizeRef);
+      //모든 디바이스에서 되는지는 확인 필요
+      // console.log('scroll end');
+      // console.log(dataSize, dataSizeRef);
       setIsBottom(true);
     }
   };
@@ -136,23 +128,24 @@ const InfiniteProducts = ({ searchKeywords }) => {
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
     const curDataSize = dataSizeRef.current;
-    console.log(speed);
+    // console.log(speed);
+    // 원래 딜레이가 없었는데 아래 조건문을 추가하며 딜레이가 약간 생겼다..
+    // 어떻게 해결할지 모르겠음..
     if (speed <= 100 && curDataSize !== 24) {
       setDataSizeRef(24);
-      console.log('조금');
     } else if (speed <= 200 && curDataSize !== 36) {
       setDataSizeRef(36);
-      console.log('중간');
-    } else if (speed > 200 && curDataSize !== 48) {
+    } else if (speed > 400 && curDataSize !== 48) {
       setDataSizeRef(48);
-      console.log('많이');
     }
   };
 
   useEffect(() => {
     if (searchKeywords.length === 0) {
+      setLoading(true);
       getRecommendationResults();
     } else {
+      setLoading(true);
       getSearchResults();
     }
     //추천결과만 보여줘도 됨 나중에 확인해보고 수정
@@ -162,10 +155,12 @@ const InfiniteProducts = ({ searchKeywords }) => {
       window.removeEventListener('scroll', infiniteScroll, false);
       window.removeEventListener('scroll', handleScrollSpeed, false);
     };
+    //location deps로 해봐도 cleanup이 안된다ㅠㅠ
   }, []);
 
   useEffect(() => {
     pageNum.set(0);
+    setLoading(true);
     //키워드가 갱신되면 무조건 0페이지부터 데이터를 요청하게 된다
     if (searchKeywords.length === 0) {
       // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
@@ -182,15 +177,13 @@ const InfiniteProducts = ({ searchKeywords }) => {
     console.log(loading);
     if (isBottom && !loading && isMore) {
       //더 불러오기
-      setIsBottom(false); // api 호출할 수 있게되면 삭제!!
+      //같은 호출을 여러번 하는 걸 막고싶은데...어떻게 하지
+      setIsBottom(false);
       console.log(dataSize, dataSizeRef);
       //
       if (searchKeywords.length === 0) {
-        setTimeout(() => {
-          setMainProducts([...mainProducts].concat([...mainProducts]));
-        }, 500); // 추천 api 갱신되면 삭제하고 추천결과 호출
+        getRecommendationResults();
       } else {
-        console.log(pageNum.get(), dataSize);
         getSearchResults();
       }
     }
