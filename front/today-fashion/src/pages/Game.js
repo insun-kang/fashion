@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import GameCard from '../components/GameCard';

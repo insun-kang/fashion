@@ -3,9 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
-import { useHistory } from 'react-router-dom';
 
-const InfiniteProducts = ({ searchKeywords }) => {
+const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
 
   const [isBottom, setIsBottom] = useState(false);
@@ -14,7 +13,6 @@ const InfiniteProducts = ({ searchKeywords }) => {
   const [loading, setLoading] = useState(false);
   const [isMore, setIsMore] = useState(true);
 
-  const history = useHistory();
   const pageNum = useTrait(0);
 
   const dataSizeRef = useRef(dataSize);
@@ -29,6 +27,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const getRecommendationResults = useCallback(async () => {
     try {
+      console.log(pageNum.get());
       const res = await axios.post('/result-cards', {
         pageNum: pageNum.get(),
         dataSize: dataSize,
@@ -41,9 +40,9 @@ const InfiniteProducts = ({ searchKeywords }) => {
         return;
       }
       if (pageNum.get() === 0) {
-        await setMainProducts(res.data.products);
+        setMainProducts(res.data.products);
       } else {
-        await setMainProducts([...mainProducts].concat(res.data.products));
+        setMainProducts([...mainProducts].concat(res.data.products));
       }
       pageNum.set(pageNum.get() + 1);
       setLoading(false);
@@ -71,9 +70,9 @@ const InfiniteProducts = ({ searchKeywords }) => {
         return;
       }
       if (pageNum.get() === 0) {
-        await setMainProducts(res.data.cards);
+        setMainProducts(res.data.cards);
       } else {
-        await setMainProducts([...mainProducts].concat(res.data.cards));
+        setMainProducts([...mainProducts].concat(res.data.cards));
       }
       pageNum.set(pageNum.get() + 1);
       setLoading(false);
@@ -197,7 +196,10 @@ const InfiniteProducts = ({ searchKeywords }) => {
     <div className="products-container">
       {mainProducts.map((product, index) => (
         <div key={index}>
-          <ProductCard productData={product} />
+          <ProductCard
+            productData={product}
+            isSelected={match.params.asin === product.asin}
+          />
         </div>
       ))}
     </div>
