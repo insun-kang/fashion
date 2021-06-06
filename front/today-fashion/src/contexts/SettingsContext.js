@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { createContext } from 'react';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
