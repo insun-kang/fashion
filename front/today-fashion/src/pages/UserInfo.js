@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import MypageNav from '../components/MypageNav';
+
 import UserInfoField from '../components/UserInfoField';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
@@ -9,9 +12,11 @@ const UserInfo = () => {
   const [editInfo, setEditInfo] = useState(false);
   const [userValues, setUserValues] = useState();
 
+  const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
   const getUserInfo = useCallback(async () => {
     //userValues 여기서 구하기
-    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
     try {
       const res = await axios.get(SERVER_URL + '/modification', {
         headers: {
@@ -27,26 +32,30 @@ const UserInfo = () => {
     } catch (error) {
       alert('Unable to bring user information');
     }
-  }, []);
 
-  const handleUpdateUserInfo = async (data) => {
-    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
-    try {
-      const res = await axios.post(SERVER_URL + '/modification', data, {
-        headers: {
-          Authorization: AuthStr,
-        },
-      });
-      console.log(res);
-    } catch (error) {
-      if (error.response.data.errorCode === 'Failed_ChangeInfo') {
-        alert(error.response.data.msg);
-      } else {
-        alert(error);
+  }, [AuthStr]);
+
+  const handleUpdateUserInfo = useCallback(
+    async (data) => {
+      try {
+        const res = await axios.post(SERVER_URL + '/modification', data, {
+          headers: {
+            Authorization: AuthStr,
+          },
+        });
+        console.log(res);
+      } catch (error) {
+        if (error.response.data.errorCode === 'failed_change_info') {
+          alert(error.response.data.msg);
+        } else {
+          alert(error);
+        }
       }
-    }
-    setEditInfo(false);
-  };
+      setEditInfo(false);
+    },
+    [AuthStr]
+  );
+
 
   useEffect(() => {
     getUserInfo();
@@ -58,10 +67,9 @@ const UserInfo = () => {
 
   return (
     <>
-      <Link to="/mypage/signout">
-        <button>sign out</button>
-      </Link>
-      <button disabled>user info</button>
+
+      <MypageNav />
+
       {editInfo ? (
         <>
           <UserInfoForm

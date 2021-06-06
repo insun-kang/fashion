@@ -1,5 +1,16 @@
 import { Field, Form, Formik } from 'formik';
 import DatePicker from 'react-datepicker';
+import {
+  validateBirth,
+  validateConfirmPassword,
+  validateEmail,
+  validateName,
+  validateNickName,
+  validatePassword,
+} from './formValidations';
+import { LinearProgress, TextField, Box } from '@material-ui/core';
+import { PCButton } from '../ui-components/@material-extend';
+import { StaticDatePicker } from '@material-ui/lab';
 
 const UserInfoForm = (props) => {
   const { handleUserInfoForm } = props;
@@ -10,9 +21,8 @@ const UserInfoForm = (props) => {
     isSignUp = false;
   } else {
     initialValues = {
-      birth: '',
+      birth: new Date(),
       email: '',
-      gender: '',
       name: '',
       nickname: '',
       pw: '',
@@ -21,80 +31,8 @@ const UserInfoForm = (props) => {
     isSignUp = true;
   }
 
-  const validateName = (nameValue) => {
-    let nameError;
-    if (!nameValue) {
-      nameError = 'Name is required';
-    }
-    //regex 추가
-    return nameError;
-  };
-  const validateEmail = (emailValue) => {
-    let emailError;
-    if (!emailValue) {
-      emailError = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) {
-      emailError = 'Invalid email address';
-    }
-    return emailError;
-  };
-
-  const validatePassword = (passwordValue) => {
-    let passwordError;
-    if (!passwordValue) {
-      passwordError = 'Password is required';
-    } else if (
-      !/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,20}$/.test(passwordValue)
-    ) {
-      passwordValue =
-        'Valid Password consists of at least 8 characters and a combination of numbers + English + special characters.';
-    }
-    return passwordError;
-  };
-
-  const validateConfirmPassword = (pw, confirmPw) => {
-    let confirmPwError;
-    if (!confirmPw) {
-      confirmPwError = 'Please confirm password';
-    } else if (pw !== confirmPw) {
-      confirmPwError = 'Password is not the same';
-    }
-    return confirmPwError;
-  };
-
-  const validateGender = (genderValue) => {
-    let genderError;
-    if (!genderValue) {
-      genderError = 'Gender is required';
-    }
-    return genderError;
-  };
-
-  const validateBirth = (birthValue) => {
-    let birthError;
-    if (!birthValue) {
-      birthError = 'Birth is required';
-    } else {
-      const birth = new Date(birthValue);
-      const curDate = new Date();
-      if (birth > curDate) {
-        birthError = 'Invalid Date for Birth';
-      }
-    }
-    return birthError;
-  };
-
-  const validateNickName = (nickNameValue) => {
-    let nickNameError;
-    if (!nickNameValue) {
-      nickNameError = 'Nickname is required';
-    }
-    return nickNameError;
-  };
-
   return (
     <div className="signup-container">
-      <h2>{isSignUp ? 'Sign Up' : 'Modify User Info'}</h2>
       <div className="signup-form">
         <Formik
           initialValues={initialValues}
@@ -108,10 +46,6 @@ const UserInfoForm = (props) => {
             const email = validateEmail(values.email);
             if (email) {
               errors.email = email;
-            }
-            const gender = validateGender(values.gender);
-            if (gender) {
-              errors.gender = gender;
             }
             const name = validateName(values.name);
             if (name) {
@@ -129,6 +63,7 @@ const UserInfoForm = (props) => {
               values.pw,
               values.confirmPw
             );
+
             if (confirmPw) {
               errors.confirmPw = confirmPw;
             }
@@ -151,158 +86,196 @@ const UserInfoForm = (props) => {
               <Field name="name">
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="name">Name</label>
-                    <input
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Name
+                    </p>
+                    <TextField
                       {...field}
                       id="name"
                       type="text"
-                      placeholder="name"
+                      placeholder="Please Enter Your Full-Name"
+                      label="Full Name"
+                      variant="outlined"
+                      fullWidth
+                      error={form.errors.name && form.touched.name}
+                      helperText={
+                        form.errors.name && form.touched.name
+                          ? form.errors.name
+                          : null
+                      }
                     />
-                    <div className="name-error">
-                      {form.errors.name && form.touched.name
-                        ? form.errors.name
-                        : null}
-                    </div>
                   </div>
                 )}
               </Field>
+              <Box margin={2} />
               <Field name="email">
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="email">E-mail</label>
-                    <input
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Email
+                    </p>
+                    <TextField
                       {...field}
                       id="email"
                       type="text"
-                      placeholder="e-mail"
+                      placeholder="Please Enter Your E-Mail Address"
+                      label="Email"
+                      variant="outlined"
+                      fullWidth
+                      error={form.errors.email && form.touched.email}
+                      helperText={
+                        form.errors.email && form.touched.email
+                          ? form.errors.email
+                          : null
+                      }
                     />
-                    <div className="email-error">
-                      {form.errors.email && form.touched.email
-                        ? form.errors.email
-                        : null}
-                    </div>
                   </div>
                 )}
               </Field>
+              <Box margin={2} />
               <Field name="pw">
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="pw">Password</label>
-                    <input
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Password
+                    </p>
+                    <TextField
                       {...field}
                       id="pw"
                       type="password"
-                      placeholder="password"
+                      placeholder="Please Enter Your Password"
+                      label="Password"
+                      variant="outlined"
+                      fullWidth
+                      error={form.errors.pw && form.touched.pw}
+                      helperText={
+                        form.errors.pw && form.touched.pw
+                          ? form.errors.pw
+                          : null
+                      }
                     />
-                    <div className="password-error">
-                      {form.errors.pw && form.touched.pw
-                        ? form.errors.pw
-                        : null}
-                    </div>
                   </div>
                 )}
               </Field>
+              <Box margin={2} />
               <Field name="confirmPw">
                 {({ field, form }) => (
                   <div>
-                    <label htmlFor="confirmPw">Confirm password</label>
-                    <input
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Confirm Password
+                    </p>
+                    <TextField
                       {...field}
                       id="confirmPw"
                       type="password"
-                      placeholder="Confirm password"
+                      placeholder="Please Confirm Your Password"
+                      label="Confirm Password"
+                      variant="outlined"
+                      fullWidth
+                      error={
+                        form.errors.confirmPw && form.touched.confirmPw
+                          ? true
+                          : false
+                      }
+                      helperText={
+                        form.errors.confirmPw && form.touched.confirmPw
+                          ? form.errors.confirmPw
+                          : null
+                      }
                     />
-                    <div className="password-error">
-                      {form.errors.confirmPw && form.touched.confirmPw
-                        ? form.errors.confirmPw
-                        : null}
-                    </div>
                   </div>
                 )}
               </Field>
+              <Box margin={2} />
+              <Field name="nickname">
+                {({ field, form }) => (
+                  <div>
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Nickname
+                    </p>
+                    <TextField
+                      {...field}
+                      id="nickname"
+                      type="text"
+                      placeholder="Please Enter Your Nickname"
+                      label="Nickname"
+                      variant="outlined"
+                      fullWidth
+                      error={
+                        form.errors.nickname && form.touched.nickname
+                          ? true
+                          : false
+                      }
+                      helperText={
+                        form.errors.nickname && form.touched.nickname
+                          ? form.errors.nickname
+                          : null
+                      }
+                    />
+                  </div>
+                )}
+              </Field>
+              <Box margin={2} />
               {isSignUp ? (
                 <Field name="birth">
                   {({ field, form }) => (
                     <div>
-                      <label>birth</label>
-                      <span
-                        onMouseUp={() => {
-                          form.setTouched({ ...form.touched, birth: true });
+                      <p
+                        style={{
+                          marginLeft: '0.35rem',
+                          marginBottom: '0.5rem',
                         }}
                       >
-                        <DatePicker
-                          name="birth"
-                          selected={form.values.birth}
-                          onChange={(date) =>
-                            form.setValues({ ...form.values, birth: date })
-                          }
-                          peekNextMonth
-                          showMonthDropdown
-                          showYearDropdown
-                          dropdownMode="select"
-                        />
-                      </span>
-                      <div className="birth-error">
-                        {form.errors.birth && form.touched.birth
-                          ? form.errors.birth
-                          : null}
-                      </div>
+                        Birth Date
+                      </p>
+                      <StaticDatePicker
+                        name="birth"
+                        orientation="landscape"
+                        openTo="day"
+                        value={form.values.birth}
+                        helperText={
+                          form.errors.birth && form.touched.birth
+                            ? form.errors.birth
+                            : null
+                        }
+                        onChange={(date) =>
+                          form.setValues({ ...form.values, birth: date })
+                        }
+                        renderInput={(params) => <TextField {...params} />}
+                      />
                     </div>
                   )}
                 </Field>
               ) : (
                 <div>
-                  <div>birth</div>
                   <div>{initialValues.birth}</div>
                 </div>
               )}
-              <Field name="nickname">
-                {({ field, form }) => (
-                  <div>
-                    <label htmlFor="nickname">Nick name</label>
-                    <input
-                      {...field}
-                      id="nickname"
-                      type="text"
-                      placeholder="nickname"
-                    />
-                    <div className="nickname-error">
-                      {form.errors.nickname && form.touched.nickname
-                        ? form.errors.nickname
-                        : null}
-                    </div>
-                  </div>
+              <Box margin={2} />
+              <div style={{ textAlign: 'center' }}>
+                {props.isSubmitting ? (
+                  <LinearProgress />
+                ) : (
+                  <PCButton
+                    variant="contained"
+                    color="primary"
+                    disabled={props.isSubmitting}
+                    onClick={props.submitForm}
+                  >
+                    {isSignUp ? 'Sign Up' : 'Save'}
+                  </PCButton>
                 )}
-              </Field>
-
-              <div id="radio-group"> Gender </div>
-              {isSignUp ? (
-                <>
-                  <div role="group" aria-labelledby="radio-group">
-                    <label>
-                      <Field type="radio" name="gender" value="female" />
-                      female
-                    </label>
-                    <label>
-                      <Field type="radio" name="gender" value="male" />
-                      male
-                    </label>
-                  </div>
-                  <div className="gender-error">
-                    {props.errors.gender && props.touched.gender
-                      ? props.errors.gender
-                      : null}
-                  </div>
-                </>
-              ) : (
-                <div>{initialValues.gender}</div>
-              )}
-
-              <input
-                type="submit"
-                disabled={props.isSubmitting}
-                value={isSignUp ? 'Sign Up' : 'Save'}
-              />
+              </div>
               {/* 정보 수정인지, 회원가입인지에 따라 value 다르게 하기 */}
               {/* 수정의 경우 수정 불가능한 정보는 disable 처리 하기 */}
             </Form>
