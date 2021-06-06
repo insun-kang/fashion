@@ -5,10 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-<<<<<<< HEAD
-=======
     "@iconify-icons/akar-icons": "^1.1.14",
->>>>>>> feature_front_main
     "@iconify/icons-ant-design": "^1.1.0",
     "@iconify/icons-eva": "^1.1.0",
     "@iconify/icons-ic": "^1.1.4",
@@ -23,10 +20,6 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
-<<<<<<< HEAD
-    "downshift": "^6.1.3",
-    "formik": "^2.2.6",
-=======
     "date-fns": "^2.21.3",
     "downshift": "^6.1.3",
     "formik": "^2.2.8",
@@ -34,7 +27,6 @@
     "formik-material-ui-lab": "^0.0.8",
     "formik-material-ui-pickers": "^0.0.12",
     "framer-motion": "^4.1.17",
->>>>>>> feature_front_main
     "react": "^17.0.2",
     "react-datepicker": "^3.8.0",
     "react-dom": "^17.0.2",
