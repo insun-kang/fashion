@@ -1,0 +1,19 @@
+summary: "json_update api"
+description: "json_update api: 인공지능 추천 리스트 바탕으로 json 업데이트"
+tags:
+  - cardgame
+produces:
+  - "application/json"
+responses:
+  200:
+    description: ok
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "result": '성공'
+            }
+security:
+  - ApiKeyAuth: []

@@ -1,3 +1,4 @@
+import React from 'react';
 const GameCard = (props) => {
   const { questionData, handleAnswerClick, setIsPending } = props;
   return (
@@ -16,14 +17,14 @@ const GameCard = (props) => {
         type="button"
         value="yes"
         onClick={() => {
-          handleAnswerClick(questionData.asin, 1);
+          handleAnswerClick(questionData.asin, 5);
         }}
       />
       <input
         type="button"
         value="no"
         onClick={() => {
-          handleAnswerClick(questionData.asin, 0);
+          handleAnswerClick(questionData.asin, 1);
         }}
       />
     </div>
