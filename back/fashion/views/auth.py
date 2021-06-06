@@ -34,7 +34,6 @@ def register():
         nickname = body['nickname']
         birth = body['birth']
 
-
         emailcheck = models.User.query.filter_by(email=email).first()
         nicknamecheck = models.User.query.filter_by(nickname=nickname).first()
 

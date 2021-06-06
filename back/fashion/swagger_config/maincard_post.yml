@@ -76,11 +76,8 @@ responses:
           type: object
           example:
             {
-              "result": {
-                "loveOrHate": 5,
-                "productAsin": "B00007GDFV",
-                "userId": "1"
-              }
+              "result":
+                { "loveOrHate": 5, "productAsin": "B00007GDFV", "userId": "1" },
             }
   400:
     description: Missing JSON in request
@@ -89,7 +86,7 @@ responses:
         schema:
           type: object
           example:
-            {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
+            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
 definitions:
   Maincard:
     type: object

@@ -85,40 +85,32 @@ const UserInfoForm = (props) => {
           {(props) => (
             <Form>
               <Field name="name">
-                {({ field, form }) => {
-                  console.log(field);
-                  return (
-                    <div>
-                      <p
-                        style={{
-                          marginLeft: '0.35rem',
-                          marginBottom: '0.5rem',
-                        }}
-                      >
-                        Name
-                      </p>
-                      <TextField
-                        {...field}
-                        id="name"
-                        type="text"
-                        placeholder="Please Enter Your Full-Name"
-                        label="Full Name"
-                        variant="outlined"
-                        fullWidth
-                        error={
-                          form.errors.name && form.touched.name ? true : false
-                        }
-                        helperText={
-                          form.errors.name && form.touched.name
-                            ? form.errors.name
-                            : null
-                        }
-                      />
-                    </div>
-                  );
-                }}
+                {({ field, form }) => (
+                  <div>
+                    <p
+                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
+                    >
+                      Name
+                    </p>
+                    <TextField
+                      {...field}
+                      id="name"
+                      type="text"
+                      placeholder="Please Enter Your Full-Name"
+                      label="Full Name"
+                      variant="outlined"
+                      fullWidth
+                      error={form.errors.name && form.touched.name}
+                      helperText={
+                        form.errors.name && form.touched.name
+                          ? form.errors.name
+                          : null
+                      }
+                    />
+                  </div>
+                )}
               </Field>
-              <Box margin={2}></Box>
+              <Box margin={2} />
               <Field name="email">
                 {({ field, form }) => (
                   <div>
@@ -135,9 +127,7 @@ const UserInfoForm = (props) => {
                       label="Email"
                       variant="outlined"
                       fullWidth
-                      error={
-                        form.errors.email && form.touched.email ? true : false
-                      }
+                      error={form.errors.email && form.touched.email}
                       helperText={
                         form.errors.email && form.touched.email
                           ? form.errors.email
@@ -147,7 +137,7 @@ const UserInfoForm = (props) => {
                   </div>
                 )}
               </Field>
-              <Box margin={2}></Box>
+              <Box margin={2} />
               <Field name="pw">
                 {({ field, form }) => (
                   <div>
@@ -164,7 +154,7 @@ const UserInfoForm = (props) => {
                       label="Password"
                       variant="outlined"
                       fullWidth
-                      error={form.errors.pw && form.touched.pw ? true : false}
+                      error={form.errors.pw && form.touched.pw}
                       helperText={
                         form.errors.pw && form.touched.pw
                           ? form.errors.pw
@@ -174,7 +164,7 @@ const UserInfoForm = (props) => {
                   </div>
                 )}
               </Field>
-              <Box margin={2}></Box>
+              <Box margin={2} />
               <Field name="confirmPw">
                 {({ field, form }) => (
                   <div>
@@ -205,7 +195,7 @@ const UserInfoForm = (props) => {
                   </div>
                 )}
               </Field>
-              <Box margin={2}></Box>
+              <Box margin={2} />
               <Field name="nickname">
                 {({ field, form }) => (
                   <div>
@@ -236,7 +226,7 @@ const UserInfoForm = (props) => {
                   </div>
                 )}
               </Field>
-              <Box margin={2}></Box>
+              <Box margin={2} />
               {isSignUp ? (
                 <Field name="birth">
                   {({ field, form }) => (
@@ -272,7 +262,7 @@ const UserInfoForm = (props) => {
                   <div>{initialValues.birth}</div>
                 </div>
               )}
-              <Box margin={2}></Box>
+              <Box margin={2} />
               <div style={{ textAlign: 'center' }}>
                 {props.isSubmitting ? (
                   <LinearProgress />
