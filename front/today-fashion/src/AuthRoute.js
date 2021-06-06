@@ -10,7 +10,6 @@ const AuthRoute = ({ component: Component, render, ...rest }) => {
   return (
     <Route
       {...rest}
-      exact
       render={(props) =>
         token ? (
           render ? (

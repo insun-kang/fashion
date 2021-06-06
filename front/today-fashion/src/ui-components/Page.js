@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import { Box } from '@material-ui/core';
 
 const Page = forwardRef(({ children, title = '', ...other }, ref) => {
