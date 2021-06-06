@@ -3,19 +3,18 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
-import { useHistory } from 'react-router-dom';
 
-const InfiniteProducts = ({ searchKeywords }) => {
+const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
 
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
   const [dataSize, setDataSize] = useState(24);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [isMore, setIsMore] = useState(true);
 
-  const history = useHistory();
   const pageNum = useTrait(0);
+  const loading = useTrait(false);
 
   const dataSizeRef = useRef(dataSize);
 
@@ -29,6 +28,7 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   const getRecommendationResults = useCallback(async () => {
     try {
+      console.log(pageNum.get());
       const res = await axios.post('/result-cards', {
         pageNum: pageNum.get(),
         dataSize: dataSize,
@@ -37,16 +37,16 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
       if (res.data.products.length === 0) {
         setIsMore(false);
-        setLoading(false);
+        loading.set(false);
         return;
       }
       if (pageNum.get() === 0) {
-        await setMainProducts(res.data.products);
+        setMainProducts(res.data.products);
       } else {
-        await setMainProducts([...mainProducts].concat(res.data.products));
+        setMainProducts([...mainProducts].concat(res.data.products));
       }
       pageNum.set(pageNum.get() + 1);
-      setLoading(false);
+      loading.set(false);
     } catch (error) {
       if (error.response.data.errorCode === 'play_too_little') {
         //게임 진행 수가 없어서 게임화면으로 이동한다는 alert 띄워주기
@@ -67,16 +67,16 @@ const InfiniteProducts = ({ searchKeywords }) => {
       console.log(res);
       if (res.data.cards.length === 0) {
         setIsMore(false);
-        setLoading(false);
+        loading.set(false);
         return;
       }
       if (pageNum.get() === 0) {
-        await setMainProducts(res.data.cards);
+        setMainProducts(res.data.cards);
       } else {
-        await setMainProducts([...mainProducts].concat(res.data.cards));
+        setMainProducts([...mainProducts].concat(res.data.cards));
       }
       pageNum.set(pageNum.get() + 1);
-      setLoading(false);
+      loading.set(false);
     } catch (error) {
       console.log(error);
     }
@@ -141,14 +141,11 @@ const InfiniteProducts = ({ searchKeywords }) => {
   };
 
   useEffect(() => {
-    if (searchKeywords.length === 0) {
-      setLoading(true);
-      getRecommendationResults();
-    } else {
-      setLoading(true);
-      getSearchResults();
-    }
-    //추천결과만 보여줘도 됨 나중에 확인해보고 수정
+    //useEffect가 세개라서 fetch 함수들이 여러번 실행되는거 고치는 지금보다 좋은 방법이 있을까?
+    //근데 세개인데 왜 네번 실행되지?
+    loading.set(true);
+    getRecommendationResults();
+
     window.addEventListener('scroll', handleScrollSpeed, true);
     window.addEventListener('scroll', infiniteScroll, true);
     return () => {
@@ -160,34 +157,36 @@ const InfiniteProducts = ({ searchKeywords }) => {
 
   useEffect(() => {
     pageNum.set(0);
-    setLoading(true);
     //키워드가 갱신되면 무조건 0페이지부터 데이터를 요청하게 된다
-    if (searchKeywords.length === 0) {
-      // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
-      // -> 캐싱 안되나? 나중에 기능 추가
-      getRecommendationResults();
-    } else {
-      getSearchResults();
+    console.log(loading.get());
+    if (!loading.get()) {
+      loading.set(true);
+      if (searchKeywords.length === 0) {
+        // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
+        // -> 캐싱 안되나? 나중에 기능 추가
+        getRecommendationResults();
+      } else {
+        getSearchResults();
+      }
     }
-
     console.log(searchKeywords);
   }, [searchKeywords]);
 
   useEffect(() => {
-    console.log(loading);
-    if (isBottom && !loading && isMore) {
+    if (isBottom && !loading.get() && isMore) {
       //더 불러오기
-      //같은 호출을 여러번 하는 걸 막고싶은데...어떻게 하지
+      //같은 호출을 여러번 하는 걸 막고싶은데...지금보다 더 좋은 방법이 있을까?
+      loading.set(true);
+      console.log(loading.get());
       setIsBottom(false);
       console.log(dataSize, dataSizeRef);
-      //
       if (searchKeywords.length === 0) {
         getRecommendationResults();
       } else {
         getSearchResults();
       }
     }
-  }, [isBottom, pageNum, mainProducts, loading, searchKeywords]);
+  }, [isBottom]);
 
   if (!mainProducts || mainProducts.length === 0) {
     return null;
@@ -197,11 +196,17 @@ const InfiniteProducts = ({ searchKeywords }) => {
     <div className="products-container">
       {mainProducts.map((product, index) => (
         <div key={index}>
-          <ProductCard productData={product} />
+          <ProductCard
+            productData={product}
+            isSelected={match.params.asin === product.asin}
+          />
         </div>
       ))}
     </div>
   );
 };
 
-export default InfiniteProducts;
+export default React.memo(
+  InfiniteProducts,
+  (prev, next) => prev.searchKeywords === next.searchKeywords
+);

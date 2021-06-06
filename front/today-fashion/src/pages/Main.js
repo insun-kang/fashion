@@ -9,27 +9,11 @@ import { PCButton } from '../ui-components/@material-extend';
 import ProductCard from '../components/ProductCard';
 import InfiniteProducts from '../components/InfiniteProducts';
 
-const Main = () => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+const Main = (props) => {
   // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
-  // const [mainProducts, setMainProducts] = useState([]);
-  // const [requestData, setRequestData] = useState({ pageNum: 0, dataSize: 10 });
-  // // const [itemNums, setItemNums] = useState(10);
-  // // TODO:
-  // // 스크롤을 완전히 끝까지 내리기 전에 새로운 데이터 호출하기
-  // // 스크롤 속도에 따라 데이터 호출하는 양 다르게 조절하기?
 
   // axios.defaults.baseURL = SERVER_URL;
   // axios.defaults.headers.common['Authorization'] = AuthStr;
-
-  // const getRecommendationResults = useCallback(async () => {
-  //   try {
-  //     const res = await axios.get('/result-cards');
-  //     setMainProducts([...mainProducts].concat(res.data.products));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
   const [searchKeywords, setSearchKeywords] = useState([]);
 
   const handleSelectedTags = (items) => {
@@ -70,7 +54,7 @@ const Main = () => {
         placeholder="Search Item by Keyword"
       />
 
-      <InfiniteProducts searchKeywords={searchKeywords} />
+      <InfiniteProducts {...props} searchKeywords={searchKeywords} />
     </>
   );
 };
