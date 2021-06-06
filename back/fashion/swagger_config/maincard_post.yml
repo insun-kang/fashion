@@ -5,7 +5,7 @@ tags:
 produces:
   - "application/json"
 requestBody:
-        description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:1, 싫어요: 0)"
+        description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:5, 싫어요: 1)"
         required: true
         content:
           application/json:
@@ -16,12 +16,12 @@ requestBody:
                 summary: 강인선
                 value:
                   asin: "1234567"
-                  loveOrHate: True
+                  loveOrHate: 5
               case2:
                 summary: 김다인
                 value:
                   asin: "1023658"
-                  loveOrHate: False
+                  loveOrHate: 1
 responses:
   200:
     description: OK
@@ -32,7 +32,7 @@ responses:
           example:
             {
               "result": {
-                "loveOrHate": True,
+                "loveOrHate": 5,
                 "productAsin": "B00007GDFV",
                 "userId": "1"
               }
@@ -58,6 +58,6 @@ definitions:
       asin:
         type: string
       loveOrHate:
-        type: boolean
+        type: integer
 security:
   - ApiKeyAuth: []

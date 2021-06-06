@@ -124,7 +124,7 @@ def maincard():
 
         # print('-'*50) print(os.getcwd()) print('-'*50) # /home/project/back
 
-        with open(f'fashion/user_recommendations/{user_id}.json', 'r') as f:
+        with open(f'fashion/user_recommendations/game_{user_id}.json', 'r') as f:
             json_data = json.load(f)
 
         products_list = []
@@ -181,48 +181,44 @@ def maincard():
 @jwt_required()
 @swag_from('../swagger_config/result_cards.yml')
 def result_cards():
+    if not request.is_json:
+        return error_code.missing_json_error
 
-    ai_result = ['0764443682','1291691480','1940280001','1940735033','1940967805',
-                    '1942705034','3293015344','5378828716','6041002984','630456984X','7106116521',
-                    '8037200124','8037200221','8279996567','9239282785','9239281533','9269808971',
-                    '9654263246','B00004T3SN','B00005OTJ8']
-
-    user_id = get_jwt_identity()
-    products_user_played = models.ProductUserPlayed.query.filter_by(user_id=user_id).all()
-    asins_user_played = [product_user_played.asin for product_user_played in products_user_played]
-    user_play_num = len(asins_user_played) # user 게임 플레이 횟수
-
-    # 추천 결과 페이지에서 사용자가 게임을 5번 미만 했다면 결과를 주지 말고 에러 반환해주세요!
-    if user_play_num < 5:
-        return error_code.error_body('play_too_little','This user played game less than 5 times')
     else:
-        products_list = []
+        body=request.get_json()
 
-        for asin in ai_result:
-            bookmark = models.Bookmark.query.filter_by(asin=asin, user_id=user_id).first()
-            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
-            product = models.Product.query.filter_by(asin=asin).first()
-            product_review = models.ProductReview.query.filter_by(asin=asin).first()
-            pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
-            products_list.append({
-                'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-                'asin': asin,
-                'price': product.price,
-                'bookmark' : True if bookmark else False, # 존재하면 True 아니면 False
-                'nlpResults': {
-                                'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                                'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
-                            },
-                'starRating': round(product.rating, 2),
-                'posReveiwRate': round(pos_review_rate, 2),
-                'image': address_format.img(asin),
-                'productUrl': address_format.product(asin),
-                'title': product.title
-            })
-        return {
-                'productsNum': len(products_list),
-                'products': products_list
-                }, 200
+        page_num=body['pageNum']
+        data_size=body['dataSize']
+
+        user_id = get_jwt_identity()
+        products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
+        asins_user_played = [product_user_played.asin for product_user_played in products_user_played_hate]
+
+        user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
+
+        # 추천 결과 페이지에서 사용자가 게임을 5번 미만 했다면 결과를 주지 말고 에러 반환해주세요!
+        if user_play_num < 5:
+            return error_code.error_body('play_too_little','This user played game less than 5 times')
+        else:
+            with open(f'fashion/user_recommendations/result_{user_id}.json', 'r') as f:
+                json_data = json.load(f)
+
+            products_list = []
+
+            products_list_num = 0
+            for product in json_data['products'][page_num*data_size:]:
+                if product['asin'] not in asins_user_played:
+                    bookmark = models.Bookmark.query.filter_by(asin=product['asin'], user_id=user_id).first()
+                    product['bookmark'] = True if bookmark else False
+                    products_list.append(product)
+                    products_list_num += 1
+                if products_list_num == data_size:
+                    break
+
+            return {
+                    'productsNum': len(products_list),
+                    'products': products_list
+                    }, 200
 
 # 코드 위에 다 삽입해서 한번에 돌리기
 # json으로 이 위에 다 만들고
