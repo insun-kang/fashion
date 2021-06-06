@@ -1,9 +1,9 @@
 summary: "메인카드 get"
 description: "메인카드 get api: 유저가 메인카드로 보게 될 10가지 제품 정보 반환"
 tags:
-    - cardgame
+  - cardgame
 produces:
-- "application/json"
+  - "application/json"
 responses:
   200:
     description: ok
@@ -13,6 +13,7 @@ responses:
           type: object
           example:
             {
+              "firstPlay": False,
               "bgSentence": "게임 40번 플레이 하면 뜨는 문구에요!",
               "products": [
                 {

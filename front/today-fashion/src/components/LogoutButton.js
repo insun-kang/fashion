@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
+import { PCButton } from '../ui-components/@material-extend';
 
 const LogoutButton = ({ history }) => {
   const handleLogout = () => {
@@ -7,7 +8,7 @@ const LogoutButton = ({ history }) => {
     localStorage.removeItem('access_token');
     history.push('/');
   };
-  return <button onClick={handleLogout}>SignOut</button>;
+  return <PCButton onClick={handleLogout}>Sign Out</PCButton>;
 };
 
 export default withRouter(LogoutButton);

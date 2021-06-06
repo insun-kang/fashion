@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Chip from '@material-ui/core/Chip';
+<<<<<<< HEAD
 import { makeStyles } from '@material-ui/core/styles';
+=======
+import { makeStyles } from '@material-ui/styles';
+>>>>>>> feature_front_main
 import TextField from '@material-ui/core/TextField';
 import Downshift from 'downshift';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
+<<<<<<< HEAD
+=======
+import { Icon, InlineIcon } from '@iconify/react';
+import searchIcon from '@iconify-icons/akar-icons/search';
+import InputAdornment from '@material-ui/core/InputAdornment';
+>>>>>>> feature_front_main
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -30,7 +40,6 @@ const TagsInput = ({ ...props }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [autoCompleteItems, setAutoCompleteItems] = useState([]);
   const [autoCompleteError, setAutoCompleteError] = useState();
-  console.log(autoCompleteItems);
   useEffect(() => {
     setSelectedItems(tags);
   }, [tags]);
@@ -41,16 +50,12 @@ const TagsInput = ({ ...props }) => {
   }, [selectedItems, selectedTags]);
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === 'Tab') {
       const newSelectedItems = [...selectedItems];
       const valueToAdd = event.target.value.toLowerCase().trim();
+      //'apple'과 'apple  '을 똑같이 취급한다
 
-      const duplicatedValues = newSelectedItems.indexOf(
-        valueToAdd
-        //'apple'과 'apple  '을 똑같이 취급한다
-      );
-
-      if (duplicatedValues !== -1) {
+      if (newSelectedItems.includes(valueToAdd)) {
         setInputValue('');
         //중복되는 태그이면 새로 더하지 않는다
         return;
@@ -59,19 +64,13 @@ const TagsInput = ({ ...props }) => {
       if (!event.target.value.replace(/\s/g, '').length) return;
       //내용이 공백뿐일때는 아무것도 하지 않는다
 
-      //TODO
-      //자동완성 dropdown에서 엔터하면 input의 내용은 추가 하지 않는 조건 필요
-      //자동완성의 단어들 중에서만 tag를 등록할 수 있게 하기
-
       //위의 예외들에 해당하지 않고,
       //검색어가 자동완성에 포함된다면 새로운 태그를 더한다.
       if (autoCompleteItems.includes(valueToAdd)) {
         newSelectedItems.push(valueToAdd);
         setSelectedItems(newSelectedItems);
+        setInputValue('');
       }
-
-      //자동완성에 포함되지 않는 단어라면 추가를 허용하지 않고, 강제로 비운다.
-      //setInputValue('');
     }
     if (
       selectedItems.length &&
@@ -84,7 +83,7 @@ const TagsInput = ({ ...props }) => {
   };
   const handleChange = (item) => {
     let newSelectedItems = [...selectedItems];
-    if (newSelectedItems.indexOf(item) === -1) {
+    if (!newSelectedItems.includes([item])) {
       //newSelectedItem에 item이 없으면
       newSelectedItems = [...newSelectedItems, item]; //item을 추가
     }
@@ -102,21 +101,31 @@ const TagsInput = ({ ...props }) => {
     setInputValue(event.target.value);
     //TODO: 자동완성 결과도 다시 불러오기
   };
+
+  const [searchRows, setSearchRows] = useState(1);
+
   useEffect(() => {
     getAutoComplete({ existingKeywords: selectedItems, keyword: inputValue });
   }, [inputValue, selectedItems]);
 
   const getAutoComplete = async (data) => {
-    try {
-      console.log(data);
-      const res = await axios.post(SERVER_URL + '/search', data);
-      console.log(res);
-      setAutoCompleteItems(res.data.keywords);
-      if (!res.data.keywords.length) {
-        setAutoCompleteError(res.data.msg);
+    if (data.keyword !== '') {
+      try {
+        const res = await axios.post(SERVER_URL + '/search', data);
+        console.log(res);
+        setAutoCompleteItems(res.data.keywords);
+        if (!res.data.keywords.length) {
+          setAutoCompleteError(res.data.msg);
+        }
+        setSearchRows(
+          autoCompleteItems.length + (autoCompleteError?.length ? 0 : 1)
+        );
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      setAutoCompleteItems([]);
+      setAutoCompleteError();
     }
   };
 
@@ -140,11 +149,14 @@ const TagsInput = ({ ...props }) => {
             placeholder,
           });
           return (
-            <div>
+            <div style={{ width: '50%', margin: '0 Auto' }}>
               <TextField
+                style={{ border: '0px solid' }}
+                halfWidth
                 InputProps={{
                   startAdornment: selectedItems.map((item) => (
                     <Chip
+                      color="primary"
                       key={item}
                       tabIndex={-1}
                       label={item}
@@ -158,6 +170,11 @@ const TagsInput = ({ ...props }) => {
                     onChange(event);
                   },
                   onFocus,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Icon icon={searchIcon} height="24px" />
+                    </InputAdornment>
+                  ),
                 }}
                 {...other}
                 {...inputProps}
@@ -167,19 +184,17 @@ const TagsInput = ({ ...props }) => {
                   autoCompleteItems.map((item, index) => (
                     <div
                       {...getItemProps({
-                        key: item,
+                        key: item[0],
                         index,
-                        item,
+                        item: item[0],
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'lightgray' : 'white',
-                          fontWeight:
-                            selectedItems === item ? 'bold' : 'normal',
                           cursor: 'pointer',
                         },
                       })}
                     >
-                      {item}
+                      {item[0]}
                     </div>
                   ))
                 ) : isOpen ? (

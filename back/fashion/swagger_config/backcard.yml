@@ -1,9 +1,9 @@
 summary: "카드게임 - 배경"
 description: "카드게임 배경에 필요한 제품들을 요청한 숫자만큼 반환하는 api"
 tags:
-    - cardgame
+  - cardgame
 produces:
-- "application/json"
+  - "application/json"
 requestBody:
         description: 배경으로 원하는 제품의 숫자
         required: true
@@ -15,7 +15,7 @@ requestBody:
                 limitNum:
                     type: integer
               example:
-                limitNum: 5
+                limitNum: 20
 responses:
   200:
     description: limitNum 만큼의 제품이 반환된 경우
@@ -25,9 +25,92 @@ responses:
           type: object
           example:
             {
-                'requestNum': 5,
-                'totalNum': 0,
-                'ProductsList': {}
+              "firstPlay": false,
+              "productsList": [
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01AEB02XY&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Sorrica Unisex Japanese Anime One Piece Cosplay Sweatshirt Hoodie (L, Black + Yellow)"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01D5MO3UC&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "S7 Case, Galaxy S7 Case, Harryshell(TM) Sunflower Wallet Folio Leather Flip Case Cover with Card Holder for Samsung Galaxy S7"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00N5LN616&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "eShakti Women's Floral embellished chambray denim maxi dress 3X-26W Regular Deep indigo"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B004FL8RX2&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Apple-1 -9.0 B - Purple"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00TE9COE8&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Fuse Lenses for Persol 2803-S (58mm)"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01147O5A8&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Women Fashion Cute Blue Sky Print Skirt"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01GQ0W8GQ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "ROMWE Women's Loose Fit Flowy Stretch Knit Crewneck Tank Tunic Dress Blue M"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00YDENIM6&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Space invaders retro T-Shirt"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B018F1R49K&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Star Wars Stormtroopers The Force Awakens Boys Tie Dye T-Shirt (XS, Red)"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00593BACU&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Jordan Flight Origin Basketball Gradeschool Boy's Shoes Size 6.5"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B017UME0O2&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Women's Metallic Shorts Liquid Wet Sexy Hot: HOT Pink (Large)"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01D9RH4RC&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Choice Women Backless Blouse Tops Scoop Neck Half Sleeve Short T-Shirt Tees Crop Tops Black"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00NO5MMDG&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Buy Cool Shirts Ladies Breast Cancer Ribbon Pocket Print Charcoal Tri Blend Hoodie 2XL"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01FW2ROI6&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Samuel New Cute Canvas Tote Bag Printing Cartoon Cat Shoulder Bag Purse Handbags"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B017J19QYI&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Michael Kors Elephant Dark Taupe Izzy Large Reversible Leather Tote"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B018679M0M&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "The Good Dinosaur Arlo Toddler Boys' Green Bootie Slippers, XL(11/12)"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B015RGN652&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Rock and Roll Cowgirl Women's Boyfriend Jeans in Light Vintage W2-5629, 29 X 34"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B01EI94T7I&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "3mm White Tungsten Carbide Polished Classic Wedding Ring Size 8.25"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00QIY28KW&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Roamans Women's Plus Size Drawstring Knit Capris Slate,4X"
+                },
+                {
+                  "productImage": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00M8KALPE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "productTitle": "Buy Cool Shirts Mens Yoga 7 Chakras Black Tall Shirt 4XLT"
+                }
+              ],
+              "requestNum": 20,
+              "totalNum": 20,
+              "userPlayNum": 2
             }
   400:
     description: Missing JSON in request

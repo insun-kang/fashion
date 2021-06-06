@@ -9,7 +9,14 @@ class UseDB:
     def db_free(self):
         if self.con:
             self.con.close()
-    #characters
+    # load_reveiw_summary
+    def review_summary_insert(self, asin, negative_review_summary, positive_review_summary, negative_review_number, positive_review_number):
+        sql = ''' insert into product_review(`asin`, `negative_review_summary`, `positive_review_summary`, `negative_review_number`, `positive_review_number`)
+              values(%s, %s, %s, %s, %s);  '''
+        with self.con.cursor() as cursor:
+            cursor.execute(sql, (asin, negative_review_summary, positive_review_summary, negative_review_number, positive_review_number))
+        self.con.commit()
+    #
     def product_keyword_insert(self, asin, type_keyword, product_keyword):
         sql = ''' insert into product_keyword(`asin`, `type_keyword`, `product_keyword`)
               values(%s, %s, %s);  '''
@@ -34,7 +41,7 @@ class UseDB:
         for i in result:
             lst.append(i)
         return lst
-    
+
     def product_insert(self, asin, title, price, rating, shared):
         sql = ''' insert into product(`asin`, `title`, `price`, `rating`, `shared`)
               values(%s, %s, %s, %s, %s);  '''

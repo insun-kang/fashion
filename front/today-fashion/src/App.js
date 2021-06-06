@@ -11,6 +11,8 @@ import UserInfo from './pages/UserInfo';
 import WithDraw from './pages/Withdraw';
 import Game from './pages/Game';
 import MyPageIntro from './pages/MyPageIntro';
+import ComponentsChart from './pages/ComponentsChart';
+
 function App() {
   const location = useLocation();
   const history = useHistory();
@@ -70,6 +72,7 @@ function App() {
         />
         <AuthRoute path="/game" render={(props) => <Game {...props} />} />
         {/* login 필요한 경로들은 AuthRoute로 배정하기 */}
+        <Route path="/components" component={ComponentsChart} />
       </Switch>
     </div>
   );

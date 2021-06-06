@@ -1,5 +1,7 @@
 from fashion import db
-from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func, Boolean, Float
+from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func, Boolean, Float, Table
+from sqlalchemy.orm import relationship, backref
+
 
 class User(db.Model):  # usertable
     __tablename__ = 'user'
@@ -30,7 +32,7 @@ class Product(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    asin = Column(String(256), nullable=False)
+    asin = Column(String(256), unique=True, primary_key=True)
     title = Column(Text(16000000), nullable=False)
     price = Column(Float, nullable=True)
     rating = Column(Float, nullable=True)
@@ -44,15 +46,14 @@ class ProductKeyword(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     asin = Column(String(256), nullable=False)
     type_keyword=Column(String(256), nullable=False)
-    product_keyword = Column(Text(16000000), nullable=True)#제품키워드
-
+    product_keyword = Column(Text(16000000), nullable=True) # 제품키워드
 
 class ProductReview(db.Model):
     __tablename__:'product_review'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    asin = Column(String(256), nullable=False)
+    asin = Column(String(256))
 
     positive_review_number = Column(Integer, nullable=False, default=0) # 긍정 리뷰 수
     negative_review_number = Column(Integer, nullable=False, default=0) # 부정 리뷰 수
@@ -67,10 +68,10 @@ class ProductUserPlayed(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    asin = Column(String(256), nullable=False)
-    user_id = Column(Integer, nullable=False)
+    asin = Column(String(256), ForeignKey('product.asin', ondelete='cascade'))
+    user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
 
-    love_or_hate = Column(Boolean, nullable=False, default=0)
+    love_or_hate = Column(Integer)
 
 
 class Bookmark(db.Model):
@@ -79,5 +80,21 @@ class Bookmark(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    asin = Column(String(256), nullable=False)
-    user_id = Column(Integer, nullable=False)
+    asin = Column(String(256), ForeignKey('product.asin', ondelete='cascade'))
+    user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
+    date = Column(DATE)
+
+
+class Share(db.Model):
+    __tablename__:'share'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    asin = Column(String(256), ForeignKey('product.asin', ondelete='cascade'))
+    user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
+    shared_date = Column(DATE)
+
+
+
+#계단식 삭제일 때는 , passive_deletes=True도 붙여야 한다.

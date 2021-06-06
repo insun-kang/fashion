@@ -1,9 +1,27 @@
 summary: "결과카드"
 description: "결과카드 get api: 유저에게 추천 정보 인공지능으로 나오는 수만큼 반환"
 tags:
-    - cardgame
+  - cardgame
 produces:
-- "application/json"
+  - "application/json"
+requestBody:
+        description: "페이지 넘버와 데이터 사이즈(pageNum & dataSize)"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/resultCard'
+            examples:
+              case1:
+                summary: 0페이지
+                value:
+                  pageNum: 0
+                  dataSize: 10
+              case2:
+                summary: 1페이지
+                value:
+                  pageNum: 1
+                  dataSize: 10
 responses:
   200:
     description: ok
@@ -15,105 +33,393 @@ responses:
             {
               "products": [
                 {
-                  "asin": "B00HGRB3CE",
-                  "badReviewRating": "20%",
+                  "asin": "0764443682",
                   "bookmark": true,
-                  "goodReviewRating": "80%",
-                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HGRB3CE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=0764443682&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
                   "keywords": [
-                    "flower",
-                    "dress",
-                    "red",
-                    "summer",
-                    "womens"
+                    "fall",
+                    "necklace"
                   ],
                   "nlpResults": {
-                    "badReviews": [
-                      "small",
-                      "dirty",
-                      "smelly"
-                    ],
-                    "goodReviews": [
-                      "reasonable",
-                      "pretty",
-                      "cute"
-                    ]
+                    "negReviewSummary": "",
+                    "posReviewSummary": " Group always does an excellent job with VBS so I didn't hesitate to purchase this item . It was easy to use and the kids had a great time using the easy-to-use system . Group always do a excellent job at VBS and I was impressed with the product ."
                   },
-                  "price": 300000,
-                  "productUrl": "https://www.amazon.com/dp/B00HGRB3CE",
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/0764443682",
                   "starRating": 5,
-                  "title": "women's flower sundress"
+                  "title": "Slime Time Fall Fest [With CDROM and Collector Cards and Neutron Balls, Incredi-Ball and Glow Stick Necklace, Paper Fram"
                 },
                 {
-                  "asin": "B07PGCYWRJ",
-                  "badReviewRating": "45%",
+                  "asin": "1291691480",
                   "bookmark": false,
-                  "goodReviewRating": "55%",
-                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07PGCYWRJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1291691480&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
                   "keywords": [
-                    "flower",
-                    "pants",
-                    "green",
-                    "winter",
-                    "womens"
+                    "men",
+                    "accessories",
+                    "magnet",
+                    "buckle",
+                    "bracelet",
+                    "jewelry"
                   ],
                   "nlpResults": {
-                    "badReviews": [
-                      "expensive",
-                      "not useful",
-                      "ugly"
-                    ],
-                    "goodReviews": [
-                      "clean",
-                      "good quality",
-                      "cute"
-                    ]
+                    "negReviewSummary": "",
+                    "posReviewSummary": " Bought this for my brother and he loves it and he s sooooo picky so if he likes it it must be good it must have been good . Bought it for him and he's soooooo picky that if he liked it, he must have liked it so much ."
                   },
-                  "price": 1000,
-                  "productUrl": "https://www.amazon.com/dp/B07PGCYWRJ",
-                  "starRating": 3,
-                  "title": "women's flower green pants"
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/1291691480",
+                  "starRating": 5,
+                  "title": "XCC Qi promise new spider snake preparing men's accessories alloy fittings magnet buckle bracelet jewelry"
                 },
                 {
-                  "asin": "1975421663",
-                  "badReviewRating": "20%",
-                  "bookmark": true,
-                  "goodReviewRating": "80%",
-                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1975421663&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "asin": "1940280001",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1940280001&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
                   "keywords": [
-                    "flower",
-                    "dress",
-                    "red",
-                    "summer",
-                    "womens"
+                    "kids",
+                    "pocket",
+                    "business",
+                    "top"
                   ],
                   "nlpResults": {
-                    "badReviews": [
-                      "small",
-                      "dirty",
-                      "smelly"
-                    ],
-                    "goodReviews": [
-                      "reasonable",
-                      "pretty",
-                      "cute"
-                    ]
+                    "negReviewSummary": "",
+                    "posReviewSummary": " This book includes great routines that are great for all performers and there is something for all situations . Highly recommended n nDM. highly recommended n.DM . The book is a great way to learn some of the best routines in the world to learn from the book itself ."
                   },
-                  "price": 300000,
-                  "productUrl": "https://www.amazon.com/dp/1975421663",
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/1940280001",
                   "starRating": 5,
-                  "title": "women's flower sundress"
+                  "title": "Magical Things I Really Do Do Too!"
+                },
+                {
+                  "asin": "1940735033",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1940735033&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [],
+                  "nlpResults": {
+                    "negReviewSummary": " Eric has a fertile imagination and Maybeth Chew captured that with her illustrations . Peanut Butter Elvis The Way To Gregory s and The Girl On The Corner resonated with Eric's stories . I placed the book on my stack of books to read where it sat until last night .",
+                    "posReviewSummary": " Eric Endersons Ashes to Ashes Oranges to Oranges . It s a speculative humorous and oftentimes startling collection of short stories . I recommend this short book wholeheartedly. Read this to know the prickling thrill of finding out what happens to the man obsessed with the truck idling across the street ."
+                  },
+                  "posReveiwRate": 0.86,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/1940735033",
+                  "starRating": 4.86,
+                  "title": "Ashes to Ashes, Oranges to Oranges"
+                },
+                {
+                  "asin": "1940967805",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1940967805&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "blue"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " The Aether and Empire series is comic books at their best . It s a creative story with just the right pace . It gets you invested in the characters with well crafted dialogue complete with well written accents . When the movies come out you ll be able to cash in so get two copies one to sell and one to display somewhere ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 4.5,
+                  "productUrl": "https://www.amazon.com/dp/1940967805",
+                  "starRating": 5,
+                  "title": "Aether & Empire #1 - 2016 First Printing Comic Book Special Edition - Rare! - Blue Juice Comics"
+                },
+                {
+                  "asin": "1942705034",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1942705034&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "love"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " very inspirational. very inspirational . very inspirational and inspirational . Very inspirational . . very inspiring . inspirational and very sad at the loss of young people in the world . Very sad at loss of the young people who have lost their lives in the last few years of their lives ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/1942705034",
+                  "starRating": 5,
+                  "title": "365 Affirmations for a Year of Love, Peace & Prosperity"
+                },
+                {
+                  "asin": "3293015344",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=3293015344&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "bracelet",
+                    "black",
+                    "white"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " The individual pieces are gorgeous and the pictures are stunning . The top string a stretchy plastic rubber rubber band busted and it was a small female wrist. So while the bracelet initially exceeded my expectations I am now left with a few pretty tiles that cannot be worn and I feel like a crummy gift giver ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/3293015344",
+                  "starRating": 3,
+                  "title": "Blessed by Pope Benedetto XVI Wood Religious Bracelet with Black and White pictures Wood"
+                },
+                {
+                  "asin": "5378828716",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=5378828716&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "sexy",
+                    "sleeveless",
+                    "casual",
+                    "bodycon",
+                    "jumpsuit",
+                    "sportswear"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " Great fit in the first place in the U.S. Great fit . Great fit with a great family and great friends . Great role model for the first time in the United States . \"Great fit\" with a family of three. Great role models. \"I'm a great guy,\" says one of the world's best friends ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/5378828716",
+                  "starRating": 5,
+                  "title": "Womens Sexy Sleeveless Camouflage Print Casual High Waist Bodycon Jumpsuit Sportswear"
+                },
+                {
+                  "asin": "6041002984",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=6041002984&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "men",
+                    "black"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " \"Loved it shipped fast arrived in about days. Comfy. comfy. Loved it shipping fast arrived at the end of the month . Comfortable. Comfortable.\" \"Comfortable\" \"Comfy\" \"comfortable\" comfy, comfortable, comfy and comfortable ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/6041002984",
+                  "starRating": 5,
+                  "title": "Sevendayz Men's Shady Records Eminem Hoodie Hoody Black Medium"
+                },
+                {
+                  "asin": "630456984X",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=630456984X&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " The movie was a great buy and the movie played perfectly . Glad I was able to find this movie on a laserdisc . It was a good buy and it played perfectly. Glad to have been able to buy this laserdisc and watch it on Blu-Ray and DVD ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/630456984X",
+                  "starRating": 5,
+                  "title": "Dante's Peak - Laserdisc"
+                },
+                {
+                  "asin": "7106116521",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=7106116521&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "earring",
+                    "earrings"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": " Diameter is too small for earrings . Not happy don't fit earrings some don't even have holes waste of money . Would not buy again but for the price not sending back... too tiny an opening.. Okay .. Diameter too small . Would like to see some very expensive earrings again but not send them back .",
+                    "posReviewSummary": " These little plastic backs work great. Exactly what I needed. .. Love these... I am going to order another pack to keep in work someone including myself is always losing the back to an earring. .. I am very satisfied with the quality the price and the shipping ."
+                  },
+                  "posReveiwRate": 0.71,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/7106116521",
+                  "starRating": 3.82,
+                  "title": "Milliongadgets(TM) Earring Safety Backs For Fish Hook Small Earrings (150)"
+                },
+                {
+                  "asin": "8037200124",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=8037200124&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "bags",
+                    "kids",
+                    "bag"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " Envirosax bags roll up into a tiny tube shape that fits easily into your purse backpack or coat pocket . Roll up into tiny tubes that fit easily into a backpack . They are also incredible durable and hold much more weight than a disposable bag of the same size . They also make a lot of plain solid colored bags ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/8037200124",
+                  "starRating": 5,
+                  "title": "Envirosax Kids Series Jessie & Lulu"
+                },
+                {
+                  "asin": "8037200221",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=8037200221&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "polyester",
+                    "bags",
+                    "waterproof",
+                    "love",
+                    "bag"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " I LOVE my envirosaxes. They roll up into a small little ball that I can easily keep in my purse . The compactness of the enviorsax makes it easy to take everywhere. I can use at the grocery store the mall Target or to toss in the kid s dirty clothes."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/8037200221",
+                  "starRating": 5,
+                  "title": "Envirosax Greengrocer Series Bag 7 Guava"
+                },
+                {
+                  "asin": "8279996567",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=8279996567&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [],
+                  "nlpResults": {
+                    "negReviewSummary": " I sent this rosary to my mother as a birthday gift and she told me it broke the first time she used it . Very disappointed. Very disappointed . I sent it to her as a gift for her birthday and she said it broke first time it did so .",
+                    "posReviewSummary": ""
+                  },
+                  "posReveiwRate": 0,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/8279996567",
+                  "starRating": 1,
+                  "title": "Blessed by Pope Benedetto XVI Our Lady of Guadalupe Rose Scented Rosary Rosario Olor a Rosas"
+                },
+                {
+                  "asin": "9239282785",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=9239282785&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "dresses",
+                    "short",
+                    "gowns",
+                    "white"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " Bought this for my anniversary party I was the talk of the town. Bought it for his anniversary party . Bought it from the store for his wedding anniversary party. Bought this from the same store as my own . Bought this as an anniversary party for his birthday party. I thought it was the most expensive thing I'd ever seen ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/9239282785",
+                  "starRating": 5,
+                  "title": "Tideclothes ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns White 16"
+                },
+                {
+                  "asin": "9239281533",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=9239281533&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "dresses",
+                    "short",
+                    "gowns"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " We really love the dress it was as beautiful as the picture . We had to have it altered just a little it runs small but it turned out to be the bell of the Prom. We had it altered a little but it ran small but turned out it was a great dress ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/9239281533",
+                  "starRating": 5,
+                  "title": "ALAGIRLS Strapless Beading Homecoming Prom Dresses Short Tulle Formal Gowns Grape 26Plus"
+                },
+                {
+                  "asin": "9269808971",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=9269808971&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "white"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " Its a real fun toy and i love it very much as for the cam boy it good for the costthank you . The cam boy is a fun toy that i love very much. Its a good cam boy and a good toy for a good price. Thank you for your feedback ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/9269808971",
+                  "starRating": 5,
+                  "title": "Syma S107C 3channel Coaxial Mini Spy Cam Helicopter (White) **MICRO SD CARD NOT INCLUDED**"
+                },
+                {
+                  "asin": "9654263246",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=9654263246&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "carbon",
+                    "clip"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": " It was a gift and used for money however it was so stiff not much money fits in it . It was not the right size I was looking for. It was used as a present and was a good gift for money, but was too stiff to fit into it .",
+                    "posReviewSummary": " A little tight getting in your money but once it s in it s secure . Will buy again from this seller . It isn't fancy but it s a money clip its in your pocket most of the time . Function is more important than looks but it still looks good ."
+                  },
+                  "posReveiwRate": 0.67,
+                  "price": 14.99,
+                  "productUrl": "https://www.amazon.com/dp/9654263246",
+                  "starRating": 4,
+                  "title": "X. L. Carbon Fiber Money Clip, made in the USA"
+                },
+                {
+                  "asin": "B00004T3SN",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00004T3SN&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    "black",
+                    "fur",
+                    "pink",
+                    "clip",
+                    "black",
+                    "fur"
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": " Way smaller than I thought they d be. However their cuteness won me over in the end . Also functionally speaking the clips on these held up after a full day behind an outdoor bar and their diminutive size probably helped with that. However, the clips held up .",
+                    "posReviewSummary": " Adorable easy to use. Bought for yr old halloween costume. Was used for Halloween. Got tons of compliments and even though real kitties don't have bells in their ears she was happy these did... I absolutely love it. It s so cute and the bells even make sounds . Would purchase again..."
+                  },
+                  "posReveiwRate": 0.75,
+                  "price": 6.99,
+                  "productUrl": "https://www.amazon.com/dp/B00004T3SN",
+                  "starRating": 5,
+                  "title": "Shimmer Anne Shine Clip On Costume/Halloween Cat Ears"
+                },
+                {
+                  "asin": "B00005OTJ8",
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00005OTJ8&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [],
+                  "nlpResults": {
+                    "negReviewSummary": "",
+                    "posReviewSummary": " My kids and I love Sponge Bob Square Pants so this comforter is a perfect addition to their bedroom theme . Our son has had one of these comforters for ten years a big chunk of his life and still loves it even though we are hitting our teen years hopefully they bring it back ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 0,
+                  "productUrl": "https://www.amazon.com/dp/B00005OTJ8",
+                  "starRating": 5,
+                  "title": "SpongeBob Squarepants Comforter - Twin"
                 }
               ],
-              "productsNum": 3
+              "productsNum": 20
             }
   400:
-    description: 알고리즘으로부터 추천 결과가 없는 경우
+    description: user가 5번 미만으로 게임했을때
     content:
       application/json:
         schema:
           type: object
           example:
-            {'errorCode': 'no_result','msg': "There's no recommendation for user at all"}
+            {'errorCode': 'play_too_little','msg': 'This user played game less than 5 times'}
 security:
   - ApiKeyAuth: []
+definitions:
+  resultCard:
+    type: object
+    required:
+      - pageNum
+      - dataSize
+    properties:
+      pageNum:
+        type: integer
+      dataSize:
+        type: integer

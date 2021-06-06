@@ -1,3 +1,4 @@
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { useLocalStorage } from './customHooks/useLocalStorage';
 
@@ -9,6 +10,7 @@ const AuthRoute = ({ component: Component, render, ...rest }) => {
   return (
     <Route
       {...rest}
+      exact
       render={(props) =>
         token ? (
           render ? (
