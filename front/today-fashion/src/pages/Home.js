@@ -1,38 +1,52 @@
 import CustomSignIn from '../components/CustomSignIn';
 import UserInfoForm from '../components/UserInfoForm';
-import 'react-datepicker/dist/react-datepicker.css';
 import { SERVER_URL } from '../config';
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, forwardRef } from 'react';
 import { Redirect } from 'react-router';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
+import { PCButton } from '../ui-components/@material-extend';
+import {
+  Slide,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+} from '@material-ui/core';
 
 const Home = ({ location, history }) => {
   const [token, setToken] = useLocalStorage('access_token', null);
   const [openSignIn, setOpenSignIn] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
 
+  const Transition = forwardRef((props, ref) => (
+    <Slide direction="up" ref={ref} {...props} />
+  ));
+
   const { from } = location.state || { from: { pathname: '/main' } };
+
+  axios.defaults.baseURL = SERVER_URL;
 
   const handleSignUp = useCallback(
     async (data) => {
       try {
-        const res = await axios.post(SERVER_URL + '/sign-up', data);
+        const res = await axios.post('/sign-up', data);
         setToken(res.data.accessToken);
         setOpenSignUp(false);
-        history.push('/main');
-        //로그인 시켜준 후 게임 화면으로 이동
+        history.push('/game');
+        //회원가입이 되면 바로 로그인 + 게임 화면으로 이동
       } catch (error) {
-        if (error.response.data.errorCode === 'alr_signed_email') {
-          alert(error.response.data.msg);
-          setOpenSignUp(false);
-          setOpenSignIn(true);
-        } else if (error.response.data.errorCode === 'alr_signed_nickname') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'invalid_pw') {
-          alert(error.response.data.msg);
-        } else {
-          alert(error);
+        switch (error.response.data.errorCode) {
+          case 'alr_signed_email':
+            alert(error.response.data.msg);
+            setOpenSignUp(false);
+            setOpenSignIn(true);
+            break;
+          case 'alr_signed_nickname':
+            alert(error.response.data.msg);
+            break;
+          default:
+            alert(error);
         }
       }
     },
@@ -43,21 +57,26 @@ const Home = ({ location, history }) => {
   const handleCustomSignIn = useCallback(
     async (data) => {
       try {
-        const res = await axios.post(SERVER_URL + '/sign-in', data);
+        const res = await axios.post('/sign-in', data);
         setToken(res.data.accessToken);
         setOpenSignIn(false);
         history.push('/main');
       } catch (error) {
-        if (error.response.data.errorCode === 'not_exists') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'missing_email') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'missing_pw') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'incorrect_pw') {
-          alert(error.response.data.msg);
-        } else {
-          alert(error);
+        switch (error.response.data.errorCode) {
+          case 'not_exists':
+            alert(error.response.data.msg); //적절하게 메세지 수정하기
+            break;
+          case 'missing_email':
+            alert(error.response.data.msg);
+            break;
+          case 'missing_pw':
+            alert(error.response.data.msg);
+            break;
+          case 'incorrect_pw':
+            alert(error.response.data.msg);
+            break;
+          default:
+            alert(error);
         }
       }
     },
@@ -80,49 +99,103 @@ const Home = ({ location, history }) => {
 
   return (
     <div className="home-container">
-      {!openSignIn && !openSignUp && (
+      <img
+        src="/image/logo.png"
+        style={{ marginTop: '10vh', marginLeft: '35vw', height: '20vw' }}
+      />
+      <div>
+        <div style={{ height: '40vh' }}></div>
         <div className="home-button-group">
-          <input
-            type="button"
+          <PCButton
+            color="primary"
+            variant="contained"
             value="Sign In"
             onClick={() => {
               setOpenSignIn(!openSignIn);
             }}
-          />
-          <input
-            type="button"
+          >
+            Sign In
+          </PCButton>
+          <PCButton
+            color="secondary"
+            variant="contained"
             value="Sign Up"
             onClick={() => {
               setOpenSignUp(!openSignUp);
             }}
-          />
+          >
+            Sign Up
+          </PCButton>
         </div>
-      )}
+      </div>
       {openSignIn && (
-        <div className="signin-modal">
-          <CustomSignIn handleCustomSignIn={handleCustomSignIn} />
-          <button
-            type="button"
-            onClick={() => {
-              setOpenSignIn(!openSignIn);
+        <Dialog
+          open={openSignIn}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={openSignIn}
+          style={{ marginTop: '37vh' }}
+        >
+          <DialogTitle
+            id="alert-dialog-slide-title"
+            style={{
+              textAlign: 'center',
+              marginTop: '1rem',
+              marginBottom: '2rem',
             }}
           >
-            &#10006;
-          </button>
-        </div>
+            Sign In
+          </DialogTitle>
+          <DialogContent>
+            <CustomSignIn handleCustomSignIn={handleCustomSignIn} />
+          </DialogContent>
+          <DialogActions>
+            <PCButton
+              color="secondary"
+              variant="text"
+              onClick={() => {
+                setOpenSignIn(!openSignIn);
+              }}
+            >
+              Close
+            </PCButton>
+          </DialogActions>
+        </Dialog>
       )}
       {openSignUp && (
-        <div className="signup-modal">
-          <UserInfoForm handleUserInfoForm={handleSignUp} />
-          <button
-            type="button"
-            onClick={() => {
-              setOpenSignUp(!openSignUp);
+        <Dialog
+          open={openSignUp}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={openSignUp}
+          style={{ height: '800px', marginTop: '13vh' }}
+        >
+          <DialogTitle
+            id="alert-dialog-slide-title"
+            style={{
+              textAlign: 'center',
+              marginTop: '1rem',
+              marginBottom: '2rem',
             }}
           >
-            &#10006;
-          </button>
-        </div>
+            Sign Up
+          </DialogTitle>
+
+          <DialogContent>
+            <UserInfoForm handleUserInfoForm={handleSignUp} />
+          </DialogContent>
+          <DialogActions>
+            <PCButton
+              color="secondary"
+              variant="text"
+              onClick={() => {
+                setOpenSignUp(!openSignUp);
+              }}
+            >
+              Close
+            </PCButton>
+          </DialogActions>
+        </Dialog>
       )}
     </div>
   );

@@ -7,14 +7,14 @@ import { SERVER_URL } from '../config';
 const WithDraw = () => {
   // const [user, setUser] = useRecoilState(userNick);
   const history = useHistory();
+  const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
+  axios.defaults.baseURL = SERVER_URL;
+  axios.defaults.headers.common['Authorization'] = AuthStr;
+
   const handleWithdrawal = useCallback(async () => {
-    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
     try {
-      await axios.get(SERVER_URL + '/withdrawal', {
-        headers: {
-          Authorization: AuthStr,
-        },
-      });
+      await axios.get('/withdrawal');
       alert('withdraw completed');
       localStorage.removeItem('access_token');
       history.push('/');

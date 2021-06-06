@@ -1,0 +1,38 @@
+summary: "공유하기"
+description: "공유하기 post api"
+tags:
+  - share
+produces:
+  - "application/json"
+requestBody:
+  description: 공유
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/Share'
+      examples:
+        case1:
+          summary: post request
+          value:
+            asin: 'B00FB155LC'
+
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'msg' : 'Share success'}
+definitions:
+  Share:
+    type: object
+    required:
+      - asin
+    properties:
+      keyword:
+        type: string
+security:
+  - ApiKeyAuth: []
