@@ -68,10 +68,10 @@ class ProductUserPlayed(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    asin = Column(String(256), ForeignKey('product.asin'))
-    user_id = Column(Integer, ForeignKey('user.id'))
+    asin = Column(String(256), ForeignKey('product.asin', ondelete="cascade"))
+    user_id = Column(Integer, ForeignKey('user.id', ondelete="cascade") )
 
-    love_or_hate = Column(Integer, nullable=False)
+    love_or_hate = Column(Integer)
 
 
 class Bookmark(db.Model):
@@ -80,8 +80,8 @@ class Bookmark(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    asin = Column(String(256), ForeignKey('product.asin'))
-    user_id = Column(Integer, ForeignKey('user.id'))
+    asin = Column(String(256), ForeignKey('product.asin', ondelete="cascade"))
+    user_id = Column(Integer, ForeignKey('user.id', ondelete="cascade"))
     date = Column(DATE)
 
 
@@ -91,6 +91,6 @@ class Share(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    asin = Column(String(256), ForeignKey('product.asin'))
-    user_id = Column(Integer, ForeignKey('user.id'))
+    asin = Column(String(256), ForeignKey('product.asin', ondelete="cascade"))
+    user_id = Column(Integer, ForeignKey('user.id', ondelete="cascade"))
     shared_date = Column(DATE)
