@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Chip from '@material-ui/core/Chip';
-<<<<<<< HEAD
-import { makeStyles } from '@material-ui/core/styles';
-=======
 import { makeStyles } from '@material-ui/styles';
->>>>>>> feature_front_main
 import TextField from '@material-ui/core/TextField';
 import Downshift from 'downshift';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
-<<<<<<< HEAD
-=======
 import { Icon, InlineIcon } from '@iconify/react';
 import searchIcon from '@iconify-icons/akar-icons/search';
 import InputAdornment from '@material-ui/core/InputAdornment';
->>>>>>> feature_front_main
 
 const useStyles = makeStyles((theme) => ({
   chip: {
