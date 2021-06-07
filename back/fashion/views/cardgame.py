@@ -24,7 +24,6 @@ from surprise import Reader, Dataset # SVD model의 dataset
 
 from . import json_update
 
-
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
