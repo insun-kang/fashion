@@ -2,8 +2,8 @@ from flask import Blueprint
 from flask import Flask, request
 import bcrypt
 from flask_cors import CORS
-from .. import models
-from . import checkvalid
+from fashion import models
+from fashion.views import checkvalid
 from datetime import datetime, timedelta
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
@@ -12,8 +12,8 @@ from sqlalchemy.sql.expression import func
 import random
 # Flasgger
 from flasgger.utils import swag_from
-from .. import error_code
-from .. import address_format
+from fashion import error_code
+from fashion import address_format
 import json
 import os
 
@@ -21,70 +21,10 @@ import os
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
-import pickle
 
-# import datetime
-# import redis
-
-# red = redis.StrictRedis()
+from fashion.views.json_update import json_update
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
-
-# -------------------------------------------------------------------------------------
-# def event_stream():
-#     pub = redis.pubsub()
-#     pub.subscribe('sse_example_channel')
-#     for msg in pub.listen():
-#         if msg['type'] != 'subscribe':
-#             event, data = json.loads(msg['data'])
-#             yield u'event: {0}\ndata: {1}\n\n'.format(event, data)
-#         else:
-#             yield u'data: {0}\n\n'.format(msg['data'])
-
-
-# @app.route('/stream')
-# def get_pushes():
-#     return Response(event_stream(), mimetype="text/event-stream")
-
-# @app.route('/post')
-# def publish_data():
-#     # ...
-#     redis.publish('sse_example_channel', json.dumps([event, data]))
-
-# # ===================================================================
-
-
-# @bp.route('/stream')
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def stream():
-#     user_id = get_jwt_identity()
-
-#     def event_stream():
-#         pubsub = red.pubsub()
-#         pubsub.subscribe(user_id) # 채널이름 => user_id
-#         # TODO: handle client disconnection.
-#         for message in pubsub.listen():
-#             print (message)
-#             if message['type']=='message':
-#                 yield 'data: %s\n\n' % message['data'].decode('utf-8')
-
-#     return flask.Response(event_stream(), mimetype="text/event-stream")
-
-# @bp.route('/post', methods=['POST'])
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def post():
-#     user_id = get_jwt_identity()
-
-#     message = 'json file 생성 완료'
-#     user = models.User.query.filter(id=user_id).first()
-#     now = datetime.datetime.now().replace(microsecond=0).time()
-#     red.publish(user_id, u'[%s] %s: %s' % (now.isoformat(), user, message))
-#     return flask.Response(status=200)
-
-
-# -------------------------------------------------------------------------------------
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
@@ -175,8 +115,8 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 10: # user가 10회 플레이할 때마다
-                json_update()
+            # if not user_play_num % 10: # user가 10회 플레이할 때마다
+            json_update.delay(user_id)
 
             result = {
                 'userPlayNum': user_play_num,
@@ -231,160 +171,3 @@ def result_cards():
                     'productsNum': len(products_list),
                     'products': products_list
                     }, 200
-
-# 코드 위에 다 삽입해서 한번에 돌리기
-# json으로 이 위에 다 만들고
-# get 요청 오면 json import해서 보내주기
-
-
-# 인공 지능 API
-@bp.route('/ai-model', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/ai_model.yml')
-def ai_model():
-    import time
-    start = time.time()
-    user_id = get_jwt_identity()
-
-    # 리뷰파일 불러오기
-    review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
-    products_user_played = models.ProductUserPlayed.query.all()
-
-    for product in products_user_played:
-        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : product.asin, 'overall' : float(product.love_or_hate)}, ignore_index=True)
-
-    # 별점범위 지정
-    reader = Reader(rating_scale= (1, 5))
-
-    # 데이터 가공
-    data = Dataset.load_from_df(df=review_df, reader=reader)
-
-    # 데이터 분할
-    train = data.build_full_trainset()
-    test = train.build_testset()
-
-    # 훈련
-    model = SVD(n_factors=100, n_epochs=20, random_state=10)
-    model.fit(train)
-
-    # 중복되지 않은 어신 리스트=>얘도 피클로 저장해놓으면 더 빠르려나
-    clean_asin = list(set(list(review_df['asin'])))
-
-    # --------------------------학습-------------------------------------
-
-    # 추천 정보를 받아 올 대상
-    item_ids = clean_asin # 추천 대상 제품들
-    actual_rating = 0
-
-    # 추천 결과 저장 => 멀티 프로세싱하면 더 빨라지지 않을까?
-    review_pred = []
-    for item_id in item_ids :
-        review_pred.append(model.predict(user_id, item_id, actual_rating))
-
-    # 추천결과에서 어신과 예상 별점만 추출
-    filter_review_pred = {}
-    for i in review_pred:
-        filter_review_pred[i[1]] = i[3]
-
-    # 예상 별점이 큰 순서대로 정렬
-    sorted_review = sorted(filter_review_pred.items(), key=lambda x: x[1], reverse=True)
-
-    # 예상 별점이 3.65 이상인 제품의 어신만 추출
-    filter_review = []
-    for i in sorted_review:
-        if i[1] >= 3.65:
-            filter_review.append(i[0])
-
-    # 리뷰 만개로 컷
-    cut_review = filter_review[:10000]
-
-    print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
-    return{
-        'result': cut_review
-    }
-
-# 속도가 너무 느릴경우: product_user_played가 100 개 넘을 때마다 새로 학습한다던지....
-# ai 모델 학습과 predict 부분 분리?
-
-
-# 인공 지능 함수 결과 바탕으로 json 파일 업데이트
-@bp.route('/json-update', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/json_update.yml')
-def json_update():
-    # 게임카드 json 업데이트 코드-----------------------------------------------------------------------------------------------------
-    user_id = get_jwt_identity()
-
-    asins = ai_model()['result'][:100]
-
-    print(f'1. asins 리스트 만들어짐 : {asins[:5]}')
-
-    products_list = {}
-    products_list['products'] = []
-
-    a = 0
-    for asin in asins:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
-        try:
-            product_title = models.Product.query.filter_by(asin=asin).first().title
-        except:
-            continue
-        products_list['products'].append({
-            'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'image': address_format.img(asin),
-            'title': product_title,
-            'asin': asin
-        })
-        a += 1
-        print(f'{a}번째 데이터 생성')
-
-    print(f'product_list 파일 만들어짐')
-
-    file_path = f'fashion/user_recommendations/game_{user_id}.json'
-
-    with open(file_path, 'w') as outfile:
-        json.dump(products_list, outfile)
-    print('파일 업데이트 끝')
-
-    # 결과카드 json 업데이트 코드-----------------------------------------------------------------------------------------------------
-    products_result_list = {}
-    products_result_list['products'] = []
-
-    a = 0
-    for asin in asins:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
-        product = models.Product.query.filter_by(asin=asin).first()
-        product_review = models.ProductReview.query.filter_by(asin=asin).first()
-        pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
-        try:
-            product_title = product.title
-        except:
-            continue
-        products_result_list['products'].append({
-            'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'asin': asin,
-            'price': product.price,
-            'nlpResults': {
-                            'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                            'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
-                        },
-            'starRating': round(product.rating, 2),
-            'posReveiwRate': round(pos_review_rate, 2),
-            'image': address_format.img(asin),
-            'productUrl': address_format.product(asin),
-            'title': product_title
-        })
-        a += 1
-        print(f'{a}번째 데이터 생성')
-
-    print(f'product_result_list 파일 만들어짐')
-
-    file_path_result = f'fashion/user_recommendations/result_{user_id}.json'
-
-    with open(file_path_result, 'w') as file:
-        json.dump(products_result_list, file)
-    print('결과 파일 생성 끝')
-
-    return{
-        'result':'성공'
-    }

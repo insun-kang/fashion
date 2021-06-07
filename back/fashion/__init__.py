@@ -1,4 +1,3 @@
-
 from flask import Flask
 import logging
 from flask_migrate import Migrate
@@ -9,12 +8,15 @@ from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
 import pymysql
 from flask_cors import CORS
-import config
+# import config
 
 # Flasgger
 from flask import request
 from flasgger import Swagger
 from flasgger import LazyString, LazyJSONEncoder
+from celery import Celery
+
+celery = Celery(__name__, broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -23,7 +25,9 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
 # --------------------------------- [edit] ---------------------------------- #
-    app.config.from_object(config)
+    # app.config.from_object(config)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost:3306/fashion'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # ORM
     db.init_app(app)
