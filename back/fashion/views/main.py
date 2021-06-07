@@ -119,7 +119,10 @@ def ResultSearch():
 
             card['keywords']=literal_eval(str(keywords_by_asin))
             card['asin']=asin
-            card['price']=product.price
+            try:
+                card['price']=product.price
+            except:
+                card['price']=0
             if not bookmark:
                 card['bookmark']=False
             else:
@@ -137,10 +140,16 @@ def ResultSearch():
                                     'negReviewSummary': review.negative_review_summary
                                     }
                 card['posReveiwRate']=review.positive_review_number/(review.positive_review_number+review.negative_review_number)                        
-            card['starRating']=product.rating
+            try:
+                card['starRating']=product.rating
+            except:
+                card['starRating']=0
             card['image']=address_format.img(asin)
             card['productUrl']=address_format.product(asin)
-            card['title']=product.title
+            try:
+                card['title']=product.title
+            except:
+                card['title']="no title"
             
             cards.append(card)
         
