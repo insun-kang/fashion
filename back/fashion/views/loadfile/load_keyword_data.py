@@ -3,7 +3,7 @@ import csv
 from usedb import UseDB
 db = UseDB()
 
-with open('asin_keywords.csv', 'r', encoding='UTF8') as f:
+with open('productkeyword.csv', 'r', encoding='UTF8') as f:
     reader = csv.DictReader(f)
 
     for row in reader:

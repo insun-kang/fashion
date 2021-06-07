@@ -139,11 +139,8 @@ def ResultSearch():
                                     'posReviewSummary': review.positive_review_summary, 
                                     'negReviewSummary': review.negative_review_summary
                                     }
-                card['posReveiwRate']=review.positive_review_number/(review.positive_review_number+review.negative_review_number)                        
-            try:
-                card['starRating']=product.rating
-            except:
-                card['starRating']=0
+                card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
+            card['starRating']=round(product.rating,2)
             card['image']=address_format.img(asin)
             card['productUrl']=address_format.product(asin)
             try:
