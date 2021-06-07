@@ -45,9 +45,10 @@ class ProductKeyword(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     asin_id = Column(Integer, ForeignKey('product.id', ondelete='cascade'))
-    asin = Column(String(256), nullable=False)
-    type_keyword=Column(String(256), nullable=False)
+    asin = Column(String(256))
+    type_keyword=Column(String(256))
     product_keyword = Column(Text(16000000), nullable=True) # 제품키워드
+    catagory = Column(String(256))
 
 class ProductReview(db.Model):
     __tablename__:'product_review'

@@ -1,7 +1,7 @@
 summary: "details"
 description: "details post api"
 tags:
-  - share
+  - details
 produces:
   - "application/json"
 requestBody:
@@ -15,7 +15,7 @@ requestBody:
         case1:
           summary: post request
           value:
-            asin: 'B00FB155LC'
+            asin_id: '34'
 
 responses:
   200:
@@ -27,32 +27,27 @@ responses:
           example:
             {
               "datas": {
-                "asin": "B00FB155LC",
-                "bookmark_count": 1,
-                "bookmark_date": [
-                  "Sat, 05 Jun 2021 00:00:00 GMT"
-                ],
-                "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00FB155LC&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                "asin_id": "34",
+                "bookmark_count": 0,
+                "bookmark_date": [],
+                "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B000072XRF&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
                 "keywords": [
-                  "skirt"
+                  "ivory",
+                  "ivory"
                 ],
                 "negative_review_number": 0,
                 "nlpResults": {
                   "negReviewSummary": "",
-                  "posReviewSummary": " MaxStudio is a second skirt of MaxStudio bought for my wife and again is excellent . Nice quality the second skirt was bought for me and again was excellent . MaxStudio's second skirt is an excellent one of the best in the world. MaxStudio has been a great source of inspiration for many ."
+                  "posReviewSummary": " Purchased for a formal event this little purse suited all my needs . It is tiny just big enough for keys IDs and lipstick . Personally I chose to dress it up by wrapping a scarf around the strap . The purse is a tiny little purse that is big enough to hold keys, lipstick and keys ."
                 },
                 "posReveiwRate": 1,
                 "positive_review_number": 1,
-                "price": 0,
-                "productUrl": "https://www.amazon.com/dp/B00FB155LC",
-                "share_count": 3,
-                "share_date": [
-                  "Thu, 03 Jun 2021 00:00:00 GMT",
-                  "Fri, 04 Jun 2021 00:00:00 GMT",
-                  "Sat, 05 Jun 2021 00:00:00 GMT"
-                ],
+                "price": 10,
+                "productUrl": "https://www.amazon.com/dp/B000072XRF",
+                "share_count": 0,
+                "share_date": [],
                 "starRating": 5,
-                "title": "MAXSTUDIO Jacquard A-line Skirt - 3108J14-G/BLKTIE-8"
+                "title": "La Regale Peau de Soie Chic Full Flap Handbag (Ivory)"
               }
             }
 definitions:
