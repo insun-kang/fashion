@@ -1,0 +1,19 @@
+summary: "옷장"
+description: "옷장 post api"
+tags:
+  - closet
+produces:
+  - "application/json"
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              'card':'fdas'
+            }
+security:
+  - ApiKeyAuth: []

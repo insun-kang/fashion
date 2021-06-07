@@ -25,17 +25,17 @@ def Share():
     else:
         body = request.get_json()
         
-        asin = body['asin']
+        asin_id = body['asin_id']
         header = request.headers.get('Authorization')
 
         user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-        product = models.Product.query.filter_by(asin=asin).first()
+        product = models.Product.query.filter_by(id=asin_id).first()
 
         shared=product.shared
         
         share = models.Share(
                 
-                asin=asin,
+                asin_id=asin_id,
                 user_id=user_id,
                 shared_date=datetime.now()
             )
