@@ -15,6 +15,9 @@ import config
 from flask import request
 from flasgger import Swagger
 from flasgger import LazyString, LazyJSONEncoder
+from celery import Celery
+
+celery = Celery(__name__, broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
 
 db = SQLAlchemy()
 migrate = Migrate()

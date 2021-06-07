@@ -19,10 +19,11 @@ from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
 
 # from .. import tasks
+from app import celery
 # celery = tasks.make_celery()
 
-from celery import Celery
-celery = Celery(__name__, broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
+# from celery import Celery
+# celery = Celery(__name__, broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
 
 # @app.task(bind=True)
 @celery.task(bind=True)
