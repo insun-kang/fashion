@@ -8,7 +8,7 @@
 4. [구현 기능](#4.-구현-기능)
 5. [와이어프레임](#5.-와이어프레임)
 6. [세부 일정](#6.-세부-일정)
-7. [역할](#7.-역할)
+7. [역할](#7. 역할)
 8. [배운 점](#8.-배운-점)
 9. [Citation](#Citation)
 
@@ -70,7 +70,7 @@
 - 세부 일정계획표는 다음과 같다 : [일정계획표 링크](https://docs.google.com/spreadsheets/d/1yF4glEA5jkFh3WHKs-dg1c-SEEmsH1NQhvRmaZRKmcA/edit?usp=sharing)
 
 
-## 7. 역할
+##7. 역할
 
 | 이름 | 담당 업무 |
 | ------ | ------ |
