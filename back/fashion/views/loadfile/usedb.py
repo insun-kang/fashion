@@ -17,11 +17,11 @@ class UseDB:
             cursor.execute(sql, (asin_id, asin, negative_review_summary, positive_review_summary, negative_review_number, positive_review_number))
         self.con.commit()
     #
-    def product_keyword_insert(self, asin_id, asin, type_keyword, product_keyword):
-        sql = ''' insert into product_keyword(`asin_id`, `asin`, `type_keyword`, `product_keyword`)
-              values(%s, %s, %s, %s);  '''
+    def product_keyword_insert(self, asin_id, asin, type_keyword, product_keyword,catagory):
+        sql = ''' insert into product_keyword(`asin_id`, `asin`, `type_keyword`, `product_keyword`, `catagory`)
+              values(%s, %s, %s, %s, %s);  '''
         with self.con.cursor() as cursor:
-            cursor.execute(sql, (asin_id, asin, type_keyword, product_keyword))
+            cursor.execute(sql, (asin_id, asin, type_keyword, product_keyword, catagory))
         self.con.commit()
 
     def search_keyword_insert(self, keyword, count):

@@ -115,7 +115,7 @@ def ResultSearch():
 
 
             card['keywords']=literal_eval(str(keywords_by_asin))
-            card['asin']=product.asin
+            card['asin_id']=product.id
             card['price']=product.price
             if not bookmark:
                 card['bookmark']=False
