@@ -5,48 +5,34 @@ const ItemTypes = {
   CARD: 'card',
 };
 const style = {
+  width: 200,
+  height: 200,
   border: '1px dashed gray',
   padding: '0.5rem 1rem',
   marginBottom: '.5rem',
   backgroundColor: 'white',
   cursor: 'move',
 };
-const WardrobeCard = memo(({ id, text, moveCard, findCard }) => {
-  const originalIndex = findCard(id).index;
-  const [{ isDragging }, drag] = useDrag(
+const WardrobeCard = memo(({ asin, img }) => {
+  const [{ isDragging, getItem }, drag] = useDrag(
     () => ({
       type: ItemTypes.CARD,
-      item: { id, originalIndex },
+      item: { asin, img },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
+        getItem: monitor.getItem(),
       }),
-      end: (item, monitor) => {
-        const { id: droppedId, originalIndex } = item;
-        const didDrop = monitor.didDrop();
-        if (!didDrop) {
-          moveCard(droppedId, originalIndex);
-        }
-      },
     }),
-    [id, originalIndex, moveCard]
+    [ItemTypes.CARD]
   );
-  const [, drop] = useDrop(
-    () => ({
-      accept: ItemTypes.CARD,
-      canDrop: () => false,
-      hover({ id: draggedId }) {
-        if (draggedId !== id) {
-          const { index: overIndex } = findCard(id);
-          moveCard(draggedId, overIndex);
-        }
-      },
-    }),
-    [findCard, moveCard]
-  );
+
   const opacity = isDragging ? 0 : 1;
   return (
-    <div ref={(node) => drag(drop(node))} style={{ ...style, opacity }}>
-      {text}
+    <div ref={drag} style={{ ...style, opacity }}>
+      <img
+        style={{ width: '100%', height: '100%' }}
+        src={`https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=${img}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250`}
+      />
     </div>
   );
 });

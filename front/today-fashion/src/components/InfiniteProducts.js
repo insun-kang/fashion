@@ -82,9 +82,9 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         } else {
           setMainProducts([...mainProducts].concat(res.data.cards));
         }
-        setIsBottom(false);
         pageNum.set(num + 1);
         loading.set(false);
+        setIsBottom(false);
       } catch (error) {
         console.log(error);
       }

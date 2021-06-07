@@ -70,7 +70,7 @@ function App() {
           render={(props) => <WithDraw {...props} />}
         />
         <AuthRoute path="/game" render={(props) => <Game {...props} />} />
-        <Route path="/Wardrobe" render={(props) => <Wardrobe {...props} />} />
+        <Route path="/wardrobe" render={(props) => <Wardrobe {...props} />} />
         <Route path="/components" component={ComponentsChart} />
       </Switch>
     </div>
