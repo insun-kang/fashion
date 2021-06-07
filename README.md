@@ -25,29 +25,29 @@
 
 
 ## 3. 프로젝트 구성
-1. **필요한 데이터셋**
+### 1. **필요한 데이터셋**
 - Amazon review data (2018) Jianmo Ni, UCSD
-2. **기술 스택 및 라이브러리**
+### 2. **기술 스택 및 라이브러리**
 
-    | 분류 | Tools | 목적 |
-    | ------ | ------ | ------ |
-    | Frontend | React | spa 구현 |
-    | Frontend | Recoil | React 상태 관리 |
-    | Frontend | Formik | Form 제어 |
-    | Frontend | reactdnd | 드래그 가능한 컴포넌트 구현 |
-    | Frontend | downshift | 선택 가능한 드롭다운 구현 |
-    | Frontend | axios | http request |
-    | Frontend | Material-ui | UI Components Library |
-    | Frontend | three.js | webGL Library |
-    | Frontend | framer | transition Library | 
-    | Frontend | lottie | after effect animation |
-    | Backend | Flask | 웹 서버 구동 |
-    | Backend | MySQL(SQLAlchemy) | 데이터베이스 |
-    | Backend | Flasgger | API 문서화 |
-    | Backend | Blueprint | API 모듈화 |
-    | AI | sklearn | train_test_split, confusion_matrix, TfidfTransformer, CountVectorizer, LogisticRegression |    
-    | AI | NLTK | NaiveBayesClassifier | 
-    | AI | pytorch-transformers | 문장요약을 위한 Bart 모델 사용 |
+| 분류 | Tools | 목적 |
+| ------ | ------ | ------ |
+| Frontend | React | spa 구현 |
+| Frontend | Recoil | React 상태 관리 |
+| Frontend | Formik | Form 제어 |
+| Frontend | reactdnd | 드래그 가능한 컴포넌트 구현 |
+| Frontend | downshift | 선택 가능한 드롭다운 구현 |
+| Frontend | axios | http request |
+| Frontend | Material-ui | UI Components Library |
+| Frontend | three.js | webGL Library |
+| Frontend | framer | transition Library | 
+| Frontend | lottie | after effect animation |
+| Backend | Flask | 웹 서버 구동 |
+| Backend | MySQL(SQLAlchemy) | 데이터베이스 |
+| Backend | Flasgger | API 문서화 |
+| Backend | Blueprint | API 모듈화 |
+| AI | sklearn | train_test_split, confusion_matrix, TfidfTransformer, CountVectorizer, LogisticRegression |    
+| AI | NLTK | NaiveBayesClassifier | 
+| AI | pytorch-transformers | 문장요약을 위한 Bart 모델 사용 |
 
 
 ## 4. 구현 기능
@@ -126,10 +126,14 @@
 - **인공지능** :
 
 
-## Citation
-- Justifying recommendations using distantly-labeled reviews and fined-grained aspects Jianmo Ni, Jiacheng Li, Julian McAuley
-- Empirical Methods in Natural Language Processing (EMNLP), 2019
 
+
+# Build/Run
+## Requirements
+- 
+## Run the app
+### Frontend
+### Backend
 
 # Browser Support
 - Google Chrome 9+
@@ -137,3 +141,7 @@
 - Opera 15+
 - Safari 5.1+
 - Microsoft Edge
+
+# Citation
+- Justifying recommendations using distantly-labeled reviews and fined-grained aspects Jianmo Ni, Jiacheng Li, Julian McAuley
+- Empirical Methods in Natural Language Processing (EMNLP), 2019
