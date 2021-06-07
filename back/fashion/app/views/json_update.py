@@ -16,7 +16,7 @@ import os
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
-from app import celery
+from .. import celery
 
 # from .. import tasks
 # celery = tasks.make_celery()

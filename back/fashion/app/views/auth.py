@@ -1,5 +1,4 @@
 from flask import current_app, Blueprint
-from ..task import make_file
 from flask import Flask, request
 import bcrypt
 from flask_cors import CORS
@@ -17,6 +16,8 @@ import json
 from .. import address_format
 import shutil
 import os
+
+
 bp = Blueprint('auth', __name__, url_prefix='/')
 
 

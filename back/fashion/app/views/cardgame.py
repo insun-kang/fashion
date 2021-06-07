@@ -116,7 +116,7 @@ def maincard():
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
             if not user_play_num % 10: # user가 10회 플레이할 때마다
-                json_update.delay(user_id)
+                json_update.json_update.delay(user_id)
 
             result = {
                 'userPlayNum': user_play_num,
