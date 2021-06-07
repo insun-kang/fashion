@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import current_app, Blueprint
 from flask import Flask, request
 import bcrypt
 from flask_cors import CORS
@@ -12,17 +12,16 @@ from .. import error_code
 from .. import address_format
 import json
 import os
-
 # 인공지능
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
+from app import celery
 
 # from .. import tasks
 # celery = tasks.make_celery()
 
-from celery import Celery
-celery = Celery(__name__, broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
+bp = Blueprint('json_update', __name__, url_prefix='/')
 
 # @app.task(bind=True)
 @celery.task(bind=True)

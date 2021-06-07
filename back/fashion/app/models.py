@@ -1,4 +1,4 @@
-from fashion import db
+from app.factory import db
 from sqlalchemy import ForeignKey, DateTime, Column, Integer, String, DATE, Text, func, Boolean, Float, Table
 from sqlalchemy.orm import relationship, backref
 
