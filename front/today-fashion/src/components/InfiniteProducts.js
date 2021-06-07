@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
@@ -214,7 +214,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   );
 };
 
-export default React.memo(
+export default memo(
   InfiniteProducts,
   (prev, next) => prev.searchKeywords === next.searchKeywords
 );
