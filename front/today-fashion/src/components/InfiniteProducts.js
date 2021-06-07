@@ -26,61 +26,71 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
 
-  const getRecommendationResults = useCallback(async () => {
-    try {
-      console.log(pageNum.get());
-      const res = await axios.post('/result-cards', {
-        pageNum: pageNum.get(),
-        dataSize: dataSize,
-      });
-      console.log(res);
+  const getRecommendationResults = useCallback(
+    async (num) => {
+      num = typeof num !== 'undefined' ? num : pageNum.get();
+      try {
+        console.log(num);
+        const res = await axios.post('/result-cards', {
+          pageNum: num,
+          dataSize: dataSize,
+        });
+        console.log(res);
 
-      if (res.data.products.length === 0) {
-        setIsMore(false);
+        if (res.data.products.length === 0) {
+          setIsMore(false);
+          loading.set(false);
+          return;
+        }
+        if (num === 0) {
+          setMainProducts(res.data.products);
+        } else {
+          setMainProducts([...mainProducts].concat(res.data.products));
+        }
+        pageNum.set(num + 1);
         loading.set(false);
-        return;
+        setIsBottom(false);
+      } catch (error) {
+        if (error.response.data.errorCode === 'play_too_little') {
+          //게임 진행 수가 없어서 게임화면으로 이동한다는 alert 띄워주기
+          history.push('/game');
+        }
+        console.log(error);
       }
-      if (pageNum.get() === 0) {
-        setMainProducts(res.data.products);
-      } else {
-        setMainProducts([...mainProducts].concat(res.data.products));
-      }
-      pageNum.set(pageNum.get() + 1);
-      loading.set(false);
-    } catch (error) {
-      if (error.response.data.errorCode === 'play_too_little') {
-        //게임 진행 수가 없어서 게임화면으로 이동한다는 alert 띄워주기
-        history.push('/game');
-      }
-      console.log(error);
-    }
-  }, [mainProducts, dataSize]);
+    },
+    [mainProducts, dataSize]
+  );
 
-  const getSearchResults = useCallback(async () => {
-    try {
-      console.log(pageNum.get());
-      const res = await axios.post('/result-search', {
-        pageNum: pageNum.get(),
-        dataSize: dataSize,
-        existingKeywords: searchKeywords,
-      });
-      console.log(res);
-      if (res.data.cards.length === 0) {
-        setIsMore(false);
+  const getSearchResults = useCallback(
+    async (num) => {
+      num = typeof num !== 'undefined' ? num : pageNum.get();
+      try {
+        console.log(pageNum.get());
+        const res = await axios.post('/result-search', {
+          pageNum: num,
+          dataSize: dataSize,
+          existingKeywords: searchKeywords,
+        });
+        console.log(res);
+        if (res.data.cards.length === 0) {
+          setIsMore(false);
+          loading.set(false);
+          return;
+        }
+        if (num === 0) {
+          setMainProducts(res.data.cards);
+        } else {
+          setMainProducts([...mainProducts].concat(res.data.cards));
+        }
+        setIsBottom(false);
+        pageNum.set(num + 1);
         loading.set(false);
-        return;
+      } catch (error) {
+        console.log(error);
       }
-      if (pageNum.get() === 0) {
-        setMainProducts(res.data.cards);
-      } else {
-        setMainProducts([...mainProducts].concat(res.data.cards));
-      }
-      pageNum.set(pageNum.get() + 1);
-      loading.set(false);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [mainProducts, pageNum, dataSize, searchKeywords]);
+    },
+    [mainProducts, pageNum, dataSize, searchKeywords]
+  );
 
   const infiniteScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -158,15 +168,14 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   useEffect(() => {
     pageNum.set(0);
     //키워드가 갱신되면 무조건 0페이지부터 데이터를 요청하게 된다
-    console.log(loading.get());
     if (!loading.get()) {
       loading.set(true);
       if (searchKeywords.length === 0) {
         // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
         // -> 캐싱 안되나? 나중에 기능 추가
-        getRecommendationResults();
+        getRecommendationResults(0);
       } else {
-        getSearchResults();
+        getSearchResults(0);
       }
     }
     console.log(searchKeywords);
@@ -178,7 +187,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
       //같은 호출을 여러번 하는 걸 막고싶은데...지금보다 더 좋은 방법이 있을까?
       loading.set(true);
       console.log(loading.get());
-      setIsBottom(false);
       console.log(dataSize, dataSizeRef);
       if (searchKeywords.length === 0) {
         getRecommendationResults();

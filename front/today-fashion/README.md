@@ -143,9 +143,9 @@ https://medium.com/suyeonme/react-how-to-implement-an-infinite-scroll-749003e989
 **setState 동기처리**
 keywords가 바뀌었을때 keyword가 있는지 없는지에 따라 호출하는 api가 다른 main페이지에서, 만약 keyword가 바뀌었으면 반드시 pageNum = 0으로 해준 다음(새로운 검색결과나 추천결과를 반환해주어야 하기 때문에) api 호출을 해주어야 해서 setState를 동기적으로 실행시켜야 하는 상황이 생겼다. 이게 정말 피치 못할 상황인지 내가 설계를 잘못했는지에 대한 고민도 하고 있는데, 사실 엎을 시간이 없었기 때문에 이 방법을 써야만 했다.
 
-setState은 비동기적으로 작용한다고 알고 있었기 때문에, 동기적으로 작동하게 하기 위해 async await을 썼다. 하지만 의도한대로 동작하지 않았다. 이에 관해 찾아본 [링크](https://stackoverflow.com/questions/51968714/is-it-correct-to-use-await-setstate) 에는 이렇게 나와있다.
+setState/useState hook은 비동기적으로 작용한다고 알고 있었기 때문에, 동기적으로 작동하게 하기 위해 async await을 썼다. 하지만 의도한대로 동작하지 않았다. 이에 관해 찾아본 [링크](https://stackoverflow.com/questions/51968714/is-it-correct-to-use-await-setstate) 에는 이렇게 나와있다.
 setState() does not return a Promise, so you cannot use it with await as you intend. (Although you can await synchronous code as well).
 When it's said that setState() is asynchronous, what's meant is that the effect of setState() may happen at a later time.
 즉, setState은 promise를 반환하지 않기 때문에 async await으로 동기처리를 할 수 없다. async await을 그럼 절대 쓸 수 없냐! 그건 아니다. 직접 promise로 감싸서 프로미스를 반환하게 한 다음. async await을 적용하면 사용이 가능하다.
 
-다만 hooks의 useState을 사용하는 경우, second 파라미터를 넣을 수 없기 때문에 promise의 resolve를 사용할 수 없는 것 같았다. 그래서 또 다른 해결 방법을 찾아야 하는데, 이 [링크](https://dev.to/bytebodger/synchronous-state-with-react-hooks-1k4f) 를 참고했다. 이 방법도 완벽하지는 않다고 한다.
+다만 hooks의 useState을 사용하는 경우, callback이 없기 때문에 promise의 resolve를 사용할 수 없는 것 같았다. 그래서 hook의 경우는 promise를 쓸 수 없는게 맞다. 또 다른 해결 방법을 찾아야 하는데, 이 [링크](https://dev.to/bytebodger/synchronous-state-with-react-hooks-1k4f) 를 참고했다. 이 방법도 완벽하지는 않다고 한다.
