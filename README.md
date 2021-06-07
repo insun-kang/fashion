@@ -2,7 +2,7 @@
 오늘옷데(ONOT)는 고객의 옷 선택에 따라 인공지능이 옷을 추천해주는 웹 서비스입니다.<br>
 [배포된 주소](elice-kdt-ai-track-vm-distribute-21.koreacentral.cloudapp.azure.com)
 
-# Table of Contents
+# 목차
 [[_TOC_]]
 
 ## 1. 웹 서비스 소개
@@ -128,20 +128,20 @@
 
 
 
-# Build/Run
-## Requirements
+# 환경설정/실행
+## 환경설정
 - 
-## Run the app
+## 실행 방법
 ### Frontend
 ### Backend
 
-# Browser Support
+# Browser 지원
 - Google Chrome 9+
 - Firefox 4+
 - Opera 15+
 - Safari 5.1+
 - Microsoft Edge
 
-# Citation
+# 참고 자료
 - Justifying recommendations using distantly-labeled reviews and fined-grained aspects Jianmo Ni, Jiacheng Li, Julian McAuley
 - Empirical Methods in Natural Language Processing (EMNLP), 2019
