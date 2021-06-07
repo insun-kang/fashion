@@ -19,6 +19,7 @@ from surprise import Reader, Dataset # SVD model의 dataset
 from .. import celery
 
 # from .. import tasks
+from app import celery
 # celery = tasks.make_celery()
 
 bp = Blueprint('json_update', __name__, url_prefix='/')
