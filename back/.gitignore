@@ -4,3 +4,4 @@ venv/
 redis-stable
 test/
 back/redis-stable.tar.gz
+redis-stable.tar.gz
