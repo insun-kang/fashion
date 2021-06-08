@@ -108,5 +108,4 @@ class Cody(db.Model):
     user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
 
 
-
 #계단식 삭제일 때는 , passive_deletes=True도 붙여야 한다.

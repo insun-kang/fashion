@@ -237,3 +237,7 @@ def withdrawal():
 @swag_from("../swagger_config/protected.yml")
 def protected():
     return {'msg': 'Succeed accessing protected area'}, 200
+
+
+
+
