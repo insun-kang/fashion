@@ -80,7 +80,7 @@ def maincard():
 
         products_list_num = 0
         for product in json_data['products']:
-            if product['asin_id'] not in asin_ids_user_played and product['keywords']:
+            if product['asin'] not in asin_ids_user_played and product['keywords']:
                 products_list.append(product)
                 products_list_num += 1
             if products_list_num == 10:
@@ -105,11 +105,8 @@ def maincard():
 
             user_id = get_jwt_identity()
 
-            product_asin = body['asin']
+            product_asin_id = body['asin']
             love_or_hate = body['loveOrHate']
-
-
-            product_asin_id = models.Product.query.filter_by(asin=product_asin).first().id
 
             product_user_played = models.ProductUserPlayed(
                 user_id = user_id,
@@ -131,8 +128,7 @@ def maincard():
             result = {
                 'userPlayNum': user_play_num,
                 'userId': user_id,
-                'productAsinId': product_asin_id,
-                'productAsin': product_asin,
+                'asin': product_asin_id,
                 'loveOrHate': love_or_hate
             }
             return {
@@ -169,8 +165,8 @@ def result_cards():
 
             products_list_num = 0
             for product in json_data['products'][page_num*data_size:]:
-                if product['asin_id'] not in asin_ids_user_played and product['keywords']:
-                    bookmark = models.Bookmark.query.filter_by(asin_id=product['asin_id'], user_id=user_id).first()
+                if product['asin'] not in asin_ids_user_played and product['keywords']:
+                    bookmark = models.Bookmark.query.filter_by(asin_id=product['asin'], user_id=user_id).first()
                     product['bookmark'] = True if bookmark else False
                     products_list.append(product)
                     products_list_num += 1
@@ -292,7 +288,7 @@ async def json_update(user_id):
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
             'image': address_format.img(product.asin),
             'title': product.title,
-            'asin': product.asin
+            'asin': asin_id
         })
         a += 1
         print(f'{a}번째 데이터 생성')
@@ -324,7 +320,7 @@ async def json_update(user_id):
             continue
         products_result_list['products'].append({
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'asin': product.asin,
+            'asin': asin_id,
             'price': product.price,
             'nlpResults': {
                             'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
