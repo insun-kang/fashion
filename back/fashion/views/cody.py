@@ -18,7 +18,7 @@ bp = Blueprint('cody', __name__, url_prefix='/')
 
 @bp.route('/load-cody', methods=['GET'])
 @jwt_required()
-@swag_from('../swagger_config/load_cody.yml')
+@swag_from('../swagger_config/load-cody.yml')
 def loadcody():
     header = request.headers.get('Authorization')
 
@@ -75,7 +75,7 @@ def loadcody():
 
 @bp.route('/save-cody', methods=['POST'])
 @jwt_required()
-@swag_from('../swagger_config/save_cody.yml')
+@swag_from('../swagger_config/save-cody.yml')
 def savecody():
     if not request.is_json:
         return error_code.missing_json_error
@@ -140,7 +140,7 @@ def savecody():
 
 @bp.route('/delete-cody', methods=['GET'])
 @jwt_required()
-@swag_from('../swagger_config/delete_cody.yml')
+@swag_from('../swagger_config/delete-cody.yml')
 def deletecody():
     header = request.headers.get('Authorization')
 
