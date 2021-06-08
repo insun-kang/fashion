@@ -1,3 +1,4 @@
+import React from 'react';
 import { Field, Form, Formik } from 'formik';
 import DatePicker from 'react-datepicker';
 import {
@@ -84,30 +85,38 @@ const UserInfoForm = (props) => {
           {(props) => (
             <Form>
               <Field name="name">
-                {({ field, form }) => (
-                  <div>
-                    <p
-                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
-                    >
-                      Name
-                    </p>
-                    <TextField
-                      {...field}
-                      id="name"
-                      type="text"
-                      placeholder="Please Enter Your Full-Name"
-                      label="Full Name"
-                      variant="outlined"
-                      fullWidth
-                      error={form.errors.name && form.touched.name}
-                      helperText={
-                        form.errors.name && form.touched.name
-                          ? form.errors.name
-                          : null
-                      }
-                    />
-                  </div>
-                )}
+                {({ field, form }) => {
+                  console.log(field);
+                  return (
+                    <div>
+                      <p
+                        style={{
+                          marginLeft: '0.35rem',
+                          marginBottom: '0.5rem',
+                        }}
+                      >
+                        Name
+                      </p>
+                      <TextField
+                        {...field}
+                        id="name"
+                        type="text"
+                        placeholder="Please Enter Your Full-Name"
+                        label="Full Name"
+                        variant="outlined"
+                        fullWidth
+                        error={
+                          form.errors.name && form.touched.name ? true : false
+                        }
+                        helperText={
+                          form.errors.name && form.touched.name
+                            ? form.errors.name
+                            : null
+                        }
+                      />
+                    </div>
+                  );
+                }}
               </Field>
               <Box margin={2} />
               <Field name="email">

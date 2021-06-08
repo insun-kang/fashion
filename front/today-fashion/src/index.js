@@ -9,20 +9,24 @@ import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { RecoilRoot } from 'recoil';
 import ThemeConfig from './theme';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 ReactDOM.render(
   <React.StrictMode>
-    <RecoilRoot>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <SettingsProvider>
-          <ThemeConfig>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </ThemeConfig>
-        </SettingsProvider>
-      </LocalizationProvider>
-    </RecoilRoot>
+    <DndProvider backend={HTML5Backend}>
+      <RecoilRoot>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <SettingsProvider>
+            <ThemeConfig>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </ThemeConfig>
+          </SettingsProvider>
+        </LocalizationProvider>
+      </RecoilRoot>
+    </DndProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

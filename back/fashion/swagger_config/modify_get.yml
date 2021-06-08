@@ -15,7 +15,11 @@ responses:
               "email": "sunink1@naver.com",
               "name": "강인선",
               "nickname": "강인성",
+<<<<<<< HEAD
               "signUpDate": "Thu, 20 May 2021 00:00:00 GMT",
+=======
+              "signUpDate": "Thu, 20 May 2021 00:00:00 GMT"
+>>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
             }
 security:
   - ApiKeyAuth: []

@@ -1,8 +1,6 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import UserInfoField from '../components/UserInfoField';
-import UserInfoForm from '../components/UserInfoForm';
+import React, { useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { SERVER_URL } from '../config';
 
 const MyPageIntro = () => {
@@ -11,30 +9,26 @@ const MyPageIntro = () => {
   //회원탈퇴 -> 페이지 새로 만들어야 할듯
   const [password, setPassword] = useState('');
   const history = useHistory();
+  const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
+  axios.defaults.baseURL = SERVER_URL;
+  axios.defaults.headers.common['Authorization'] = AuthStr;
 
   const confirmUser = useCallback(async () => {
-    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
     try {
-      const res = await axios.post(
-        SERVER_URL + '/mypage',
-        { pw: password },
-        {
-          headers: {
-            Authorization: AuthStr,
-          },
-        }
-      );
-      console.log(res);
+      await axios.post('/mypage', { pw: password });
       history.push('/mypage/userinfo');
     } catch (error) {
-      if (error.response.data.errorCode === 'incorrect_pw') {
-        alert(error.response.data.msg);
-      } else if (error.response.data.errorCode === 'missing_pw') {
-        alert(error.response.data.msg);
-      } else {
-        alert(error);
+      switch (error.response.data.errorCode) {
+        case 'incorrect_pw':
+          alert(error.response.data.msg);
+          break;
+        case 'missing_pw':
+          alert(error.response.data.msg);
+          break;
+        default:
+          alert(error);
       }
-      console.log(error);
     }
   }, [history, password]);
 
@@ -49,7 +43,7 @@ const MyPageIntro = () => {
           }}
           value={password}
         />
-        <input type="button" value="확인" onClick={confirmUser} />
+        <input type="button" value="Confirm" onClick={confirmUser} />
       </div>
     </div>
   );
