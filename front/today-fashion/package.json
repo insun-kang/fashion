@@ -36,7 +36,9 @@
     "react-intersection-observer": "^8.32.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
+    "react-three-fiber": "^6.0.13",
     "recoil": "^0.3.0",
+    "three": "^0.129.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

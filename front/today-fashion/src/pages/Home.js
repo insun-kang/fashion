@@ -83,6 +83,28 @@ const Home = ({ location, history }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [history]
   );
+  const handleClickKaKaoOAuth = () => {
+    //window.location.replace(SERVER_URL+"")
+    //카카오 로그인 요청하는 백엔드 경로로 이동
+  };
+  const handleKaKaoSignIn = useCallback(async (queryString) => {
+    //코드 백엔드로 보내는 요청
+    const authCode = new URLSearchParams(queryString).get('code');
+    //https://www.sitepoint.com/get-url-parameters-with-javascript/
+    try {
+      // const res = await axios.get('/kakao-Sign-in',{authCode})
+      // setToken(res.data.accessToken);
+      // setOpenSignIn(false);
+      // history.push('/main');
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
+    if (window.location.search && !token) {
+      handleKaKaoSignIn(window.location.search);
+      history.push({ search: '' });
+    }
+  }, [token]);
 
   useEffect(() => {
     return () => {
