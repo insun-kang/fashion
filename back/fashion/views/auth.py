@@ -62,19 +62,23 @@ def register():
             models.db.session.commit()
             # 추천 디폴트 json 파일 생성----------------------------------------------------------------------------------------------
             queried = models.User.query.filter_by(email=email).first()
+            file_game = f'fashion/user_recommendations/game_{queried.id}.json'
+            file_result = f'fashion/user_recommendations/result_{queried.id}.json'
 
             try:
-                shutil.copy2("fashion/user_recommendations/game_default.json", f"fashion/user_recommendations/game_{queried.id}.json")
-                shutil.copy2("fashion/user_recommendations/result_default.json", f"fashion/user_recommendations/result_{queried.id}.json")
+                shutil.copy2("fashion/user_recommendations/default_game.json", file_game)
+                shutil.copy2("fashion/user_recommendations/default_result.json", file_result)
             except:
                 admin=models.User.query.filter_by(id=queried.id).first()
                 models.db.session.delete(admin)
                 models.db.session.commit()
+                if os.path.isfile(file_game) or os.path.isfile(file_result):
+                    os.remove(file_game)
+                    os.remove(file_result)
                 return error_code.error_body('failed_copying','Failed copying default json file')
             # ----------------------------------------------------------------------------------------------------------------------------------
 
             #바로 로그인 실행
-            # queried = models.User.query.filter_by(email=email).first() # 위로 이동함
 
             accessToken = create_access_token(identity=queried.id, fresh=True)
 
@@ -237,3 +241,7 @@ def withdrawal():
 @swag_from("../swagger_config/protected.yml")
 def protected():
     return {'msg': 'Succeed accessing protected area'}, 200
+
+
+
+

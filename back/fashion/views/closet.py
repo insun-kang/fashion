@@ -58,17 +58,16 @@ def closet():
             card['bookmark']=True
         if not review:
             card['nlpResults']={
-                            'posReviewSummary': 'Oh no....there is no positive review at all...;(', 
-                            'negReviewSummary': 'OMG! There is no negative review at all!;)'
-                            }
+                            'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+            }
         
-            card['posReveiwRate']=0
         else:
             card['nlpResults']={
-                                'posReviewSummary': review.positive_review_summary, 
-                                'negReviewSummary': review.negative_review_summary
-                                }
-            card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
+                            'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+            }
+        card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
         card['starRating']=round(product.rating,2)
         card['image']=address_format.img(product.asin)
         card['productUrl']=address_format.product(product.asin)
@@ -76,7 +75,6 @@ def closet():
 
         cards.append(card)
 
-        print(catagory)
 
         if catagory == 'overall':
             data['overall']=[cards]

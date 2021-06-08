@@ -2,3 +2,6 @@ __pycache__/
 migrations/
 venv/
 nohup.*
+
+game*
+result*

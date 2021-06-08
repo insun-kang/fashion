@@ -16,7 +16,7 @@ from .. import address_format
 
 bp = Blueprint('cody', __name__, url_prefix='/')
 
-@bp.route('/load_cody', methods=['GET'])
+@bp.route('/load-cody', methods=['GET'])
 @jwt_required()
 @swag_from('../swagger_config/load_cody.yml')
 def loadcody():
@@ -55,17 +55,16 @@ def loadcody():
             card['bookmark']=True
         if not review:
             card['nlpResults']={
-                            'posReviewSummary': 'Oh no....there is no positive review at all...;(', 
-                            'negReviewSummary': 'OMG! There is no negative review at all!;)'
-                            }
+                            'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+            }
         
-            card['posReveiwRate']=0
         else:
             card['nlpResults']={
-                                'posReviewSummary': review.positive_review_summary, 
-                                'negReviewSummary': review.negative_review_summary
-                                }
-            card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
+                            'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+            }
+        card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
         card['starRating']=round(product.rating,2)
         card['image']=address_format.img(product.asin)
         card['productUrl']=address_format.product(product.asin)
@@ -74,7 +73,7 @@ def loadcody():
         cards.append(card)
     return {'cards': cards, 'msg' : 'Loading success'}, 200
 
-@bp.route('/save_cody', methods=['POST'])
+@bp.route('/save-cody', methods=['POST'])
 @jwt_required()
 @swag_from('../swagger_config/save_cody.yml')
 def savecody():
@@ -118,7 +117,7 @@ def savecody():
             models.db.session.commit()
         return {'msg' : 'Save success'}, 200
 
-@bp.route('/delete_cody', methods=['GET'])
+@bp.route('/delete-cody', methods=['GET'])
 @jwt_required()
 @swag_from('../swagger_config/delete_cody.yml')
 def deletecody():
