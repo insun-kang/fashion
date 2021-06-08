@@ -2,3 +2,5 @@ __pycache__/
 migrations/
 venv/
 redis-stable
+test/
+back/redis-stable.tar.gz
