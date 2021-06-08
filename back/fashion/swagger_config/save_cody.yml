@@ -1,0 +1,31 @@
+summary: "코디 저장"
+description: "코디 저장하기 get api"
+tags:
+  - cody
+produces:
+  - "application/json"
+requestBody:
+  description: 수정할 정보(email,pw,name,nickname)
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "#/definitions/Modified"
+      examples:
+        case1:
+          summary: 1
+          value:
+            asin: ["565","8","789"]
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              'card':'fdas'
+            }
+security:
+  - ApiKeyAuth: []
