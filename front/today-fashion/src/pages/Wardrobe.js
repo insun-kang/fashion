@@ -78,11 +78,15 @@ const items2 = [
   },
 ];
 
+const categories = ['overall', 'top', 'bottom', 'etc'];
 const Wardrobe = () => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
 
-  const [coordinateItems, setCoordinateItems] = useState(items2);
-  const [bookmarkItems, setBookMarkItems] = useState(items1);
+  const [coordinateItems, setCoordinateItems] = useState([]);
+
+  const [totalBookMarkItems, setTotalBookMarkItems] = useState();
+  const [bookmarkItems, setBookMarkItems] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
@@ -143,13 +147,17 @@ const Wardrobe = () => {
   const getBookmarkItems = useCallback(async () => {
     try {
       const res = await axios.get('/closet');
+      setTotalBookMarkItems(res.data.data);
+      console.log(res);
     } catch (error) {}
   }, []);
 
   const getCoordinateItems = useCallback(async () => {
     try {
       const res = await axios.get('/load-cody');
-    } catch {}
+      console.log(res);
+      setCoordinateItems(res);
+    } catch (error) {}
   }, []);
 
   //didmount 시점에 찜한 상품, 코디 상품 불러오기
@@ -198,32 +206,37 @@ const Wardrobe = () => {
   }
   return (
     <>
-      <div ref={drop} style={{ ...style, backgroundColor }}>
-        {coordinateItems.map((card) =>
-          card ? (
-            <CoordinateCard
-              key={card.asin}
-              asin={card.asin}
-              img={card.img}
-              moveCard={moveCard}
-              findCard={findCard}
-              addCard={addCard}
+      {coordinateItems && (
+        <>
+          <div ref={drop} style={{ ...style, backgroundColor }}>
+            {coordinateItems.map((card) =>
+              card ? (
+                <CoordinateCard
+                  key={card.asin}
+                  asin={card.asin}
+                  img={card.img}
+                  moveCard={moveCard}
+                  findCard={findCard}
+                  addCard={addCard}
+                />
+              ) : null
+            )}
+          </div>
+          <div className="coordinate-button-group">
+            <input type="button" value="clear" onClick={handleClearButton} />
+            <input type="button" value="save" onClick={handleSaveButton} />
+            <KakaoShareButton
+              handleShareKakaoButton={handleShareKakaoButton}
+              coordinateItems={coordinateItems}
             />
-          ) : null
-        )}
-      </div>
-      <div className="coordinate-button-group">
-        <input type="button" value="clear" onClick={handleClearButton} />
-        <input type="button" value="save" onClick={handleSaveButton} />
-        <KakaoShareButton
-          handleShareKakaoButton={handleShareKakaoButton}
-          coordinateItems={coordinateItems}
-        />
-      </div>
+          </div>
+        </>
+      )}
       <div style={style}>
-        {bookmarkItems.map((card) => (
-          <WardrobeCard key={card.asin} asin={card.asin} img={card.img} />
-        ))}
+        {bookmarkItems &&
+          bookmarkItems.map((card) => (
+            <WardrobeCard key={card.asin} asin={card.asin} img={card.img} />
+          ))}
       </div>
     </>
   );
