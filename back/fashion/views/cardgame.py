@@ -21,70 +21,11 @@ import os
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
-import pickle
 
-# import datetime
-# import redis
-
-# red = redis.StrictRedis()
+import asyncio
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
-# -------------------------------------------------------------------------------------
-# def event_stream():
-#     pub = redis.pubsub()
-#     pub.subscribe('sse_example_channel')
-#     for msg in pub.listen():
-#         if msg['type'] != 'subscribe':
-#             event, data = json.loads(msg['data'])
-#             yield u'event: {0}\ndata: {1}\n\n'.format(event, data)
-#         else:
-#             yield u'data: {0}\n\n'.format(msg['data'])
-
-
-# @app.route('/stream')
-# def get_pushes():
-#     return Response(event_stream(), mimetype="text/event-stream")
-
-# @app.route('/post')
-# def publish_data():
-#     # ...
-#     redis.publish('sse_example_channel', json.dumps([event, data]))
-
-# # ===================================================================
-
-
-# @bp.route('/stream')
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def stream():
-#     user_id = get_jwt_identity()
-
-#     def event_stream():
-#         pubsub = red.pubsub()
-#         pubsub.subscribe(user_id) # 채널이름 => user_id
-#         # TODO: handle client disconnection.
-#         for message in pubsub.listen():
-#             print (message)
-#             if message['type']=='message':
-#                 yield 'data: %s\n\n' % message['data'].decode('utf-8')
-
-#     return flask.Response(event_stream(), mimetype="text/event-stream")
-
-# @bp.route('/post', methods=['POST'])
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def post():
-#     user_id = get_jwt_identity()
-
-#     message = 'json file 생성 완료'
-#     user = models.User.query.filter(id=user_id).first()
-#     now = datetime.datetime.now().replace(microsecond=0).time()
-#     red.publish(user_id, u'[%s] %s: %s' % (now.isoformat(), user, message))
-#     return flask.Response(status=200)
-
-
-# -------------------------------------------------------------------------------------
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
@@ -175,8 +116,11 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 10: # user가 10회 플레이할 때마다
-                json_update()
+            # if not user_play_num % 10: # user가 10회 플레이할 때마다
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(json_update())
+            loop.close()
+
 
             result = {
                 'userPlayNum': user_play_num,
@@ -303,15 +247,12 @@ def ai_model():
         'result': cut_review
     }
 
-# 속도가 너무 느릴경우: product_user_played가 100 개 넘을 때마다 새로 학습한다던지....
-# ai 모델 학습과 predict 부분 분리?
-
 
 # 인공 지능 함수 결과 바탕으로 json 파일 업데이트
 @bp.route('/json-update', methods=['GET'])
 @jwt_required()
 @swag_from('../swagger_config/json_update.yml')
-def json_update():
+async def json_update():
     # 게임카드 json 업데이트 코드-----------------------------------------------------------------------------------------------------
     user_id = get_jwt_identity()
 
