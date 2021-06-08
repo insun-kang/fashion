@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import update from 'immutability-helper';
 import CoordinateCard from '../components/CoordinateCard';
@@ -133,6 +133,7 @@ const Wardrobe = () => {
   );
 
   //didmount 시점에 찜한 상품, 코디 상품 불러오기
+  useEffect(() => {}, []);
 
   const handleSaveButton = () => {
     //백엔드에 요청 보내기
