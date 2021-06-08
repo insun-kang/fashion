@@ -49,6 +49,8 @@
 | AI | sklearn | train_test_split, confusion_matrix, TfidfTransformer, CountVectorizer, LogisticRegression |    
 | AI | NLTK | NaiveBayesClassifier | 
 | AI | pytorch-transformers | 문장요약을 위한 Bart 모델 사용 |
+| AI | surprise - SVD | 추천 알고리즘 |
+| AI | pandas | 데이터 가공 |
 
 
 ## 4. 구현 기능
