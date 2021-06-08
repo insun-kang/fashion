@@ -13,7 +13,81 @@ responses:
           type: object
           example:
             {
-              'card':'fdas'
+              "cards": [
+                {
+                  "asin": 565,
+                  "bookmark": true,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00076EMBK&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    [
+                      "diamond"
+                    ],
+                    [
+                      "ring"
+                    ]
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "OMG! There is no negative review at all!;)",
+                    "posReviewSummary": " This being the noughties.. being able to do most things online and with spare time at a premium not wanting especially to go around shopping in over priced stores I found Amazon s jewelery section great.. n Now you should go to a shop to get sized... n Amazon s design it yourself feature is absolutely great ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 10,
+                  "productUrl": "https://www.amazon.com/dp/B00076EMBK",
+                  "starRating": 5,
+                  "title": "Platinum Channel-Set Diamond Engagement Ring Setting (1/10 ct tw, J, I1)"
+                },
+                {
+                  "asin": 8,
+                  "bookmark": true,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=7106116521&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    [
+                      "earring"
+                    ],
+                    [
+                      "earrings"
+                    ],
+                    [
+                      "earring"
+                    ],
+                    [
+                      "earrings"
+                    ]
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": " Diameter is too small for earrings . Not happy don't fit earrings some don't even have holes waste of money . Would not buy again but for the price not sending back... too tiny an opening.. Okay .. Diameter too small . Would like to see some very expensive earrings again but not send them back .",
+                    "posReviewSummary": " These little plastic backs work great. Exactly what I needed. .. Love these... I am going to order another pack to keep in work someone including myself is always losing the back to an earring. .. I am very satisfied with the quality the price and the shipping ."
+                  },
+                  "posReveiwRate": 0.71,
+                  "price": 10,
+                  "productUrl": "https://www.amazon.com/dp/7106116521",
+                  "starRating": 3.82,
+                  "title": "Milliongadgets(TM) Earring Safety Backs For Fish Hook Small Earrings (150)"
+                },
+                {
+                  "asin": 5,
+                  "bookmark": false,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1940967805&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    [
+                      "blue"
+                    ],
+                    [
+                      "blue"
+                    ]
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "OMG! There is no negative review at all!;)",
+                    "posReviewSummary": " The Aether and Empire series is comic books at their best . It s a creative story with just the right pace . It gets you invested in the characters with well crafted dialogue complete with well written accents . When the movies come out you ll be able to cash in so get two copies one to sell and one to display somewhere ."
+                  },
+                  "posReveiwRate": 1,
+                  "price": 4.5,
+                  "productUrl": "https://www.amazon.com/dp/1940967805",
+                  "starRating": 5,
+                  "title": "Aether & Empire #1 - 2016 First Printing Comic Book Special Edition - Rare! - Blue Juice Comics"
+                }
+              ],
+              "msg": "Loading success"
             }
 security:
   - ApiKeyAuth: []

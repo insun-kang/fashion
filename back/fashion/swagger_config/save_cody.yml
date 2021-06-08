@@ -15,7 +15,7 @@ requestBody:
         case1:
           summary: 1
           value:
-            asin: ["565","8","789"]
+            asins: [565, 8, 789]
 responses:
   200:
     description: OK
@@ -25,7 +25,9 @@ responses:
           type: object
           example:
             {
-              'card':'fdas'
+              "msg": "Save success",
+              "totalBookmark": 2,
+              "totalShared": 6
             }
 security:
   - ApiKeyAuth: []
