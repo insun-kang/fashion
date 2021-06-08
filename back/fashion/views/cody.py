@@ -13,39 +13,36 @@ from ast import literal_eval
 from flasgger.utils import swag_from
 from .. import error_code
 
-bp = Blueprint('share', __name__, url_prefix='/')
+bp = Blueprint('cody', __name__, url_prefix='/')
 
-@bp.route('/share', methods=['POST'])
+@bp.route('/cody', methods=['POST'])
 @jwt_required()
-@swag_from('../swagger_config/share.yml')
-def Share():
+@swag_from('../swagger_config/cody.yml')
+def Cody():
     if not request.is_json:
         return error_code.missing_json_error
 
     else:
         body = request.get_json()
         
-        asin_ids = body['asin'] #array
+        asin_id = body['asin']
         header = request.headers.get('Authorization')
 
         user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+        product = models.Product.query.filter_by(id=asin_id).first()
 
+        shared=product.shared
+        
+        share = models.Share(
+                
+                asin_id=asin_id,
+                user_id=user_id,
+                shared_date=datetime.now()
+            )
+        models.db.session.add(share)
+        models.db.session.commit()
 
-        for asin_id in asin_ids:
-            product = models.Product.query.filter_by(id=asin_id).first()
-
-            shared=product.shared
-            
-            share = models.Share(
-                    asin_id=asin_id,
-                    user_id=user_id,
-                    shared_date=datetime.now()
-                )
-
-            models.db.session.add(share)
-            models.db.session.commit()
-
-            product.shared = shared+1
-            models.db.session.commit()
+        product.shared = shared+1
+        models.db.session.commit()
 
         return {'msg' : 'Share success'}, 200
