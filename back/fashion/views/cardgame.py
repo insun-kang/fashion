@@ -23,6 +23,7 @@ from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
 
 import asyncio
+import queue
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
@@ -79,7 +80,7 @@ def maincard():
 
         products_list_num = 0
         for product in json_data['products']:
-            if product['asin_id'] not in asin_ids_user_played and product['keywords']:
+            if product['asin'] not in asin_ids_user_played and product['keywords']:
                 products_list.append(product)
                 products_list_num += 1
             if products_list_num == 10:
@@ -104,11 +105,8 @@ def maincard():
 
             user_id = get_jwt_identity()
 
-            product_asin = body['asin']
+            product_asin_id = body['asin']
             love_or_hate = body['loveOrHate']
-
-
-            product_asin_id = models.Product.query.filter_by(asin=product_asin).first().id
 
             product_user_played = models.ProductUserPlayed(
                 user_id = user_id,
@@ -121,16 +119,16 @@ def maincard():
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
             # if not user_play_num % 10: # user가 10회 플레이할 때마다
+            user_queue(user_id)
             # loop = asyncio.get_event_loop()
-            # loop.run_until_complete(json_update())
+            # loop.run_until_complete(json_update(user_id))
             # loop.close()
 
 
             result = {
                 'userPlayNum': user_play_num,
                 'userId': user_id,
-                'productAsinId': product_asin_id,
-                'productAsin': product_asin,
+                'asin': product_asin_id,
                 'loveOrHate': love_or_hate
             }
             return {
@@ -167,8 +165,8 @@ def result_cards():
 
             products_list_num = 0
             for product in json_data['products'][page_num*data_size:]:
-                if product['asin_id'] not in asin_ids_user_played and product['keywords']:
-                    bookmark = models.Bookmark.query.filter_by(asin_id=product['asin_id'], user_id=user_id).first()
+                if product['asin'] not in asin_ids_user_played and product['keywords']:
+                    bookmark = models.Bookmark.query.filter_by(asin_id=product['asin'], user_id=user_id).first()
                     product['bookmark'] = True if bookmark else False
                     products_list.append(product)
                     products_list_num += 1
@@ -185,18 +183,25 @@ def result_cards():
 # json으로 이 위에 다 만들고
 # get 요청 오면 json import해서 보내주기
 
+# 큐 함수
+async def user_queue(user_id):
+    user_queue = queue.Queue()
+    user_queue.put(user_id)
+    return json_update(user_queue.get())
 
-# 인공 지능 API
-@bp.route('/ai-model', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/ai_model.yml')
-def ai_model():
+
+# 인공 지능 함수 결과 바탕으로 json 파일 업데이트
+# @bp.route('/json-update', methods=['GET'])
+# @jwt_required()
+# @swag_from('../swagger_config/json_update.yml')
+# def json_update(user_id):
+async def json_update(user_id):
     import time
     start = time.time()
-    user_id = get_jwt_identity()
+    # user_id = get_jwt_identity()
 
     # 리뷰파일 불러오기
-    review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
+    review_df = pd.read_csv('fashion/user_recommendations/reviews_df.csv', encoding='cp949', index_col=0)
     products_user_played = models.ProductUserPlayed.query.all()
 
     for product in products_user_played:
@@ -249,21 +254,14 @@ def ai_model():
     cut_review = filter_review[:10000]
 
     print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
-    return{
-        'result': cut_review
-    }
-
-
-# 인공 지능 함수 결과 바탕으로 json 파일 업데이트
-@bp.route('/json-update', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/json_update.yml')
-def json_update():
+    # return{
+    #     'result': cut_review
+    # }
     # 게임카드 json 업데이트 코드-----------------------------------------------------------------------------------------------------
-    user_id = get_jwt_identity()
+    # user_id = get_jwt_identity()
 
-    asins = ai_model()['result'][:100]
-
+    # asins = ai_model()['result'][:100]
+    asins = cut_review[:100]
     # asin_id_list = [models.Product.query.filter_by(asin=asin).first().id for asin in asins]
     # 데이터 정제될때까지 임시 예외처리----------------------------------------------------------------------
     asin_id_list = []
@@ -290,7 +288,7 @@ def json_update():
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
             'image': address_format.img(product.asin),
             'title': product.title,
-            'asin': product.asin
+            'asin': asin_id
         })
         a += 1
         print(f'{a}번째 데이터 생성')
@@ -322,7 +320,7 @@ def json_update():
             continue
         products_result_list['products'].append({
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'asin': product.asin,
+            'asin': asin_id,
             'price': product.price,
             'nlpResults': {
                             'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
@@ -345,6 +343,8 @@ def json_update():
         json.dump(products_result_list, file)
     print('결과 파일 생성 끝')
 
+    print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
     return{
-        'result':'성공'
+        'result':'성공',
+        'time': time.time() - start
     }
