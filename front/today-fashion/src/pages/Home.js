@@ -2,7 +2,13 @@ import CustomSignIn from '../components/CustomSignIn';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
 import axios from 'axios';
-import React, { useCallback, useEffect, useState, forwardRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  forwardRef,
+  Suspense,
+} from 'react';
 import { Redirect } from 'react-router';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
 import { PCButton } from '../ui-components/@material-extend';
@@ -120,7 +126,7 @@ const Home = ({ location, history }) => {
   }
 
   return (
-    <div className="home-container">
+    <div className="fixed-container">
       <img
         src="/image/logo.png"
         style={{ marginTop: '10vh', marginLeft: '35vw', height: '20vw' }}

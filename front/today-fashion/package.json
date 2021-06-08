@@ -16,6 +16,7 @@
     "@material-ui/lab": "^5.0.0-alpha.34",
     "@material-ui/styles": "^5.0.0-alpha.33",
     "@material-ui/utils": "^5.0.0-alpha.33",
+    "@react-three/drei": "^6.0.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",

@@ -4,11 +4,14 @@ function pxToRem(value) {
 
 function responsiveFontSizes({ sm, md, lg }) {
   return {
-    '@media (min-width:600px)': {
+    '@media (min-width:480px)': {
       fontSize: pxToRem(sm),
     },
     '@media (min-width:960px)': {
       fontSize: pxToRem(md),
+    },
+    '@media (min-width:1024px)': {
+      fontSize: pxToRem(lg),
     },
     '@media (min-width:1280px)': {
       fontSize: pxToRem(lg),
