@@ -29,8 +29,9 @@ def Closet():
     bookmark=models.Bookmark.query.filter_by(user_id=user_id).all()
 
     data={}
-    cards=[]
+    
     for i in bookmark:
+        cards=[]
         asin_id=i.asin_id
         card={}
         keywords=[]
@@ -49,7 +50,7 @@ def Closet():
         review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
         card['keywords']=keywords
-        card['asin_id']=product.id
+        card['asin']=product.id
         card['price']=product.price
         if not bookmark:
             card['bookmark']=False
@@ -74,6 +75,8 @@ def Closet():
         card['title']=product.title
 
         cards.append(card)
+
+        print(catagory)
 
         if catagory == 'overall':
             data['overall']=[cards]
