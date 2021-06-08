@@ -71,16 +71,16 @@ def Details():
         datas['price']=product.price
         if not review:
             datas['nlpResults']={
-                            'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                            'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                            'posReviewSummary': 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': 'OMG! There is no negative review at all!;)'
             }
-        
+            datas['posReveiwRate']= 0
         else:
             datas['nlpResults']={
                             'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
                             'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
             }
-        datas['posReveiwRate']=review.positive_review_number/(review.positive_review_number+review.negative_review_number)
+            datas['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)
         datas['positive_review_number']=review.positive_review_number   
         datas['negative_review_number']=review.negative_review_number    
 

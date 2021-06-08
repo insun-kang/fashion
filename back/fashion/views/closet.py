@@ -28,13 +28,14 @@ def closet():
 
     bookmark=models.Bookmark.query.filter_by(user_id=user_id).all()
 
-    data={}
+    data={'overall': [], 'top': [], 'bottom': [], 'etc': []}
     
     for i in bookmark:
         cards=[]
         asin_id=i.asin_id
         card={}
         keywords=[]
+        catagory=''
 
         #card['keywords']
         asin=models.ProductKeyword.query.filter_by(asin_id=asin_id).all()
@@ -58,16 +59,17 @@ def closet():
             card['bookmark']=True
         if not review:
             card['nlpResults']={
-                            'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                            'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                            'posReviewSummary': 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': 'OMG! There is no negative review at all!;)'
             }
-        
+            card['posReveiwRate']= 0
         else:
             card['nlpResults']={
                             'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
                             'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
             }
-        card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
+            card['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2) 
+                                
         card['starRating']=round(product.rating,2)
         card['image']=address_format.img(product.asin)
         card['productUrl']=address_format.product(product.asin)
@@ -77,13 +79,13 @@ def closet():
 
 
         if catagory == 'overall':
-            data['overall']=[cards]
+            data['overall'].append(cards)
         elif catagory == 'top':
-            data['top']=[cards]
+            data['top'].append(cards)
         elif catagory == 'bottom':
-            data['bottom']=[cards]
+            data['bottom'].append(cards)
         else:
-            data['etc']=[cards]
+            data['etc'].append(cards)
     
 
     return { 'data':data, 'catagories': ['overall','top','bottom','etc']}, 200
