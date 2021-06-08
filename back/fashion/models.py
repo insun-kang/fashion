@@ -98,6 +98,15 @@ class Share(db.Model):
     user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
     shared_date = Column(DATE)
 
+class Cody(db.Model):
+    __tablename__:'cody'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    asin_id = Column(Integer, ForeignKey('product.id', ondelete='cascade'))
+    user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
+
 
 
 #계단식 삭제일 때는 , passive_deletes=True도 붙여야 한다.

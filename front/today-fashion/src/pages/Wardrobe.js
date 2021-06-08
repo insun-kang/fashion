@@ -1,8 +1,11 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import update from 'immutability-helper';
 import CoordinateCard from '../components/CoordinateCard';
 import WardrobeCard from '../components/WardrobeCard';
+import axios from 'axios';
+import { SERVER_URL } from '../config';
+import KakaoShareButton from '../components/KaKaoShareButton';
 const ItemTypes = {
   CARD: 'card',
 };
@@ -76,8 +79,13 @@ const items2 = [
 ];
 
 const Wardrobe = () => {
+  const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+
   const [coordinateItems, setCoordinateItems] = useState(items2);
   const [bookmarkItems, setBookMarkItems] = useState(items1);
+
+  axios.defaults.baseURL = SERVER_URL;
+  axios.defaults.headers.common['Authorization'] = AuthStr;
 
   const findCard = useCallback(
     (asin) => {
@@ -132,7 +140,23 @@ const Wardrobe = () => {
     [setCoordinateItems, coordinateItems]
   );
 
+  const getBookmarkItems = useCallback(async () => {
+    try {
+      const res = await axios.get('/closet');
+    } catch (error) {}
+  }, []);
+
+  const getCoordinateItems = useCallback(async () => {
+    try {
+      const res = await axios.get('/load-cody');
+    } catch {}
+  }, []);
+
   //didmount 시점에 찜한 상품, 코디 상품 불러오기
+  useEffect(() => {
+    getBookmarkItems();
+    getCoordinateItems();
+  }, []);
 
   const handleSaveButton = () => {
     //백엔드에 요청 보내기
@@ -140,6 +164,10 @@ const Wardrobe = () => {
   const handleClearButton = () => {
     setCoordinateItems([]);
     //백엔드에도 요청 보내기
+  };
+
+  const handleShareKakaoButton = () => {
+    //공유된 상품 백엔드에 알려주기
   };
 
   const [{ isOver, canDrop }, drop] = useDrop(
@@ -168,7 +196,6 @@ const Wardrobe = () => {
   if (isActive) {
     backgroundColor = '#B2CFF1';
   }
-
   return (
     <>
       <div ref={drop} style={{ ...style, backgroundColor }}>
@@ -188,7 +215,10 @@ const Wardrobe = () => {
       <div className="coordinate-button-group">
         <input type="button" value="clear" onClick={handleClearButton} />
         <input type="button" value="save" onClick={handleSaveButton} />
-        <input type="button" value="share" />
+        <KakaoShareButton
+          handleShareKakaoButton={handleShareKakaoButton}
+          coordinateItems={coordinateItems}
+        />
       </div>
       <div style={style}>
         {bookmarkItems.map((card) => (

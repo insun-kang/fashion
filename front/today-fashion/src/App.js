@@ -13,6 +13,7 @@ import Game from './pages/Game';
 import MyPageIntro from './pages/MyPageIntro';
 import ComponentsChart from './pages/ComponentsChart';
 import Wardrobe from './pages/Wardrobe';
+import SharedWardrobe from './pages/SharedWardrobe';
 
 function App() {
   const location = useLocation();
@@ -70,7 +71,15 @@ function App() {
           render={(props) => <WithDraw {...props} />}
         />
         <AuthRoute path="/game" render={(props) => <Game {...props} />} />
-        <Route path="/wardrobe" render={(props) => <Wardrobe {...props} />} />
+        <Route
+          path="/wardrobe"
+          exact
+          render={(props) => <Wardrobe {...props} />}
+        />
+        <Route
+          path="/wardrobe/:items"
+          render={(props) => <SharedWardrobe {...props} />}
+        />
         <Route path="/components" component={ComponentsChart} />
       </Switch>
     </div>
