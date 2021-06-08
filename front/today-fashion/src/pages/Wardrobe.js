@@ -206,7 +206,7 @@ const Wardrobe = () => {
   }
   return (
     <>
-      {coordinateItems && (
+      {coordinateItems.length && (
         <>
           <div ref={drop} style={{ ...style, backgroundColor }}>
             {coordinateItems.map((card) =>
