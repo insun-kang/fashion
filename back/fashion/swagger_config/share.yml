@@ -15,7 +15,7 @@ requestBody:
         case1:
           summary: post request
           value:
-            asin_id: '23'
+            asins: [23,564]
 
 responses:
   200:
@@ -26,6 +26,14 @@ responses:
           type: object
           example:
             {'msg' : 'Share success'}
+  400:
+    description: 공유안됨
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'errorCode': 'failed_try', 'msg': 'failed_try'}
 definitions:
   Share:
     type: object
