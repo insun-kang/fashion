@@ -21,70 +21,11 @@ import os
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
-import pickle
 
-# import datetime
-# import redis
-
-# red = redis.StrictRedis()
+import asyncio
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
-# -------------------------------------------------------------------------------------
-# def event_stream():
-#     pub = redis.pubsub()
-#     pub.subscribe('sse_example_channel')
-#     for msg in pub.listen():
-#         if msg['type'] != 'subscribe':
-#             event, data = json.loads(msg['data'])
-#             yield u'event: {0}\ndata: {1}\n\n'.format(event, data)
-#         else:
-#             yield u'data: {0}\n\n'.format(msg['data'])
-
-
-# @app.route('/stream')
-# def get_pushes():
-#     return Response(event_stream(), mimetype="text/event-stream")
-
-# @app.route('/post')
-# def publish_data():
-#     # ...
-#     redis.publish('sse_example_channel', json.dumps([event, data]))
-
-# # ===================================================================
-
-
-# @bp.route('/stream')
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def stream():
-#     user_id = get_jwt_identity()
-
-#     def event_stream():
-#         pubsub = red.pubsub()
-#         pubsub.subscribe(user_id) # 채널이름 => user_id
-#         # TODO: handle client disconnection.
-#         for message in pubsub.listen():
-#             print (message)
-#             if message['type']=='message':
-#                 yield 'data: %s\n\n' % message['data'].decode('utf-8')
-
-#     return flask.Response(event_stream(), mimetype="text/event-stream")
-
-# @bp.route('/post', methods=['POST'])
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def post():
-#     user_id = get_jwt_identity()
-
-#     message = 'json file 생성 완료'
-#     user = models.User.query.filter(id=user_id).first()
-#     now = datetime.datetime.now().replace(microsecond=0).time()
-#     red.publish(user_id, u'[%s] %s: %s' % (now.isoformat(), user, message))
-#     return flask.Response(status=200)
-
-
-# -------------------------------------------------------------------------------------
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
@@ -99,6 +40,7 @@ def backcard():
         limit_num = body['limitNum']
 
         bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
+
         products_list = []
 
         products_list = [
@@ -124,9 +66,9 @@ def maincard():
 
         user_id = get_jwt_identity()
         products_user_played = models.ProductUserPlayed.query.filter_by(user_id=user_id).all()
-        asins_user_played = [product_user_played.asin for product_user_played in products_user_played]
+        asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played]
         # user 게임 플레이 횟수
-        user_play_num = len(asins_user_played)
+        user_play_num = len(asin_ids_user_played)
 
         # print('-'*50) print(os.getcwd()) print('-'*50) # /home/project/back
 
@@ -137,7 +79,7 @@ def maincard():
 
         products_list_num = 0
         for product in json_data['products']:
-            if product['asin'] not in asins_user_played and product['keywords']:
+            if product['asin_id'] not in asin_ids_user_played and product['keywords']:
                 products_list.append(product)
                 products_list_num += 1
             if products_list_num == 10:
@@ -165,9 +107,12 @@ def maincard():
             product_asin = body['asin']
             love_or_hate = body['loveOrHate']
 
+
+            product_asin_id = models.Product.query.filter_by(asin=product_asin).first().id
+
             product_user_played = models.ProductUserPlayed(
                 user_id = user_id,
-                asin = product_asin,
+                asin_id = product_asin_id,
                 love_or_hate=love_or_hate,
             )
             models.db.session.add(product_user_played)
@@ -175,12 +120,16 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 10: # user가 10회 플레이할 때마다
-                json_update()
+            # if not user_play_num % 10: # user가 10회 플레이할 때마다
+            # loop = asyncio.get_event_loop()
+            # loop.run_until_complete(json_update())
+            # loop.close()
+
 
             result = {
                 'userPlayNum': user_play_num,
                 'userId': user_id,
+                'productAsinId': product_asin_id,
                 'productAsin': product_asin,
                 'loveOrHate': love_or_hate
             }
@@ -203,7 +152,7 @@ def result_cards():
 
         user_id = get_jwt_identity()
         products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
-        asins_user_played = [product_user_played.asin for product_user_played in products_user_played_hate]
+        asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate]
 
         user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
@@ -218,8 +167,8 @@ def result_cards():
 
             products_list_num = 0
             for product in json_data['products'][page_num*data_size:]:
-                if product['asin'] not in asins_user_played and product['keywords']:
-                    bookmark = models.Bookmark.query.filter_by(asin=product['asin'], user_id=user_id).first()
+                if product['asin_id'] not in asin_ids_user_played and product['keywords']:
+                    bookmark = models.Bookmark.query.filter_by(asin_id=product['asin_id'], user_id=user_id).first()
                     product['bookmark'] = True if bookmark else False
                     products_list.append(product)
                     products_list_num += 1
@@ -227,7 +176,7 @@ def result_cards():
                     break
             # 싫어요 횟수/전체 플레이 횟수 => 정확도가 낮아요 추가
             return {
-                    'accuracy': round(len(asins_user_played)/user_play_num, 2),
+                    'accuracy': round(len(asin_ids_user_played)/user_play_num, 2),
                     'productsNum': len(products_list),
                     'products': products_list
                     }, 200
@@ -251,7 +200,8 @@ def ai_model():
     products_user_played = models.ProductUserPlayed.query.all()
 
     for product in products_user_played:
-        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : product.asin, 'overall' : float(product.love_or_hate)}, ignore_index=True)
+        real_product = models.Product.query.filter_by(id=product.asin_id).first()
+        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : real_product.asin, 'overall' : float(product.love_or_hate)}, ignore_index=True)
 
     # 별점범위 지정
     reader = Reader(rating_scale= (1, 5))
@@ -267,7 +217,7 @@ def ai_model():
     model = SVD(n_factors=100, n_epochs=20, random_state=10)
     model.fit(train)
 
-    # 중복되지 않은 어신 리스트=>얘도 피클로 저장해놓으면 더 빠르려나
+    # 중복되지 않은 어신 리스트
     clean_asin = list(set(list(review_df['asin'])))
 
     # --------------------------학습-------------------------------------
@@ -303,9 +253,6 @@ def ai_model():
         'result': cut_review
     }
 
-# 속도가 너무 느릴경우: product_user_played가 100 개 넘을 때마다 새로 학습한다던지....
-# ai 모델 학습과 predict 부분 분리?
-
 
 # 인공 지능 함수 결과 바탕으로 json 파일 업데이트
 @bp.route('/json-update', methods=['GET'])
@@ -317,23 +264,33 @@ def json_update():
 
     asins = ai_model()['result'][:100]
 
-    print(f'1. asins 리스트 만들어짐 : {asins[:5]}')
+    # asin_id_list = [models.Product.query.filter_by(asin=asin).first().id for asin in asins]
+    # 데이터 정제될때까지 임시 예외처리----------------------------------------------------------------------
+    asin_id_list = []
+    for asin in asins:
+        try:
+            asin_id_list.append(models.Product.query.filter_by(asin=asin).first().id)
+        except:
+            continue
+    # -----------------------------------------------------------------------------------------------------------
+
+    print(f'1. asin_ids 리스트 만들어짐 : {asin_id_list[:5]}')
 
     products_list = {}
     products_list['products'] = []
 
     a = 0
-    for asin in asins:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
+    for asin_id in asin_id_list:
+        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
         try:
-            product_title = models.Product.query.filter_by(asin=asin).first().title
+            product= models.Product.query.filter_by(id=asin_id).first()
         except:
             continue
         products_list['products'].append({
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'image': address_format.img(asin),
-            'title': product_title,
-            'asin': asin
+            'image': address_format.img(product.asin),
+            'title': product.title,
+            'asin': product.asin
         })
         a += 1
         print(f'{a}번째 데이터 생성')
@@ -351,18 +308,21 @@ def json_update():
     products_result_list['products'] = []
 
     a = 0
-    for asin in asins:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
-        product = models.Product.query.filter_by(asin=asin).first()
-        product_review = models.ProductReview.query.filter_by(asin=asin).first()
-        pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
+    for asin_id in asin_id_list:
+        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+        product = models.Product.query.filter_by(id=asin_id).first()
+        try:
+            product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
+            pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
+        except:
+            continue
         try:
             product_title = product.title
         except:
             continue
         products_result_list['products'].append({
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'asin': asin,
+            'asin': product.asin,
             'price': product.price,
             'nlpResults': {
                             'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
@@ -370,8 +330,8 @@ def json_update():
                         },
             'starRating': round(product.rating, 2),
             'posReveiwRate': round(pos_review_rate, 2),
-            'image': address_format.img(asin),
-            'productUrl': address_format.product(asin),
+            'image': address_format.img(product.asin),
+            'productUrl': address_format.product(product.asin),
             'title': product_title
         })
         a += 1

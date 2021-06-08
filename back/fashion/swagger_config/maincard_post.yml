@@ -30,42 +30,42 @@ requestBody:
               case4:
                 summary: 데이터 4
                 value:
-                  asin: "1940735033"
+                  asin: "1940967805"
                   loveOrHate: 5
               case5:
                 summary: 데이터 5
                 value:
-                  asin: "1940967805"
+                  asin: "5378828716"
                   loveOrHate: 5
               case6:
                 summary: 데이터 6
                 value:
-                  asin: "1942705034"
+                  asin: "7106116521"
                   loveOrHate: 5
               case7:
                 summary: 데이터 7
                 value:
-                  asin: "3293015344"
+                  asin: "8037200124"
                   loveOrHate: 1
               case8:
                 summary: 데이터 8
                 value:
-                  asin: "5378828716"
+                  asin: "8037200221"
                   loveOrHate: 1
               case9:
                 summary: 데이터 9
                 value:
-                  asin: "6041002984"
+                  asin: "9269808971"
                   loveOrHate: 5
               case10:
                 summary: 데이터 10
                 value:
-                  asin: "630456984X"
+                  asin: "9654263246"
                   loveOrHate: 5
               case11:
                 summary: 데이터 11
                 value:
-                  asin: "7106116521"
+                  asin: "B00004T3SN"
                   loveOrHate: 5
 responses:
   200:
