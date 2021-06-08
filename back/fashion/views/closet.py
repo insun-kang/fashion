@@ -20,7 +20,7 @@ bp = Blueprint('closet', __name__, url_prefix='/')
 @bp.route('/closet', methods=['GET'])
 @jwt_required()
 @swag_from('../swagger_config/closet.yml')
-def Closet():
+def closet():
 
     header = request.headers.get('Authorization')
 
@@ -89,3 +89,5 @@ def Closet():
     
 
     return { 'data':data, 'catagories': ['overall','top','bottom','etc']}, 200
+
+
