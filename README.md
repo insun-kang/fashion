@@ -5,6 +5,7 @@
 # 목차
 [[_TOC_]]
 
+
 ## 1. 웹 서비스 소개
 ![logo1](./img/ONOT_logo3.png)
 - **사용자 취향 기반 실시간 옷 추천 서비스** 
@@ -110,22 +111,11 @@
 
 
 ## 8. 배운 점
-- **프론트엔드** :
-1. eslint-prettier 설정하기
-    - editor 환경에서의 설정과 editorconfig의 설정, prettier 규칙 설정과 eslint 규칙 설정을 차근차근 살펴보며 통일시키고, 저장시 formatting되는 설정을 적용한다.
-2. 유지보수가 쉬운 로그인 인증관리를 구현하기
-    - 이전에 로그인 관리를 했을 때는 모든 페이지에서 on mount 시점에 login이 되었는지 되지 않았는지 구분하는 함수를 실행하는 식으로 구현했다. 커스텀 훅을 이용해서 반복되는 코드를 줄일 수 있지만 여전히 모든 페이지 파일에 인증 관련 코드를 작성해야 하는 것은 여전하고, 이렇게 작성할 경우 코드의 유지보수가 번거롭다. 
-    - 이번에는 root 컴포넌트에서 useEffect를 사용해서 페이지가 변할때마다 해당 코드를 실행하게 했고, 이를 통해 로컬 스토리지의 토큰을 관리했다.
-    - 로그인이 필요한 페이지에서는 react-router-dom의 커스텀 routing을 만들어 로그인 되지 않았을 경우 로그인 페이지로 강제 이동하도록 구현했다.
-    - SSOT(single source of truth)라는 코드 설계 원칙을 준수하려 노력했다. (token을 통해 로그인 여부를 인증하므로 isLoggedIn이라는 state를 따로 사용하지 않는 방식)
-3. 협업 환경에서 일관성 있는 UI/UX 및 Responsive Web 개발
-    - 오늘옷데 Design System 기반으로 필요한 UI/UX Component를 Customize하여 라이브러리화
-- **백엔드** :
-1. swagger 사용할 때 jwt_token 추가하는 법
-    - 공식문서가 있었으나 작동하지 않았고, stackoverflow에 검색해봐도 관련 결과가 3개정도밖에 안 떠서 알아낸 정보를 전부 조합해서 이것저것 해봐야 했다. openapi 버전이 낮아서 적용이 안됐던 것이었다.
-- **인공지능** :
-
-
+- **남다영** : [배운점 링크](https://kdt-gitlab.elice.io/001-part4-aifashionkeyword/team1/project-team1/-/blob/sprint/front/today-fashion/README.md)
+- **황정우** :
+- **강인선** :
+- **김다인** :
+- **김신성** :
 
 
 # 환경설정/실행
