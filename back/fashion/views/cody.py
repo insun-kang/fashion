@@ -16,7 +16,7 @@ from .. import address_format
 
 bp = Blueprint('cody', __name__, url_prefix='/')
 
-@bp.route('/load_cody', methods=['GET'])
+@bp.route('/load-cody', methods=['GET'])
 @jwt_required()
 @swag_from('../swagger_config/load_cody.yml')
 def loadcody():
@@ -74,7 +74,7 @@ def loadcody():
         cards.append(card)
     return {'cards': cards, 'msg' : 'Loading success'}, 200
 
-@bp.route('/save_cody', methods=['POST'])
+@bp.route('/save-cody', methods=['POST'])
 @jwt_required()
 @swag_from('../swagger_config/save_cody.yml')
 def savecody():
@@ -118,7 +118,7 @@ def savecody():
             models.db.session.commit()
         return {'msg' : 'Save success'}, 200
 
-@bp.route('/delete_cody', methods=['GET'])
+@bp.route('/delete-cody', methods=['GET'])
 @jwt_required()
 @swag_from('../swagger_config/delete_cody.yml')
 def deletecody():
