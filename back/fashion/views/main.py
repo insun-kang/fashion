@@ -135,18 +135,9 @@ def ResultSearch():
                                     }
                 card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
             card['starRating']=round(product.rating,2)
-<<<<<<< HEAD
-            card['image']=address_format.img(asin)
-            card['productUrl']=address_format.product(asin)
-            try:
-                card['title']=product.title
-            except:
-                card['title']="no title"
-=======
             card['image']=address_format.img(product.asin)
             card['productUrl']=address_format.product(product.asin)
             card['title']=product.title
->>>>>>> 11c70963f554855f051e878a688a685bfc41c06b
             
             cards.append(card)
         
