@@ -16,34 +16,32 @@ code {
   font-family: 'Spoqa';
   font-weight: 100;
   font-style: normal;
-  src: local('Spoqa'),
-    url('./fonts/SpoqaHanSansNeo-Thin.wotf2') format('opentype');
+  src: local('Spoqa'), url('./fonts/SpoqaHanSansNeo-Thin.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Spoqa';
   font-weight: 300;
   font-style: normal;
   src: local('Spoqa'),
-    url('./fonts/SpoqaHanSansNeo-Light.wotf2') format('opentype');
+    url('./fonts/SpoqaHanSansNeo-Light.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Spoqa';
   font-weight: 400;
   font-style: normal;
   src: local('Spoqa'),
-    url('./fonts/SpoqaHanSansNeo-Regular.wotf2') format('opentype');
+    url('./fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Spoqa';
   font-weight: 500;
   font-style: normal;
   src: local('Spoqa'),
-    url('./fonts/SpoqaHanSansNeo-Medium.wotf2') format('opentype');
+    url('./fonts/SpoqaHanSansNeo-Medium.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Spoqa';
   font-weight: 700;
   font-style: normal;
-  src: local('Spoqa'),
-    url('./fonts/SpoqaHanSansNeo-Bold.wotf2') format('opentype');
+  src: local('Spoqa'), url('./fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2');
 }
