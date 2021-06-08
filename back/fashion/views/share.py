@@ -25,7 +25,7 @@ def Share():
     else:
         body = request.get_json()
         
-        asin_id = body['asin_id']
+        asin_id = body['asin']
         header = request.headers.get('Authorization')
 
         user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']

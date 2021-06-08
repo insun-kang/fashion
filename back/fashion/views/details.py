@@ -25,7 +25,7 @@ def Details():
     else:
         body=request.get_json()
 
-        asin_id=body['asin_id']
+        asin_id=body['asin']
 
             
         datas={}
@@ -67,7 +67,7 @@ def Details():
 
 
         datas['keywords']=keywords
-        datas['asin_id']=asin_id
+        datas['asin']=asin_id
         datas['price']=product.price
         if not review:
             datas['nlpResults']={
