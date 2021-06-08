@@ -75,7 +75,6 @@ def Details():
                             'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
             }
         
-            datas['posReveiwRate']=0
         else:
             datas['nlpResults']={
                             'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
