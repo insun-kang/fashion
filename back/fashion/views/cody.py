@@ -26,7 +26,7 @@ def loadcody():
     asin_ids = models.Cody.query.filter_by(user_id=user_id).all()
     
     if not asin_ids:
-        return {'msg' : 'Make Your Cody!!'}, 200
+        return {'cards': [], 'msg' : 'Make Your Cody!!'}, 200
 
     cards=[]
     for i in asin_ids:
