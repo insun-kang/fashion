@@ -86,9 +86,9 @@ def ResultSearch():
         cards=[]
         
         #limit, offset
-        asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword))\
+        asin_ids = models.db.session.query(models.ProductKeyword.asin_id, models.func.count(models.ProductKeyword.product_keyword))\
         .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))\
-        .group_by("asin")\
+        .group_by("asin_id")\
         .having(models.func.count(models.ProductKeyword.product_keyword)<=size)\
         .offset(page_num*data_size)\
         .limit(data_size)\
@@ -97,32 +97,26 @@ def ResultSearch():
         
 
         
-        for i in asins:
+        for i in asin_ids:
             
-            asin=i.asin
+            asin_id=i.asin_id
             card={}
             keywords=[]
             #card['keywords']
-            keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin=asin).all()
-            # for keyword in keywords_by_asin:
-            #     if keyword not in keywords:
-            #         keywords.append(keyword.product_keyword)
+            keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+            
             #card['price'],card['title']
-            product=models.Product.query.filter_by(asin=asin).first()
-
+            product=models.Product.query.filter_by(id=asin_id).first()
             #card['bookmark']
-            bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin=asin).first()
+            bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin_id=asin_id).first()
 
             #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
-            review = models.ProductReview.query.filter_by(asin=asin).first()
+            review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
 
             card['keywords']=literal_eval(str(keywords_by_asin))
-            card['asin']=asin
-            try:
-                card['price']=product.price
-            except:
-                card['price']=0
+            card['asin_id']=product.id
+            card['price']=product.price
             if not bookmark:
                 card['bookmark']=False
             else:
@@ -141,18 +135,15 @@ def ResultSearch():
                                     }
                 card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
             card['starRating']=round(product.rating,2)
-            card['image']=address_format.img(asin)
-            card['productUrl']=address_format.product(asin)
-            try:
-                card['title']=product.title
-            except:
-                card['title']="no title"
+            card['image']=address_format.img(product.asin)
+            card['productUrl']=address_format.product(product.asin)
+            card['title']=product.title
             
             cards.append(card)
         
         return {'cards':cards}, 200
 
 
-# select asin, count(product_keyword) as count from product_keyword 
+# select asin, asin_id, count(product_keyword) as count from product_keyword 
 # where product_keyword="black" or product_keyword="red" group by asin having count = 2;
 

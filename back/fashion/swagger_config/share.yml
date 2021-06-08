@@ -15,7 +15,7 @@ requestBody:
         case1:
           summary: post request
           value:
-            asin: 'B00FB155LC'
+            asin_id: '23'
 
 responses:
   200:

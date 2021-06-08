@@ -44,15 +44,18 @@ class ProductKeyword(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    asin = Column(String(256), nullable=False)
-    type_keyword=Column(String(256), nullable=False)
+    asin_id = Column(Integer, ForeignKey('product.id', ondelete='cascade'))
+    asin = Column(String(256))
+    type_keyword=Column(String(256))
     product_keyword = Column(Text(16000000), nullable=True) # 제품키워드
+    catagory = Column(String(256))
 
 class ProductReview(db.Model):
     __tablename__:'product_review'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    asin_id = Column(Integer, ForeignKey('product.id', ondelete='cascade'))
     asin = Column(String(256))
 
     positive_review_number = Column(Integer, nullable=False, default=0) # 긍정 리뷰 수
@@ -68,7 +71,7 @@ class ProductUserPlayed(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    asin = Column(String(256), ForeignKey('product.asin', ondelete='cascade'))
+    asin_id = Column(Integer, ForeignKey('product.id', ondelete='cascade'))
     user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
 
     love_or_hate = Column(Integer)
@@ -80,11 +83,7 @@ class Bookmark(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-<<<<<<< HEAD
-    asin = Column(String(256), nullable=False)
-    user_id = Column(Integer, nullable=False)
-=======
-    asin = Column(String(256), ForeignKey('product.asin', ondelete='cascade'))
+    asin_id = Column(Integer, ForeignKey('product.id', ondelete='cascade'))
     user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
     date = Column(DATE)
 
@@ -95,11 +94,10 @@ class Share(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    asin = Column(String(256), ForeignKey('product.asin', ondelete='cascade'))
+    asin_id = Column(Integer, ForeignKey('product.id', ondelete='cascade'))
     user_id = Column(Integer, ForeignKey('user.id', ondelete='cascade'))
     shared_date = Column(DATE)
 
 
 
 #계단식 삭제일 때는 , passive_deletes=True도 붙여야 한다.
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
