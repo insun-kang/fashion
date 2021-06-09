@@ -19,6 +19,8 @@ import os
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
+
+
 @bp.route('/sign-up', methods=['POST'])
 @swag_from('../swagger_config/register.yml', validation=True)
 def register():
@@ -242,11 +244,3 @@ def withdrawal():
 def protected():
     return {'msg': 'Succeed accessing protected area'}, 200
 
-
-
-#kakao oauth
-@bp.route('/oauth')
-def oauth():
-    code = str(request.args.get('code'))
-    resToken = getAccessToken("XXXXXXXXXXXXXXXXXXXXXXX",str(code))  #XXXXXXXXX 자리에 RESET API KEY값을 사용
-    return 'code=' + str(code) + '<br/>response for token=' + str(resToken)
