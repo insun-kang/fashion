@@ -244,4 +244,9 @@ def protected():
 
 
 
-
+#kakao oauth
+@bp.route('/oauth')
+def oauth():
+    code = str(request.args.get('code'))
+    resToken = getAccessToken("XXXXXXXXXXXXXXXXXXXXXXX",str(code))  #XXXXXXXXX 자리에 RESET API KEY값을 사용
+    return 'code=' + str(code) + '<br/>response for token=' + str(resToken)
