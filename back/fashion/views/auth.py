@@ -20,6 +20,8 @@ import pandas as pd
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
+
+
 @bp.route('/sign-up', methods=['POST'])
 @swag_from('../swagger_config/register.yml', validation=True)
 def register():
