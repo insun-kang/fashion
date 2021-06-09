@@ -233,7 +233,7 @@ def ai_model(user_id):
         except:
             continue
         products_list['products'].append({
-            'keywords': literal_eval(str(keywords)),
+            'keywords': keywords,
             'image': image,
             'title': title,
             'asin': asin_id
@@ -250,8 +250,8 @@ def ai_model(user_id):
 
     for asin_id in asin_id_list:
         try:
-            keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
-            # keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
             product = models.Product.query.filter_by(id=asin_id).first()
             product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
             pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
@@ -263,7 +263,7 @@ def ai_model(user_id):
             continue
 
         products_result_list['products'].append({
-            'keywords': literal_eval(str(keywords)),
+            'keywords': keywords,
             'asin': asin_id,
             'price': price,
             'nlpResults': {
