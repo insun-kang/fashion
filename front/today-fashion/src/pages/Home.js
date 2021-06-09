@@ -18,6 +18,7 @@ import {
   DialogActions,
   DialogTitle,
   DialogContent,
+  Grid,
 } from '@material-ui/core';
 
 const Home = ({ location, history }) => {
@@ -126,35 +127,7 @@ const Home = ({ location, history }) => {
   }
 
   return (
-    <div
-      className="App"
-      // height={window.innerHeight}
-      // width={window.innerWidth}
-      // sytle={{ itemAlign: 'center', textAlign: 'center' }}
-    >
-      <div style={{ height: '40vh' }}></div>
-      <div className="home-button-group">
-        <PCButton
-          color="primary"
-          variant="contained"
-          value="Sign In"
-          onClick={() => {
-            setOpenSignIn(!openSignIn);
-          }}
-        >
-          Sign In
-        </PCButton>
-        <PCButton
-          color="secondary"
-          variant="contained"
-          value="Sign Up"
-          onClick={() => {
-            setOpenSignUp(!openSignUp);
-          }}
-        >
-          Sign Up
-        </PCButton>
-      </div>
+    <div className="App">
       {openSignIn && (
         <Dialog
           open={openSignIn}
@@ -224,6 +197,29 @@ const Home = ({ location, history }) => {
           </DialogActions>
         </Dialog>
       )}
+      <Grid style={{ height: '80vh' }}></Grid>
+      <Grid>
+        <PCButton
+          color="primary"
+          variant="contained"
+          value="Sign In"
+          onClick={() => {
+            setOpenSignIn(!openSignIn);
+          }}
+        >
+          Sign In
+        </PCButton>
+        <PCButton
+          color="secondary"
+          variant="contained"
+          value="Sign Up"
+          onClick={() => {
+            setOpenSignUp(!openSignUp);
+          }}
+        >
+          Sign Up
+        </PCButton>
+      </Grid>
     </div>
   );
 };
