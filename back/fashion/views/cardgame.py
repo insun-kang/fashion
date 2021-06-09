@@ -29,6 +29,7 @@ import asyncio
 from multiprocessing import Process, Queue
 
 import queue
+from ast import literal_eval
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
@@ -123,8 +124,8 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 10: # user가 10회 플레이할 때마다
-                ai_model(user_id)
+            # if not user_play_num % 10: # user가 10회 플레이할 때마다
+            ai_model(user_id)
 
             # user_queue(user_id)
             # loop = asyncio.get_event_loop()
@@ -187,6 +188,7 @@ def result_cards():
 
 def ai_model(user_id):
     # 리뷰파일 불러오기
+    start = time.time()
     review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
     products_user_played = models.ProductUserPlayed.query.all()
 
@@ -218,21 +220,20 @@ def ai_model(user_id):
 
     asin_id_list = asin_id_list[:1000]
 
-    # print('time:', time.time() - start)
-
     products_list = {}
     products_list['products'] = []
 
     for asin_id in asin_id_list:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
         try:
+            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
             product= models.Product.query.filter_by(id=asin_id).first()
             image = address_format.img(product.asin)
             title = product.title
         except:
             continue
         products_list['products'].append({
-            'keywords': keywords if len(keywords) <= 6 else keywords[:6],
+            'keywords': literal_eval(str(keywords)),
             'image': image,
             'title': title,
             'asin': asin_id
@@ -249,7 +250,8 @@ def ai_model(user_id):
 
     for asin_id in asin_id_list:
         try:
-            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+            keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+            # keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
             product = models.Product.query.filter_by(id=asin_id).first()
             product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
             pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
@@ -261,7 +263,7 @@ def ai_model(user_id):
             continue
 
         products_result_list['products'].append({
-            'keywords': keywords if len(keywords) <= 6 else keywords[:6],
+            'keywords': literal_eval(str(keywords)),
             'asin': asin_id,
             'price': price,
             'nlpResults': {
@@ -281,6 +283,9 @@ def ai_model(user_id):
         json.dump(products_result_list, file)
 
     print('result update succeed')
+    print('time:', time.time() - start)
+
+
 # # 큐 함수
 # async def user_queue(user_id):
 #     user_queue = queue.Queue()
