@@ -217,7 +217,7 @@ const UserInfoForm = (props) => {
                     color="primary"
                     disabled={props.isSubmitting}
                     onClick={props.submitForm}
-                    style={{ width: '50%' }}
+                    style={{ width: '30%', height: '45px' }}
                   >
                     {isSignUp ? 'Sign Up' : 'Save'}
                   </PCButton>

@@ -7,10 +7,10 @@ const ButtonStyle = styled(Button)(({ theme, styleProps }) => {
   const { color, variant } = styleProps;
 
   const styleContained = (color) => ({
-    margin: '1rem',
+    margin: '0.5rem',
     // boxShadow: theme.customShadows[color],
     color: theme.palette[color].contrastText,
-    borderRadius: '20px',
+    borderRadius: '15px',
     backgroundColor: theme.palette[color].main,
     '&:hover': {
       backgroundColor: theme.palette[color].dark,

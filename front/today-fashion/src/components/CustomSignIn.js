@@ -74,7 +74,8 @@ const CustomSignIn = (props) => {
                     onClick={submitForm}
                     style={{
                       margin: '0 auto',
-                      width: '50%',
+                      width: '30%',
+                      height: '45px',
                     }}
                   >
                     Sign In
