@@ -18,7 +18,7 @@ bp = Blueprint('details', __name__, url_prefix='/')
 
 @bp.route('/details', methods=['POST'])
 @swag_from('../swagger_config/details.yml')
-def Details():
+def details():
     if not request.is_json:
         return error_code.missing_json_error
 
