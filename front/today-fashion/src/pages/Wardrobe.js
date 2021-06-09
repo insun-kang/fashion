@@ -6,6 +6,7 @@ import WardrobeCard from '../components/WardrobeCard';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
 import KakaoShareButton from '../components/KaKaoShareButton';
+import WardrobeNav from '../components/WardrobeNav';
 const ItemTypes = {
   CARD: 'card',
 };
@@ -78,15 +79,15 @@ const items2 = [
   },
 ];
 
-const categories = ['overall', 'top', 'bottom', 'etc'];
 const Wardrobe = () => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+  const categories = ['overall', 'top', 'bottom', 'etc'];
 
   const [coordinateItems, setCoordinateItems] = useState([]);
-
   const [totalBookMarkItems, setTotalBookMarkItems] = useState();
   const [bookmarkItems, setBookMarkItems] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [social, setSocial] = useState({ totalBookmark: 0, totalShared: 0 });
 
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
@@ -148,7 +149,7 @@ const Wardrobe = () => {
     try {
       const res = await axios.get('/closet');
       setTotalBookMarkItems(res.data.data);
-      console.log(res);
+      setBookMarkItems(res.data.data[categories[selectedCategory]]);
     } catch (error) {}
   }, []);
 
@@ -166,15 +167,38 @@ const Wardrobe = () => {
     getCoordinateItems();
   }, []);
 
-  const handleSaveButton = () => {
-    //백엔드에 요청 보내기
-  };
-  const handleClearButton = () => {
-    setCoordinateItems([]);
-    //백엔드에도 요청 보내기
+  useEffect(() => {
+    if (totalBookMarkItems) {
+      setBookMarkItems(totalBookMarkItems[categories[selectedCategory]]);
+    }
+  }, [selectedCategory]);
+
+  const handleSaveButton = async () => {
+    const sharedData = [...coordinateItems];
+    const data = sharedData.map((item) => item.asin);
+    try {
+      const res = await axios.post('/saved-cody', { asins: data });
+      setSocial({
+        totalBookmark: res.data.totalBookmark,
+        totalShared: res.data.totalShared,
+      });
+    } catch (error) {}
   };
 
-  const handleShareKakaoButton = () => {
+  const handleClearButton = async () => {
+    setCoordinateItems([]);
+    try {
+      await axios.get('/delete-cody');
+    } catch (error) {}
+  };
+
+  const handleShareKakaoButton = async () => {
+    const sharedData = [...coordinateItems];
+    const data = sharedData.map((item) => item.asin);
+    try {
+      await axios.post('/shared-page', { asins: data });
+      console.log('send');
+    } catch (error) {}
     //공유된 상품 백엔드에 알려주기
   };
 
@@ -228,6 +252,7 @@ const Wardrobe = () => {
             <KakaoShareButton
               handleShareKakaoButton={handleShareKakaoButton}
               coordinateItems={coordinateItems}
+              social={social}
             />
           </div>
         </>
@@ -238,6 +263,11 @@ const Wardrobe = () => {
             <WardrobeCard key={card.asin} asin={card.asin} img={card.img} />
           ))}
       </div>
+      <WardrobeNav
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
     </>
   );
 };

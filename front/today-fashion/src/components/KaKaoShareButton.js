@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { KAKAO_KEY } from '../config';
-const KakaoShareButton = ({ handleShareKakaoButton, coordinateItems }) => {
+const KakaoShareButton = ({
+  handleShareKakaoButton,
+  coordinateItems,
+  social,
+}) => {
   const encodeValue = coordinateItems.map((item) => item.asin);
   const url =
     window.location.href +
@@ -8,8 +12,6 @@ const KakaoShareButton = ({ handleShareKakaoButton, coordinateItems }) => {
     encodeURIComponent(JSON.stringify(encodeValue));
 
   useEffect(() => {
-    //공유횟수, 좋아요 횟수 구하기
-    //
     createKakaoButton();
   }, []);
 
@@ -40,8 +42,8 @@ const KakaoShareButton = ({ handleShareKakaoButton, coordinateItems }) => {
           },
         },
         social: {
-          likeCount: 77,
-          sharedCount: 333,
+          likeCount: social.totalBookmark,
+          sharedCount: social.totalShared,
         },
         buttons: [
           {

@@ -8,26 +8,25 @@ const useStyles = makeStyles({
   },
 });
 
-const WardrobeNav = () => {
+const WardrobeNav = ({ categories, selectedCategory, setSelectedCategory }) => {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleTabChange = (event, newValue) => {
+    setSelectedCategory(newValue);
   };
 
   return (
     <Paper className={classes.root}>
       <Tabs
-        value={value}
-        onChange={handleChange}
+        value={selectedCategory}
+        onChange={handleTabChange}
         indicatorColor="primary"
         textColor="primary"
         centered
       >
-        <Tab label="Item One" />
-        <Tab label="Item Two" />
-        <Tab label="Item Three" />
+        {categories.map((category) => (
+          <Tab key={category} label={category} />
+        ))}
       </Tabs>
     </Paper>
   );
