@@ -8,6 +8,7 @@ import Modal from './Modal';
 import Container from './Container';
 import Grid from './Grid';
 import Accordion from './Grid';
+import Dialog from './Dialog';
 
 export default function ComponentsOverrides(theme) {
   return merge(
@@ -19,6 +20,7 @@ export default function ComponentsOverrides(theme) {
     Modal(theme),
     Container(theme),
     Grid(theme),
-    Accordion(theme)
+    Accordion(theme),
+    Dialog(theme)
   );
 }

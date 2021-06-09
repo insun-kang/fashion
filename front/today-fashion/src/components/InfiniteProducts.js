@@ -9,18 +9,17 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
 
   const [isBottom, setIsBottom] = useState(false);
   const [mainProducts, setMainProducts] = useState([]);
-  const [dataSize, setDataSize] = useState(24);
-  // const [loading, setLoading] = useState(false);
   const [isMore, setIsMore] = useState(true);
 
   const pageNum = useTrait(0);
   const loading = useTrait(false);
 
-  const dataSizeRef = useRef(dataSize);
+  const dataSizeRef = useRef(24);
+
+  let cancelToken;
 
   const setDataSizeRef = (cur) => {
     dataSizeRef.current = cur;
-    setDataSize(cur);
   };
 
   axios.defaults.baseURL = SERVER_URL;
@@ -28,13 +27,24 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
 
   const getRecommendationResults = useCallback(
     async (num) => {
+      console.log(typeof num);
       num = typeof num !== 'undefined' ? num : pageNum.get();
+
+      if (typeof cancelToken != typeof undefined) {
+        cancelToken.cancel('Operation canceled due to new request.');
+      }
+      cancelToken = axios.CancelToken.source();
+
       try {
         console.log(num);
-        const res = await axios.post('/result-cards', {
-          pageNum: num,
-          dataSize: dataSize,
-        });
+        const res = await axios.post(
+          '/result-cards',
+          {
+            pageNum: num,
+            dataSize: dataSizeRef.current,
+          },
+          { cancelToken: cancelToken.token }
+        );
         console.log(res);
 
         if (res.data.products.length === 0) {
@@ -58,19 +68,27 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         console.log(error);
       }
     },
-    [mainProducts, dataSize]
+    [mainProducts, dataSizeRef]
   );
 
   const getSearchResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      if (typeof cancelToken != typeof undefined) {
+        cancelToken.cancel('Operation canceled due to new request.');
+      }
+      cancelToken = axios.CancelToken.source();
       try {
         console.log(pageNum.get());
-        const res = await axios.post('/result-search', {
-          pageNum: num,
-          dataSize: dataSize,
-          existingKeywords: searchKeywords,
-        });
+        const res = await axios.post(
+          '/result-search',
+          {
+            pageNum: num,
+            dataSize: dataSizeRef.current,
+            existingKeywords: searchKeywords,
+          },
+          { cancelToken: cancelToken.token }
+        );
         console.log(res);
         if (res.data.cards.length === 0) {
           setIsMore(false);
@@ -89,7 +107,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         console.log(error);
       }
     },
-    [mainProducts, pageNum, dataSize, searchKeywords]
+    [mainProducts, pageNum, dataSizeRef, searchKeywords]
   );
 
   const infiniteScroll = () => {
@@ -138,9 +156,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
     const curDataSize = dataSizeRef.current;
-    // console.log(speed);
-    // 원래 딜레이가 없었는데 아래 조건문을 추가하며 딜레이가 약간 생겼다..
-    // 어떻게 해결할지 모르겠음..
     if (speed <= 100 && curDataSize !== 24) {
       setDataSizeRef(24);
     } else if (speed <= 200 && curDataSize !== 36) {
@@ -151,25 +166,19 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   };
 
   useEffect(() => {
-    //useEffect가 세개라서 fetch 함수들이 여러번 실행되는거 고치는 지금보다 좋은 방법이 있을까?
-    //근데 세개인데 왜 네번 실행되지?
-    loading.set(true);
-    getRecommendationResults();
-
     window.addEventListener('scroll', handleScrollSpeed, true);
     window.addEventListener('scroll', infiniteScroll, true);
     return () => {
       window.removeEventListener('scroll', infiniteScroll, false);
       window.removeEventListener('scroll', handleScrollSpeed, false);
     };
-    //location deps로 해봐도 cleanup이 안된다ㅠㅠ
   }, []);
 
   useEffect(() => {
-    pageNum.set(0);
     //키워드가 갱신되면 무조건 0페이지부터 데이터를 요청하게 된다
     if (!loading.get()) {
       loading.set(true);
+      pageNum.set(0);
       if (searchKeywords.length === 0) {
         // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
         // -> 캐싱 안되나? 나중에 기능 추가
@@ -187,7 +196,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
       //같은 호출을 여러번 하는 걸 막고싶은데...지금보다 더 좋은 방법이 있을까?
       loading.set(true);
       console.log(loading.get());
-      console.log(dataSize, dataSizeRef);
+      console.log(dataSizeRef);
       if (searchKeywords.length === 0) {
         getRecommendationResults();
       } else {

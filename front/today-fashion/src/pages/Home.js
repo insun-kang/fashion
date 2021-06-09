@@ -2,16 +2,10 @@ import CustomSignIn from '../components/CustomSignIn';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
 import axios from 'axios';
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-  forwardRef,
-  Suspense,
-} from 'react';
+import React, { useCallback, useEffect, useState, forwardRef } from 'react';
 import { Redirect } from 'react-router';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
-import { PCButton } from '../ui-components/@material-extend';
+import { PCButton, KakaoButton } from '../ui-components/@material-extend';
 import {
   Slide,
   Dialog,
@@ -20,15 +14,40 @@ import {
   DialogContent,
   Grid,
 } from '@material-ui/core';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/core/Alert';
 
 const Home = ({ location, history }) => {
   const [token, setToken] = useLocalStorage('access_token', null);
   const [openSignIn, setOpenSignIn] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
+  const [catchError, setCatchError] = useState({
+    state: false,
+    msg: '',
+  });
 
-  const Transition = forwardRef((props, ref) => (
-    <Slide direction="up" ref={ref} {...props} />
-  ));
+  const vertical = 'top';
+  const horizontal = 'center';
+
+  const handleClose = () => {
+    setOpenSignIn(false);
+    setOpenSignUp(false);
+  };
+
+  const errorClear = () => {
+    setCatchError({
+      state: false,
+      msg: '',
+    });
+  };
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   const { from } = location.state || { from: { pathname: '/main' } };
 
@@ -45,15 +64,15 @@ const Home = ({ location, history }) => {
       } catch (error) {
         switch (error.response.data.errorCode) {
           case 'alr_signed_email':
-            alert(error.response.data.msg);
+            setCatchError({ state: true, msg: error.response.data.msg });
             setOpenSignUp(false);
             setOpenSignIn(true);
             break;
           case 'alr_signed_nickname':
-            alert(error.response.data.msg);
+            setCatchError({ state: true, msg: error.response.data.msg });
             break;
           default:
-            alert(error);
+            setCatchError({ state: true, msg: error });
         }
       }
     },
@@ -71,19 +90,20 @@ const Home = ({ location, history }) => {
       } catch (error) {
         switch (error.response.data.errorCode) {
           case 'not_exists':
-            alert(error.response.data.msg); //적절하게 메세지 수정하기
+            // alert(error.response.data.msg);
+            setCatchError({ state: true, msg: error.response.data.msg });
             break;
           case 'missing_email':
-            alert(error.response.data.msg);
+            setCatchError({ state: true, msg: error.response.data.msg });
             break;
           case 'missing_pw':
-            alert(error.response.data.msg);
+            setCatchError({ state: true, msg: error.response.data.msg });
             break;
           case 'incorrect_pw':
-            alert(error.response.data.msg);
+            setCatchError({ state: true, msg: error.response.data.msg });
             break;
           default:
-            alert(error);
+            setCatchError({ state: true, msg: error });
         }
       }
     },
@@ -126,15 +146,19 @@ const Home = ({ location, history }) => {
     //로그인 된 상태라면 직전에 있었던 페이지 혹은 main으로 redirect된다.
   }
 
+  // const KakaoLoginButton = <PCButton style={{ backgroundColor: '#fee500' }} />;
+
   return (
     <div className="App">
       {openSignIn && (
         <Dialog
           open={openSignIn}
-          TransitionComponent={Transition}
+          TransitionComponent={catchError.state ? undefined : Transition}
           keepMounted
           fullWidth
-          onClose={openSignIn}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
           style={{ marginTop: '40vh' }}
         >
           <DialogTitle
@@ -151,13 +175,7 @@ const Home = ({ location, history }) => {
             <CustomSignIn handleCustomSignIn={handleCustomSignIn} />
           </DialogContent>
           <DialogActions>
-            <PCButton
-              color="secondary"
-              variant="text"
-              onClick={() => {
-                setOpenSignIn(!openSignIn);
-              }}
-            >
+            <PCButton color="secondary" variant="text" onClick={handleClose}>
               Close
             </PCButton>
           </DialogActions>
@@ -201,6 +219,15 @@ const Home = ({ location, history }) => {
       )}
       <Grid style={{ height: '67vh' }}></Grid>
       <Grid>
+        <KakaoButton
+          color="kakao"
+          variant="contained"
+          value="Login Kakao"
+          startIcon={<img src="/image/kakao.png" height="22px" />}
+        >
+          Login with Kakao
+        </KakaoButton>
+        <br />
         <PCButton
           color="primary"
           variant="contained"
@@ -222,6 +249,22 @@ const Home = ({ location, history }) => {
           Sign Up
         </PCButton>
       </Grid>
+      <Snackbar
+        open={catchError.state}
+        autoHideDuration={2000}
+        onClose={errorClear}
+        TransitionComponent={Transition}
+        anchorOrigin={{ vertical, horizontal }}
+      >
+        <Alert
+          variant="filled"
+          severity="error"
+          onClose={errorClear}
+          width="30%"
+        >
+          {catchError.msg}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

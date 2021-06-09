@@ -14,8 +14,6 @@ import random
 from flasgger.utils import swag_from
 from .. import error_code
 from .. import address_format
-<<<<<<< HEAD
-=======
 import json
 import os
 
@@ -23,71 +21,13 @@ import os
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
-import pickle
 
-# import datetime
-# import redis
+import asyncio
+import queue
 
-# red = redis.StrictRedis()
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
-# -------------------------------------------------------------------------------------
-# def event_stream():
-#     pub = redis.pubsub()
-#     pub.subscribe('sse_example_channel')
-#     for msg in pub.listen():
-#         if msg['type'] != 'subscribe':
-#             event, data = json.loads(msg['data'])
-#             yield u'event: {0}\ndata: {1}\n\n'.format(event, data)
-#         else:
-#             yield u'data: {0}\n\n'.format(msg['data'])
-
-
-# @app.route('/stream')
-# def get_pushes():
-#     return Response(event_stream(), mimetype="text/event-stream")
-
-# @app.route('/post')
-# def publish_data():
-#     # ...
-#     redis.publish('sse_example_channel', json.dumps([event, data]))
-
-# # ===================================================================
-
-
-# @bp.route('/stream')
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def stream():
-#     user_id = get_jwt_identity()
-
-#     def event_stream():
-#         pubsub = red.pubsub()
-#         pubsub.subscribe(user_id) # 채널이름 => user_id
-#         # TODO: handle client disconnection.
-#         for message in pubsub.listen():
-#             print (message)
-#             if message['type']=='message':
-#                 yield 'data: %s\n\n' % message['data'].decode('utf-8')
-
-#     return flask.Response(event_stream(), mimetype="text/event-stream")
-
-# @bp.route('/post', methods=['POST'])
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def post():
-#     user_id = get_jwt_identity()
-
-#     message = 'json file 생성 완료'
-#     user = models.User.query.filter(id=user_id).first()
-#     now = datetime.datetime.now().replace(microsecond=0).time()
-#     red.publish(user_id, u'[%s] %s: %s' % (now.isoformat(), user, message))
-#     return flask.Response(status=200)
-
-
-# -------------------------------------------------------------------------------------
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
@@ -102,6 +42,7 @@ def backcard():
         limit_num = body['limitNum']
 
         bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
+
         products_list = []
 
         products_list = [
@@ -116,33 +57,6 @@ def backcard():
                 'totalNum': len(products_list),
                 'productsList': products_list
                 }, 200
-<<<<<<< HEAD
-        # return {
-        #         "productsList": [
-        #             {
-        #             "productImage": address_format.img(asin[0]),
-        #             "productTitle": "womens blue popular shirts"
-        #             },
-        #             {
-        #             "productImage": address_format.img(asin[1]),
-        #             "productTitle": "Womens blue popular shirts"
-        #             }
-        #         ],
-        #         "requestNum": 5,
-        #         "totalNum": 2
-        #         }, 200
-
-# api 문서화-----------------------------------------------제작은 아직 안 들어감!
-
-# 1,2,3,5,10,20,30,40,50(문구 10개 중 돌리거나)
-# 3번 뒤 상품 준비가 됐다고 팝업이 뜸
-# 백엔드에서 유저에게 맞는 상품리스트 만들면 프론트에 push를 줄건지 프론트에서 rule base
-# 게임 플레이 누적 횟수
-# 메인카드 10개 단위로
-# 결과보기 했을 때 발전시키게
-
-=======
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 
 # 메인 카드 api
 @bp.route('/maincard', methods=['GET','POST'])
@@ -151,45 +65,14 @@ def backcard():
 @swag_from('../swagger_config/maincard_post.yml', methods=['POST'])
 def maincard():
     if request.method =='GET': # GET 요청
-<<<<<<< HEAD
-        # 별점이 3점 이상인 제품중 유저 선호키워드와 맞는것
-        # 신성님 알고리즘=> 누적된 키워드 보내주면 제품 asin 보내줌(?)
-        # => 알고리즘을 자세히 알아야...
-        #
-        # if asin in models.ProductUserPlayed.query.filter_by(user_id=user_id).all():
-            # 이미 user가 본 카드는 return 안 함!
-            # 새로이 제품 asin 받아오기
-            # while로 돌려줘야할 듯
-            # 알고리즘이 어떤 식으로 결과가 나와야 완성 가능
-        # else: # 본 카드가 아니라면 결과 반환
-
-        # 게임 플레이 횟수 ProductUserPlayed 테이블에서 len(user가 플레이한 product 갯수) 하면 될듯
-        # len(models.ProductUserPlayed.query.filter_by(user_id=user_id).all())
-        # 1,2,3,5,10,20,30,40,50(문구 10개 중 돌리거나)
-        # 지금은 랜덤으로 뜨게 해놓음
-        # len(models.ProductUserPlayed.query.filter_by(user_id=user_id).all()) == 0이면 첫 게임
-
-        user_play_num = random.randint(0,8)
-        bg_sentence_list = ['당신의 스타일이면 좋아요를 눌러주세요!', # 1
-        '이런 스타일은 어떠세요?', # 2
-        '스타일 평가를 많이 할 수록 추천이 정확해져요!', # 3
-        '게임 5번 플레이 하면 뜨는 문구에요!',  # 5
-        '게임 10번 플레이 하면 뜨는 문구에요!', # 10
-        '게임 20번 플레이 하면 뜨는 문구에요!', # 20
-        '게임 30번 플레이 하면 뜨는 문구에요!', # 30
-        '게임 40번 플레이 하면 뜨는 문구에요!', # 40
-        '게임 50번 플레이 하면 뜨는 문구에요! 다영님 최고에요' # 50
-        ]
-=======
 
         user_id = get_jwt_identity()
         products_user_played = models.ProductUserPlayed.query.filter_by(user_id=user_id).all()
-        asins_user_played = [product_user_played.asin for product_user_played in products_user_played]
+        asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played]
         # user 게임 플레이 횟수
-        user_play_num = len(asins_user_played)
+        user_play_num = len(asin_ids_user_played)
 
         # print('-'*50) print(os.getcwd()) print('-'*50) # /home/project/back
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 
         with open(f'fashion/user_recommendations/game_{user_id}.json', 'r') as f:
             json_data = json.load(f)
@@ -198,7 +81,7 @@ def maincard():
 
         products_list_num = 0
         for product in json_data['products']:
-            if product['asin'] not in asins_user_played and product['keywords']:
+            if product['asin'] not in asin_ids_user_played and product['keywords']:
                 products_list.append(product)
                 products_list_num += 1
             if products_list_num == 10:
@@ -223,12 +106,12 @@ def maincard():
 
             user_id = get_jwt_identity()
 
-            product_asin = body['asin']
+            product_asin_id = body['asin']
             love_or_hate = body['loveOrHate']
 
             product_user_played = models.ProductUserPlayed(
                 user_id = user_id,
-                asin = product_asin,
+                asin_id = product_asin_id,
                 love_or_hate=love_or_hate,
             )
             models.db.session.add(product_user_played)
@@ -236,13 +119,17 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 10: # user가 10회 플레이할 때마다
-                json_update()
+            # if not user_play_num % 10: # user가 10회 플레이할 때마다
+            user_queue(user_id)
+            # loop = asyncio.get_event_loop()
+            # loop.run_until_complete(json_update(user_id))
+            # loop.close()
+
 
             result = {
                 'userPlayNum': user_play_num,
                 'userId': user_id,
-                'productAsin': product_asin,
+                'asin': product_asin_id,
                 'loveOrHate': love_or_hate
             }
             return {
@@ -250,70 +137,6 @@ def maincard():
                     }, 200
 
 # 게임 결과 api
-<<<<<<< HEAD
-@bp.route('/result-cards', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/result_cards.yml')
-def result_cards():
-    # bookmarks = models.Product_user_match.query.all()
-    # products = models.Product.query.all()
-
-    asin = ['B00HGRB3CE', 'B07PGCYWRJ', '1975421663']
-    return {
-            'productsNum': 3,
-            'products':
-                [
-                    {
-                        'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
-                        'asin': asin[0],
-                        'price': 300000.00,
-                        'bookmark': True,
-                        'nlpResults': {
-                                            'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
-                                            'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
-                                        },
-                        'starRating': 3.24,
-                        'posReveiwRate': 0.50,
-                        'negReviewRate': 0.50,
-                        'image': address_format.img(asin[0]),
-                        'productUrl': address_format.product(asin[0]),
-                        'title': 'women\'s flower sundress'
-                    },
-                    {
-                        'keywords': ['flower', 'pants', 'green', 'winter', 'womens'],
-                        'asin': asin[1],
-                        'price': 1000.20,
-                        'bookmark': False,
-                        'nlpResults': {
-                                            'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
-                                            'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
-                                        },
-                        'starRating': 4.05,
-                        'posReveiwRate': 0.50,
-                        'negReviewRate': 0.50,
-                        'image': address_format.img(asin[1]),
-                        'productUrl': address_format.product(asin[1]),
-                        'title': 'women\'s flower green pants'
-                    },
-                    {
-                        'keywords': ['flower', 'dress', 'red', 'summer', 'womens'],
-                        'asin': asin[2],
-                        'price': 300000.00,
-                        'bookmark': True,
-                        'nlpResults': {
-                                        'posReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .',
-                                        'negReviewSummary': 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building . It was the first structure to reach a height of 300 metres . It is now taller than the Chrysler Building in New York City by 5.2 metres (17 ft) Excluding transmitters, the Eiffel Tower is the second tallest free-standing structure in France .'
-                                     },
-                        'starRating': 5.00,
-                        'posReveiwRate': 0.50,
-                        'negReviewRate': 0.50,
-                        'image': address_format.img(asin[2]),
-                        'productUrl': address_format.product(asin[2]),
-                        'title': 'women\'s flower sundress'
-                    },
-                ]
-            }, 200
-=======
 @bp.route('/result-cards', methods=['POST'])
 @jwt_required()
 @swag_from('../swagger_config/result_cards.yml')
@@ -328,7 +151,7 @@ def result_cards():
 
         user_id = get_jwt_identity()
         products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
-        asins_user_played = [product_user_played.asin for product_user_played in products_user_played_hate]
+        asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate]
 
         user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
@@ -343,8 +166,8 @@ def result_cards():
 
             products_list_num = 0
             for product in json_data['products'][page_num*data_size:]:
-                if product['asin'] not in asins_user_played and product['keywords']:
-                    bookmark = models.Bookmark.query.filter_by(asin=product['asin'], user_id=user_id).first()
+                if product['asin'] not in asin_ids_user_played and product['keywords']:
+                    bookmark = models.Bookmark.query.filter_by(asin_id=product['asin'], user_id=user_id).first()
                     product['bookmark'] = True if bookmark else False
                     products_list.append(product)
                     products_list_num += 1
@@ -352,7 +175,7 @@ def result_cards():
                     break
             # 싫어요 횟수/전체 플레이 횟수 => 정확도가 낮아요 추가
             return {
-                    'accuracy': round(len(asins_user_played)/user_play_num, 2),
+                    'accuracy': round(len(asin_ids_user_played)/user_play_num, 2),
                     'productsNum': len(products_list),
                     'products': products_list
                     }, 200
@@ -361,22 +184,30 @@ def result_cards():
 # json으로 이 위에 다 만들고
 # get 요청 오면 json import해서 보내주기
 
+# 큐 함수
+async def user_queue(user_id):
+    user_queue = queue.Queue()
+    user_queue.put(user_id)
+    return json_update(user_queue.get())
 
-# 인공 지능 API
-@bp.route('/ai-model', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/ai_model.yml')
-def ai_model():
+
+# 인공 지능 함수 결과 바탕으로 json 파일 업데이트
+# @bp.route('/json-update', methods=['GET'])
+# @jwt_required()
+# @swag_from('../swagger_config/json_update.yml')
+# def json_update(user_id):
+async def json_update(user_id):
     import time
     start = time.time()
-    user_id = get_jwt_identity()
+    # user_id = get_jwt_identity()
 
     # 리뷰파일 불러오기
-    review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
+    review_df = pd.read_csv('fashion/user_recommendations/reviews_df.csv', encoding='cp949', index_col=0)
     products_user_played = models.ProductUserPlayed.query.all()
 
     for product in products_user_played:
-        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : product.asin, 'overall' : float(product.love_or_hate)}, ignore_index=True)
+        real_product = models.Product.query.filter_by(id=product.asin_id).first()
+        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : real_product.asin, 'overall' : float(product.love_or_hate)}, ignore_index=True)
 
     # 별점범위 지정
     reader = Reader(rating_scale= (1, 5))
@@ -392,7 +223,7 @@ def ai_model():
     model = SVD(n_factors=100, n_epochs=20, random_state=10)
     model.fit(train)
 
-    # 중복되지 않은 어신 리스트=>얘도 피클로 저장해놓으면 더 빠르려나
+    # 중복되지 않은 어신 리스트
     clean_asin = list(set(list(review_df['asin'])))
 
     # --------------------------학습-------------------------------------
@@ -424,41 +255,41 @@ def ai_model():
     cut_review = filter_review[:10000]
 
     print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
-    return{
-        'result': cut_review
-    }
-
-# 속도가 너무 느릴경우: product_user_played가 100 개 넘을 때마다 새로 학습한다던지....
-# ai 모델 학습과 predict 부분 분리?
-
-
-# 인공 지능 함수 결과 바탕으로 json 파일 업데이트
-@bp.route('/json-update', methods=['GET'])
-@jwt_required()
-@swag_from('../swagger_config/json_update.yml')
-def json_update():
+    # return{
+    #     'result': cut_review
+    # }
     # 게임카드 json 업데이트 코드-----------------------------------------------------------------------------------------------------
-    user_id = get_jwt_identity()
+    # user_id = get_jwt_identity()
 
-    asins = ai_model()['result'][:100]
+    # asins = ai_model()['result'][:100]
+    asins = cut_review[:100]
+    # asin_id_list = [models.Product.query.filter_by(asin=asin).first().id for asin in asins]
+    # 데이터 정제될때까지 임시 예외처리----------------------------------------------------------------------
+    asin_id_list = []
+    for asin in asins:
+        try:
+            asin_id_list.append(models.Product.query.filter_by(asin=asin).first().id)
+        except:
+            continue
+    # -----------------------------------------------------------------------------------------------------------
 
-    print(f'1. asins 리스트 만들어짐 : {asins[:5]}')
+    print(f'1. asin_ids 리스트 만들어짐 : {asin_id_list[:5]}')
 
     products_list = {}
     products_list['products'] = []
 
     a = 0
-    for asin in asins:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
+    for asin_id in asin_id_list:
+        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
         try:
-            product_title = models.Product.query.filter_by(asin=asin).first().title
+            product= models.Product.query.filter_by(id=asin_id).first()
         except:
             continue
         products_list['products'].append({
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'image': address_format.img(asin),
-            'title': product_title,
-            'asin': asin
+            'image': address_format.img(product.asin),
+            'title': product.title,
+            'asin': asin_id
         })
         a += 1
         print(f'{a}번째 데이터 생성')
@@ -476,18 +307,21 @@ def json_update():
     products_result_list['products'] = []
 
     a = 0
-    for asin in asins:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
-        product = models.Product.query.filter_by(asin=asin).first()
-        product_review = models.ProductReview.query.filter_by(asin=asin).first()
-        pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
+    for asin_id in asin_id_list:
+        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+        product = models.Product.query.filter_by(id=asin_id).first()
+        try:
+            product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
+            pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
+        except:
+            continue
         try:
             product_title = product.title
         except:
             continue
         products_result_list['products'].append({
             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'asin': asin,
+            'asin': asin_id,
             'price': product.price,
             'nlpResults': {
                             'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
@@ -495,8 +329,8 @@ def json_update():
                         },
             'starRating': round(product.rating, 2),
             'posReveiwRate': round(pos_review_rate, 2),
-            'image': address_format.img(asin),
-            'productUrl': address_format.product(asin),
+            'image': address_format.img(product.asin),
+            'productUrl': address_format.product(product.asin),
             'title': product_title
         })
         a += 1
@@ -510,7 +344,8 @@ def json_update():
         json.dump(products_result_list, file)
     print('결과 파일 생성 끝')
 
+    print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
     return{
-        'result':'성공'
+        'result':'성공',
+        'time': time.time() - start
     }
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6

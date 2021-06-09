@@ -74,16 +74,27 @@ const ERROR = {
   contrastText: '#fff',
 };
 
+const KAKAO = {
+  lighter: '#fffce3',
+  light: '#fcf07e',
+  main: '#fee500',
+  dark: '#d9c400',
+  darker: '#9f974d',
+  contrastText: GREY[800],
+};
+
 const GRADIENTS = {
   primary: createGradient(PRIMARY.light, PRIMARY.main),
   info: createGradient(INFO.light, INFO.main),
   success: createGradient(SUCCESS.light, SUCCESS.main),
   warning: createGradient(WARNING.light, WARNING.main),
   error: createGradient(ERROR.light, ERROR.main),
+  kakao: createGradient(KAKAO.main, GREY[0]),
 };
 
 const COMMON = {
   common: { black: '#000', white: '#fff' },
+  kakao: { ...KAKAO },
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },
   info: { ...INFO },

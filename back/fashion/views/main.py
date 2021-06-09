@@ -18,7 +18,7 @@ bp = Blueprint('main', __name__, url_prefix='/')
 
 @bp.route('/search', methods=['POST'])
 @swag_from('../swagger_config/search.yml')
-def Search():
+def search():
     if not request.is_json:
         return error_code.missing_json_error
 
@@ -31,7 +31,7 @@ def Search():
         return_keywords=[]
 
         search = "{}%".format(keyword.lower())
-        find_keyword=models.db.session.query(models.SearchKeyword.keyword).filter(models.SearchKeyword.keyword.like(search)).all()
+        find_keyword=models.SearchKeyword.query.filter(models.SearchKeyword.keyword.like(search)).all()
 
         #이스터애그
         if keyword=='dayong':
@@ -50,22 +50,30 @@ def Search():
             # return {'msg': "신성하게 남다르게 강인하게 황송하게(황정하게) 이게 다인가 싶을 때 김건우, 이범석(코치님들) 화이팅", 'keywords': '인성 담당: 강인성'}, 200
             return '인성 담당: 강인성'
 
-        if not keyword:
+
+
+        if len(keyword) == 0:
             return {'msg': "You haven't entered anything", 'keywords': return_keywords}, 200
         
-        if not find_keyword:
+        if len(find_keyword) == 0:
             return {'msg': 'No results were found for your search', 'keywords': return_keywords}, 200
 
         if not existing_keywords:
-            return {'msg': 'success', 'keywords': literal_eval(str(find_keyword))}, 200
+            for i in find_keyword:
+                return_keywords.append((i.keyword))
+            return {'msg': 'success', 'keywords': return_keywords}, 200
 
         else:
-            return {'msg': 'success', 'keywords': literal_eval(str(find_keyword))}, 200
+            for i in find_keyword:
+                if i.keyword not in existing_keywords:
+                    return_keywords.append((i.keyword))
+            return {'msg': 'success', 'keywords': return_keywords}, 200
+
 
 @bp.route('/result-search', methods=['POST'])
 @jwt_required()
 @swag_from('../swagger_config/result_search.yml')
-def ResultSearch():
+def result_search():
     if not request.is_json:
         return error_code.missing_json_error
 
@@ -123,17 +131,16 @@ def ResultSearch():
                 card['bookmark']=True
             if not review:
                 card['nlpResults']={
-                                'posReviewSummary': 'Oh no....there is no positive review at all...;(', 
+                                'posReviewSummary': 'Oh no....there is no positive review at all...;(',
                                 'negReviewSummary': 'OMG! There is no negative review at all!;)'
-                                }
-            
-                card['posReveiwRate']=0
+                }
+                card['posReveiwRate']= 0
             else:
                 card['nlpResults']={
-                                    'posReviewSummary': review.positive_review_summary, 
-                                    'negReviewSummary': review.negative_review_summary
-                                    }
-                card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
+                                'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                                'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                }
+                card['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
             card['starRating']=round(product.rating,2)
             card['image']=address_format.img(product.asin)
             card['productUrl']=address_format.product(product.asin)

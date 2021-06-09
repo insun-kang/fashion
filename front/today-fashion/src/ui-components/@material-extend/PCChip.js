@@ -66,6 +66,7 @@ const EllipsisText = (props) => {
   return (
     <div
       style={{
+        textAlign: 'center',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',

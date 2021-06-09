@@ -20,15 +20,15 @@ const ButtonStyle = styled(Button)(({ theme, styleProps }) => {
       height: '60px',
     },
     '@media (min-width:640px)': {
-      width: '175px',
+      width: '365px',
       height: '60px',
     },
     '@media (min-width:960px)': {
-      width: '175px',
+      width: '365px',
       height: '60px',
     },
     '@media (min-width:1280px)': {
-      width: '175px',
+      width: '365px',
       height: '60px',
     },
   });
@@ -68,7 +68,7 @@ const ButtonStyle = styled(Button)(({ theme, styleProps }) => {
   };
 });
 
-const PCButton = forwardRef(
+const KakaoButton = forwardRef(
   ({ color = 'primary', variant = 'text', children, ...other }, ref) => {
     return (
       <ButtonStyle
@@ -83,7 +83,7 @@ const PCButton = forwardRef(
   }
 );
 
-PCButton.propTypes = {
+KakaoButton.propTypes = {
   children: PropTypes.node,
   color: PropTypes.oneOf([
     'inherit',
@@ -101,4 +101,4 @@ PCButton.propTypes = {
   ]),
 };
 
-export default PCButton;
+export default KakaoButton;

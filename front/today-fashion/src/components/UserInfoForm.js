@@ -85,30 +85,27 @@ const UserInfoForm = (props) => {
           {(props) => (
             <Form>
               <Field name="name">
-                {({ field, form }) => {
-                  console.log(field);
-                  return (
-                    <div>
-                      <TextField
-                        {...field}
-                        id="name"
-                        type="text"
-                        placeholder="Please Enter Your Full-Name"
-                        label="Full Name"
-                        variant="outlined"
-                        fullWidth
-                        error={
-                          form.errors.name && form.touched.name ? true : false
-                        }
-                        helperText={
-                          form.errors.name && form.touched.name
-                            ? form.errors.name
-                            : null
-                        }
-                      />
-                    </div>
-                  );
-                }}
+                {({ field, form }) => (
+                  <div>
+                    <TextField
+                      {...field}
+                      id="name"
+                      type="text"
+                      placeholder="Please Enter Your Full-Name"
+                      label="Full Name"
+                      variant="outlined"
+                      fullWidth
+                      error={
+                        form.errors.name && form.touched.name ? true : false
+                      }
+                      helperText={
+                        form.errors.name && form.touched.name
+                          ? form.errors.name
+                          : null
+                      }
+                    />
+                  </div>
+                )}
               </Field>
               <Box margin={2} />
               <Field name="email">

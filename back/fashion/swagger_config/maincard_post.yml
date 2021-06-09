@@ -34,57 +34,57 @@ requestBody:
               case1:
                 summary: 데이터 1
                 value:
-                  asin: "0764443682"
+                  asin: 1
                   loveOrHate: 5
               case2:
                 summary: 데이터 2
                 value:
-                  asin: "1291691480"
+                  asin: 2
                   loveOrHate: 1
               case3:
                 summary: 데이터 3
                 value:
-                  asin: "1940280001"
+                  asin: 3
                   loveOrHate: 1
               case4:
                 summary: 데이터 4
                 value:
-                  asin: "1940735033"
+                  asin: 4
                   loveOrHate: 5
               case5:
                 summary: 데이터 5
                 value:
-                  asin: "1940967805"
+                  asin: 5
                   loveOrHate: 5
               case6:
                 summary: 데이터 6
                 value:
-                  asin: "1942705034"
+                  asin: 6
                   loveOrHate: 5
               case7:
                 summary: 데이터 7
                 value:
-                  asin: "3293015344"
+                  asin: 7
                   loveOrHate: 1
               case8:
                 summary: 데이터 8
                 value:
-                  asin: "5378828716"
+                  asin: 8
                   loveOrHate: 1
               case9:
                 summary: 데이터 9
                 value:
-                  asin: "6041002984"
+                  asin: 9
                   loveOrHate: 5
               case10:
                 summary: 데이터 10
                 value:
-                  asin: "630456984X"
+                  asin: 10
                   loveOrHate: 5
               case11:
                 summary: 데이터 11
                 value:
-                  asin: "7106116521"
+                  asin: 11
                   loveOrHate: 5
 >>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 responses:
@@ -102,7 +102,7 @@ responses:
 =======
               "result": {
                 "loveOrHate": 5,
-                "productAsin": "B00007GDFV",
+                "asin": 1,
                 "userId": "1"
               }
 >>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
@@ -130,7 +130,7 @@ definitions:
       userId:
         type: string
       asin:
-        type: string
+        type: integer
       loveOrHate:
 <<<<<<< HEAD
         type: boolean

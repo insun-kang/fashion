@@ -136,6 +136,8 @@ eventlistener 함수 내에서 useState의 변수에 접근하는 경우, 초기
 useRef를 사용해서 state값에 접근할 수 있다.
 [참고링크](https://medium.com/geographit/accessing-react-state-in-event-listeners-with-usestate-and-useref-hooks-8cceee73c559)
 
+또한 scroll 관련 eventListener을 사용하는 경우, 리스너 안에서 setState을 하면 컴포넌트가 리 렌더링을 하게 되어 스크롤 속도를 감지하는데 있어서 약간의 딜레이가 생기게 된다. 값이 바뀔때 리 렌더링을 해줄 필요가 없는 변수는 useState이 아닌 useRef를 사용하자
+
 **무한스크롤 적용**
 https://medium.com/suyeonme/react-how-to-implement-an-infinite-scroll-749003e9896a
 위 방법을 사용해서 코드를 리팩토링 하고 싶다. 커스텀 훅을 사용하면 코드가 많이 깔끔해지는데, 커스텀 훅을 만들자 라고 생각하면 왠지 어렵게 느껴져서 그럴 생각조차 못 하는 경우가 많은 것 같다.

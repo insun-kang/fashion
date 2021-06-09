@@ -28,64 +28,34 @@ def closet():
 
     bookmark=models.Bookmark.query.filter_by(user_id=user_id).all()
 
-    data={}
+    data={'overall': [], 'top': [], 'bottom': [], 'etc': []}
     
     for i in bookmark:
-        cards=[]
         asin_id=i.asin_id
         card={}
-        keywords=[]
+        catagory=''
 
         #card['keywords']
-        asin=models.ProductKeyword.query.filter_by(asin_id=asin_id).all()
-        for j in asin:
-            keywords.append(j.product_keyword)
-            catagory=j.catagory
+        asin=models.ProductKeyword.query.filter_by(asin_id=asin_id).first()
+        catagory=asin.catagory
+
         #card['price'],card['title']
         product=models.Product.query.filter_by(id=asin_id).first()
-        #card['bookmark']
-        bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin_id=asin_id).first()
 
-        #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
-        review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
-        card['keywords']=keywords
         card['asin']=product.id
-        card['price']=product.price
-        if not bookmark:
-            card['bookmark']=False
-        else:
-            card['bookmark']=True
-        if not review:
-            card['nlpResults']={
-                            'posReviewSummary': 'Oh no....there is no positive review at all...;(', 
-                            'negReviewSummary': 'OMG! There is no negative review at all!;)'
-                            }
-        
-            card['posReveiwRate']=0
-        else:
-            card['nlpResults']={
-                                'posReviewSummary': review.positive_review_summary, 
-                                'negReviewSummary': review.negative_review_summary
-                                }
-            card['posReveiwRate']=round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
-        card['starRating']=round(product.rating,2)
         card['image']=address_format.img(product.asin)
-        card['productUrl']=address_format.product(product.asin)
         card['title']=product.title
-
-        cards.append(card)
-
-        print(catagory)
+        
 
         if catagory == 'overall':
-            data['overall']=[cards]
+            data['overall'].append(card)
         elif catagory == 'top':
-            data['top']=[cards]
+            data['top'].append(card)
         elif catagory == 'bottom':
-            data['bottom']=[cards]
+            data['bottom'].append(card)
         else:
-            data['etc']=[cards]
+            data['etc'].append(card)
     
 
     return { 'data':data, 'catagories': ['overall','top','bottom','etc']}, 200

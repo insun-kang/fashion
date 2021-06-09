@@ -33,6 +33,7 @@ const TagsInput = ({ ...props }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [autoCompleteItems, setAutoCompleteItems] = useState([]);
   const [autoCompleteError, setAutoCompleteError] = useState();
+  let cancelToken;
 
   useEffect(() => {
     setSelectedItems(tags);
@@ -104,8 +105,14 @@ const TagsInput = ({ ...props }) => {
 
   const getAutoComplete = async (data) => {
     if (data.keyword !== '') {
+      if (typeof cancelToken != typeof undefined) {
+        cancelToken.cancel('Operation canceled due to new request.');
+      }
+      cancelToken = axios.CancelToken.source();
       try {
-        const res = await axios.post(SERVER_URL + '/search', data);
+        const res = await axios.post(SERVER_URL + '/search', data, {
+          cancelToken: cancelToken.token,
+        });
         console.log(res);
         setAutoCompleteItems(res.data.keywords);
         if (!res.data.keywords.length) {
@@ -178,9 +185,9 @@ const TagsInput = ({ ...props }) => {
                   autoCompleteItems.map((item, index) => (
                     <div
                       {...getItemProps({
-                        key: item[0],
+                        key: item,
                         index,
-                        item: item[0],
+                        item: item,
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'lightgray' : 'white',
@@ -188,7 +195,7 @@ const TagsInput = ({ ...props }) => {
                         },
                       })}
                     >
-                      {item[0]}
+                      {item}
                     </div>
                   ))
                 ) : isOpen ? (

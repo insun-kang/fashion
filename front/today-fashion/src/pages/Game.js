@@ -9,6 +9,7 @@ import {
   gameCount,
   gameQuestionsData,
 } from '../states/state';
+import { LinearProgress } from '@material-ui/core';
 
 const Game = () => {
   //TODO: 첫 게임일 경우 게임 3번 이상부터 결과보기 버튼 생성
@@ -90,9 +91,9 @@ const Game = () => {
   console.log(totalPlayNum);
 
   return (
-    <div className="game-container">
-      <div>게임화면</div>
-      <div>{isPending && '로딩중'}</div>
+    <div>
+      {/*로티로 대체*/}
+      <div>{isPending && <LinearProgress />}</div>
       <div>{isPending ? null : totalPlayNum}</div>
       {totalPlayNum > 5 && (
         <Link to="/main">
@@ -101,7 +102,7 @@ const Game = () => {
       )}
       {!isMore && 'No game left!'}
       {/* pending일때도 result 보기 할 수 있게 수정*/}
-      <div className="background">
+      {/* <div className="background">
         {background &&
           background.map((product, idx) => (
             <img
@@ -110,7 +111,7 @@ const Game = () => {
               key={idx}
             />
           ))}
-      </div>
+      </div> */}
       {questions &&
         isMore &&
         questions.map((question, idx) => {
@@ -124,13 +125,9 @@ const Game = () => {
               style={{
                 zIndex: zIndex,
                 position: 'absolute',
-                top: '100px',
-                left: '500px',
                 //위치 임의로 지정함
                 backgroundColor: 'white',
                 //backgroundColor을 지정해주지 않으면 뒤의 게임 문항이 비쳐보임. 필수!
-                width: '300px',
-                height: '500px',
                 display: isPending ? 'none' : 'block',
               }}
             >

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 
 const ItemTypes = {
   CARD: 'card',
@@ -13,11 +13,11 @@ const style = {
   backgroundColor: 'white',
   cursor: 'move',
 };
-const WardrobeCard = memo(({ asin, img }) => {
+const WardrobeCard = memo(({ asin, image, title }) => {
   const [{ isDragging, getItem }, drag] = useDrag(
     () => ({
       type: ItemTypes.CARD,
-      item: { asin, img },
+      item: { asin, image, title },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
         getItem: monitor.getItem(),
@@ -29,10 +29,7 @@ const WardrobeCard = memo(({ asin, img }) => {
   const opacity = isDragging ? 0 : 1;
   return (
     <div ref={drag} style={{ ...style, opacity }}>
-      <img
-        style={{ width: '100%', height: '100%' }}
-        src={`https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=${img}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250`}
-      />
+      <img style={{ width: '100%', height: '100%' }} src={image} alt={title} />
     </div>
   );
 });
