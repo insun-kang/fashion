@@ -185,9 +185,9 @@ const TagsInput = ({ ...props }) => {
                   autoCompleteItems.map((item, index) => (
                     <div
                       {...getItemProps({
-                        key: item[0],
+                        key: item,
                         index,
-                        item: item[0],
+                        item: item,
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'lightgray' : 'white',
@@ -195,7 +195,7 @@ const TagsInput = ({ ...props }) => {
                         },
                       })}
                     >
-                      {item[0]}
+                      {item}
                     </div>
                   ))
                 ) : isOpen ? (

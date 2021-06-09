@@ -4,11 +4,10 @@ import { SERVER_URL } from '../config';
 
 const SharedWardrobe = ({ match, history }) => {
   const sharedItems = JSON.parse(decodeURIComponent(match.params.items));
+  console.log(sharedItems);
   const [itemsData, setItemsData] = useState();
 
   axios.defaults.baseURL = SERVER_URL;
-
-  console.log(sharedItems);
 
   const getItems = async () => {
     try {

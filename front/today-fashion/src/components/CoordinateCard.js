@@ -14,20 +14,20 @@ const style = {
   cursor: 'move',
 };
 const CoordinateCard = memo((props) => {
-  const { asin, img, moveCard, findCard, addCard } = props;
+  const { asin, image, title, moveCard, findCard, addCard } = props;
   const originalIndex = findCard(asin).index;
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: ItemTypes.CARD,
-      item: { asin, originalIndex },
+      item: { asin, image, title },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
       end: (item, monitor) => {
-        const { asin: droppedId, originalIndex } = item;
+        const { asin: droppedAsin, originalIndex } = item;
         const didDrop = monitor.didDrop();
         if (!didDrop) {
-          moveCard(droppedId, originalIndex);
+          moveCard(droppedAsin, originalIndex);
         }
       },
     }),
@@ -42,7 +42,6 @@ const CoordinateCard = memo((props) => {
         if (dragged.asin !== asin) {
           const getItem = monitor.getItem();
           if (getItem) {
-            console.log(getItem.asin);
             addCard(getItem, overIndex);
           } else {
             moveCard(dragged.asin, overIndex);
@@ -61,10 +60,7 @@ const CoordinateCard = memo((props) => {
   const opacity = isDragging ? 0 : 1;
   return (
     <div ref={(node) => drag(drop(node))} style={{ ...style, opacity }}>
-      <img
-        style={{ width: '100%', height: '100%' }}
-        src={`https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=${img}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250`}
-      />
+      <img style={{ width: '100%', height: '100%' }} src={image} alt={title} />
     </div>
   );
 });
