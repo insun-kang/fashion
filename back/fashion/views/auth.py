@@ -16,6 +16,7 @@ import json
 from .. import address_format
 import shutil
 import os
+import pandas as pd
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
@@ -243,4 +244,3 @@ def withdrawal():
 @swag_from("../swagger_config/protected.yml")
 def protected():
     return {'msg': 'Succeed accessing protected area'}, 200
-
