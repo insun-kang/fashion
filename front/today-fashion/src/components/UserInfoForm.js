@@ -33,7 +33,7 @@ const UserInfoForm = (props) => {
   }
 
   return (
-    <div className="signup-container">
+    <div className="App">
       <div className="signup-form">
         <Formik
           initialValues={initialValues}
@@ -89,14 +89,6 @@ const UserInfoForm = (props) => {
                   console.log(field);
                   return (
                     <div>
-                      <p
-                        style={{
-                          marginLeft: '0.35rem',
-                          marginBottom: '0.5rem',
-                        }}
-                      >
-                        Name
-                      </p>
                       <TextField
                         {...field}
                         id="name"
@@ -122,11 +114,6 @@ const UserInfoForm = (props) => {
               <Field name="email">
                 {({ field, form }) => (
                   <div>
-                    <p
-                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
-                    >
-                      Email
-                    </p>
                     <TextField
                       {...field}
                       id="email"
@@ -149,11 +136,6 @@ const UserInfoForm = (props) => {
               <Field name="pw">
                 {({ field, form }) => (
                   <div>
-                    <p
-                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
-                    >
-                      Password
-                    </p>
                     <TextField
                       {...field}
                       id="pw"
@@ -176,11 +158,6 @@ const UserInfoForm = (props) => {
               <Field name="confirmPw">
                 {({ field, form }) => (
                   <div>
-                    <p
-                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
-                    >
-                      Confirm Password
-                    </p>
                     <TextField
                       {...field}
                       id="confirmPw"
@@ -207,11 +184,6 @@ const UserInfoForm = (props) => {
               <Field name="nickname">
                 {({ field, form }) => (
                   <div>
-                    <p
-                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
-                    >
-                      Nickname
-                    </p>
                     <TextField
                       {...field}
                       id="nickname"
@@ -234,42 +206,7 @@ const UserInfoForm = (props) => {
                   </div>
                 )}
               </Field>
-              <Box margin={2} />
-              {isSignUp ? (
-                <Field name="birth">
-                  {({ field, form }) => (
-                    <div>
-                      <p
-                        style={{
-                          marginLeft: '0.35rem',
-                          marginBottom: '0.5rem',
-                        }}
-                      >
-                        Birth Date
-                      </p>
-                      <StaticDatePicker
-                        name="birth"
-                        orientation="landscape"
-                        openTo="day"
-                        value={form.values.birth}
-                        helperText={
-                          form.errors.birth && form.touched.birth
-                            ? form.errors.birth
-                            : null
-                        }
-                        onChange={(date) =>
-                          form.setValues({ ...form.values, birth: date })
-                        }
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </div>
-                  )}
-                </Field>
-              ) : (
-                <div>
-                  <div>{initialValues.birth}</div>
-                </div>
-              )}
+
               <Box margin={2} />
               <div style={{ textAlign: 'center' }}>
                 {props.isSubmitting ? (
@@ -280,6 +217,7 @@ const UserInfoForm = (props) => {
                     color="primary"
                     disabled={props.isSubmitting}
                     onClick={props.submitForm}
+                    style={{ width: '50%' }}
                   >
                     {isSignUp ? 'Sign Up' : 'Save'}
                   </PCButton>

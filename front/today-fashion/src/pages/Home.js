@@ -126,35 +126,34 @@ const Home = ({ location, history }) => {
   }
 
   return (
-    <div className="fixed-container">
-      <img
-        src="/image/logo.png"
-        style={{ marginTop: '10vh', marginLeft: '35vw', height: '20vw' }}
-      />
-      <div>
-        <div style={{ height: '40vh' }}></div>
-        <div className="home-button-group">
-          <PCButton
-            color="primary"
-            variant="contained"
-            value="Sign In"
-            onClick={() => {
-              setOpenSignIn(!openSignIn);
-            }}
-          >
-            Sign In
-          </PCButton>
-          <PCButton
-            color="secondary"
-            variant="contained"
-            value="Sign Up"
-            onClick={() => {
-              setOpenSignUp(!openSignUp);
-            }}
-          >
-            Sign Up
-          </PCButton>
-        </div>
+    <div
+      className="App"
+      // height={window.innerHeight}
+      // width={window.innerWidth}
+      // sytle={{ itemAlign: 'center', textAlign: 'center' }}
+    >
+      <div style={{ height: '40vh' }}></div>
+      <div className="home-button-group">
+        <PCButton
+          color="primary"
+          variant="contained"
+          value="Sign In"
+          onClick={() => {
+            setOpenSignIn(!openSignIn);
+          }}
+        >
+          Sign In
+        </PCButton>
+        <PCButton
+          color="secondary"
+          variant="contained"
+          value="Sign Up"
+          onClick={() => {
+            setOpenSignUp(!openSignUp);
+          }}
+        >
+          Sign Up
+        </PCButton>
       </div>
       {openSignIn && (
         <Dialog
@@ -162,7 +161,7 @@ const Home = ({ location, history }) => {
           TransitionComponent={Transition}
           keepMounted
           onClose={openSignIn}
-          style={{ marginTop: '37vh' }}
+          style={{ marginTop: '40vh' }}
         >
           <DialogTitle
             id="alert-dialog-slide-title"
@@ -196,7 +195,7 @@ const Home = ({ location, history }) => {
           TransitionComponent={Transition}
           keepMounted
           onClose={openSignUp}
-          style={{ height: '800px', marginTop: '13vh' }}
+          style={{ marginTop: '10vh' }}
         >
           <DialogTitle
             id="alert-dialog-slide-title"

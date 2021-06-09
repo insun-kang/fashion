@@ -49,40 +49,38 @@ function App() {
   //페이지가 변할때마다 로그인 여부 확인
 
   return (
-    <div className="App">
-      <Switch>
-        <Route path="/" exact render={(props) => <Home {...props} />} />
-        {/* login 되어있다면 main("/main"), 되어있지 않다면 home("/")으로 처리 */}
-        <AuthRoute
-          path={['/main/:asin', '/main']}
-          render={(props) => <Main {...props} />}
-        />
-        <AuthRoute
-          path="/mypage"
-          exact
-          render={(props) => <MyPageIntro {...props} />}
-        />
-        <AuthRoute
-          path="/mypage/userinfo"
-          render={(props) => <UserInfo {...props} />}
-        />
-        <AuthRoute
-          path="/mypage/withdraw"
-          render={(props) => <WithDraw {...props} />}
-        />
-        <AuthRoute path="/game" render={(props) => <Game {...props} />} />
-        <Route
-          path="/wardrobe"
-          exact
-          render={(props) => <Wardrobe {...props} />}
-        />
-        <Route
-          path="/wardrobe/:items"
-          render={(props) => <SharedWardrobe {...props} />}
-        />
-        <Route path="/components" component={ComponentsChart} />
-      </Switch>
-    </div>
+    <Switch>
+      <Route path="/" exact render={(props) => <Home {...props} />} />
+      {/* login 되어있다면 main("/main"), 되어있지 않다면 home("/")으로 처리 */}
+      <AuthRoute
+        path={['/main/:asin', '/main']}
+        render={(props) => <Main {...props} />}
+      />
+      <AuthRoute
+        path="/mypage"
+        exact
+        render={(props) => <MyPageIntro {...props} />}
+      />
+      <AuthRoute
+        path="/mypage/userinfo"
+        render={(props) => <UserInfo {...props} />}
+      />
+      <AuthRoute
+        path="/mypage/withdraw"
+        render={(props) => <WithDraw {...props} />}
+      />
+      <AuthRoute path="/game" render={(props) => <Game {...props} />} />
+      <Route
+        path="/wardrobe"
+        exact
+        render={(props) => <Wardrobe {...props} />}
+      />
+      <Route
+        path="/wardrobe/:items"
+        render={(props) => <SharedWardrobe {...props} />}
+      />
+      <Route path="/components" component={ComponentsChart} />
+    </Switch>
   );
 }
 

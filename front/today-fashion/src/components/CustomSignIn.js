@@ -8,7 +8,7 @@ const CustomSignIn = (props) => {
   const { handleCustomSignIn } = props;
 
   return (
-    <div className="signin-container">
+    <div className="App">
       <div className="signin-form">
         <Formik
           initialValues={{ email: '', pw: '' }}
@@ -22,11 +22,6 @@ const CustomSignIn = (props) => {
               <Field name="email" validate={validateEmail}>
                 {({ field, form }) => (
                   <div>
-                    <p
-                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
-                    >
-                      Email
-                    </p>
                     <TextField
                       {...field}
                       id="email"
@@ -49,11 +44,6 @@ const CustomSignIn = (props) => {
               <Field name="pw" validate={validatePassword}>
                 {({ field, form }) => (
                   <div>
-                    <p
-                      style={{ marginLeft: '0.35rem', marginBottom: '0.5rem' }}
-                    >
-                      Password
-                    </p>
                     <TextField
                       {...field}
                       id="pw"
@@ -84,6 +74,7 @@ const CustomSignIn = (props) => {
                     onClick={submitForm}
                     style={{
                       margin: '0 auto',
+                      width: '50%',
                     }}
                   >
                     Sign In
