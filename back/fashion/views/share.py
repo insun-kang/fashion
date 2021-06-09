@@ -56,7 +56,7 @@ def share():
 
 @bp.route('/shared-page', methods=['POST'])
 @swag_from('../swagger_config/shared_page.yml')
-def sharedpage():
+def shared_page():
     try:
         body = request.get_json()
             
