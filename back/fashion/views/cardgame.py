@@ -16,14 +16,12 @@ from .. import error_code
 from .. import address_format
 import json
 import os
+import time
 
 # 인공지능
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
-
-import asyncio
-import queue
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
@@ -118,11 +116,8 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            # if not user_play_num % 10: # user가 10회 플레이할 때마다
-            user_queue(user_id)
-            # loop = asyncio.get_event_loop()
-            # loop.run_until_complete(json_update(user_id))
-            # loop.close()
+            if not user_play_num % 15: # user가 15회 플레이할 때마다
+                ai_model(user_id)
 
 
             result = {
@@ -179,40 +174,18 @@ def result_cards():
                     'products': products_list
                     }, 200
 
-# 코드 위에 다 삽입해서 한번에 돌리기
-# json으로 이 위에 다 만들고
-# get 요청 오면 json import해서 보내주기
-
-# 큐 함수
-async def user_queue(user_id):
-    user_queue = queue.Queue()
-    user_queue.put(user_id)
-    return json_update(user_queue.get())
-
-
-# 인공 지능 함수 결과 바탕으로 json 파일 업데이트
-# @bp.route('/json-update', methods=['GET'])
-# @jwt_required()
-# @swag_from('../swagger_config/json_update.yml')
-# def json_update(user_id):
-async def json_update(user_id):
-    import time
-    start = time.time()
-    # user_id = get_jwt_identity()
-
+def ai_model(user_id):
     # 리뷰파일 불러오기
-    review_df = pd.read_csv('fashion/user_recommendations/reviews_df.csv', encoding='cp949', index_col=0)
+    start = time.time()
+    review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
     products_user_played = models.ProductUserPlayed.query.all()
 
+    # 새로운 사용자 기록 추가하기
     for product in products_user_played:
-        real_product = models.Product.query.filter_by(id=product.asin_id).first()
-        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : real_product.asin, 'overall' : float(product.love_or_hate)}, ignore_index=True)
-
-    # 별점범위 지정
-    reader = Reader(rating_scale= (1, 5))
+        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : product.asin_id, 'overall' : float(product.love_or_hate)}, ignore_index=True)
 
     # 데이터 가공
-    data = Dataset.load_from_df(df=review_df, reader=reader)
+    data = Dataset.load_from_df(df=review_df, reader=Reader(rating_scale= (1, 5)))
 
     # 데이터 분할
     train = data.build_full_trainset()
@@ -222,129 +195,79 @@ async def json_update(user_id):
     model = SVD(n_factors=100, n_epochs=20, random_state=10)
     model.fit(train)
 
-    # 중복되지 않은 어신 리스트
-    clean_asin = list(set(list(review_df['asin'])))
-
-    # --------------------------학습-------------------------------------
-
     # 추천 정보를 받아 올 대상
-    item_ids = clean_asin # 추천 대상 제품들
-    actual_rating = 0
-
-    # 추천 결과 저장 => 멀티 프로세싱하면 더 빨라지지 않을까?
-    review_pred = []
-    for item_id in item_ids :
-        review_pred.append(model.predict(user_id, item_id, actual_rating))
+    # 중복되지 않은 어신 리스트
+    item_ids = list(set(review_df['asin'])) # 추천 대상 제품들
 
     # 추천결과에서 어신과 예상 별점만 추출
-    filter_review_pred = {}
-    for i in review_pred:
-        filter_review_pred[i[1]] = i[3]
-
-    # 예상 별점이 큰 순서대로 정렬
-    sorted_review = sorted(filter_review_pred.items(), key=lambda x: x[1], reverse=True)
-
-    # 예상 별점이 3.65 이상인 제품의 어신만 추출
-    filter_review = []
-    for i in sorted_review:
-        if i[1] >= 3.65:
-            filter_review.append(i[0])
-
-    # 리뷰 만개로 컷
-    cut_review = filter_review[:10000]
-
-    print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
-    # return{
-    #     'result': cut_review
-    # }
-    # 게임카드 json 업데이트 코드-----------------------------------------------------------------------------------------------------
-    # user_id = get_jwt_identity()
-
-    # asins = ai_model()['result'][:100]
-    asins = cut_review[:100]
-    # asin_id_list = [models.Product.query.filter_by(asin=asin).first().id for asin in asins]
-    # 데이터 정제될때까지 임시 예외처리----------------------------------------------------------------------
     asin_id_list = []
-    for asin in asins:
-        try:
-            asin_id_list.append(models.Product.query.filter_by(asin=asin).first().id)
-        except:
-            continue
-    # -----------------------------------------------------------------------------------------------------------
+    for item_id in item_ids :
+        result = model.predict(user_id, item_id, 0)
+        if result[3] >= 3.65:
+            asin_id_list.append(result[1])
 
-    print(f'1. asin_ids 리스트 만들어짐 : {asin_id_list[:5]}')
+    asin_id_list = asin_id_list[:1000]
 
     products_list = {}
     products_list['products'] = []
 
-    a = 0
     for asin_id in asin_id_list:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
         try:
+            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
             product= models.Product.query.filter_by(id=asin_id).first()
+            image = address_format.img(product.asin)
+            title = product.title
         except:
             continue
         products_list['products'].append({
-            'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-            'image': address_format.img(product.asin),
-            'title': product.title,
+            'keywords': keywords,
+            'image': image,
+            'title': title,
             'asin': asin_id
         })
-        a += 1
-        print(f'{a}번째 데이터 생성')
-
-    print(f'product_list 파일 만들어짐')
 
     file_path = f'fashion/user_recommendations/game_{user_id}.json'
 
     with open(file_path, 'w') as outfile:
         json.dump(products_list, outfile)
-    print('파일 업데이트 끝')
+    print('game update succeed')
 
-    # 결과카드 json 업데이트 코드-----------------------------------------------------------------------------------------------------
     products_result_list = {}
     products_result_list['products'] = []
 
-    a = 0
     for asin_id in asin_id_list:
-        keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
-        product = models.Product.query.filter_by(id=asin_id).first()
         try:
+            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+            product = models.Product.query.filter_by(id=asin_id).first()
             product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
             pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
+            title = product.title
+            product_url = address_format.product(product.asin)
+            image = address_format.img(product.asin)
+            price = product.price
         except:
             continue
-        try:
-            product_title = product.title
-        except:
-            continue
+        # literal_eval(str(keywords))
         products_result_list['products'].append({
-            'keywords': keywords if len(keywords) <= 6 else keywords[:6],
+            'keywords': keywords,
             'asin': asin_id,
-            'price': product.price,
+            'price': price,
             'nlpResults': {
                             'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
                             'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
                         },
             'starRating': round(product.rating, 2),
             'posReveiwRate': round(pos_review_rate, 2),
-            'image': address_format.img(product.asin),
-            'productUrl': address_format.product(product.asin),
-            'title': product_title
+            'image': image,
+            'productUrl': product_url,
+            'title': title
         })
-        a += 1
-        print(f'{a}번째 데이터 생성')
-
-    print(f'product_result_list 파일 만들어짐')
 
     file_path_result = f'fashion/user_recommendations/result_{user_id}.json'
 
     with open(file_path_result, 'w') as file:
         json.dump(products_result_list, file)
-    print('결과 파일 생성 끝')
 
-    print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
-    return{
-        'result':'성공',
-        'time': time.time() - start
-    }
+    print('time:', time.time() - start)
