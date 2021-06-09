@@ -18,18 +18,10 @@ import json
 import os
 import time
 
-
 # 인공지능
 import pandas as pd
 from surprise import SVD, accuracy # SVD model, 평가
 from surprise import Reader, Dataset # SVD model의 dataset
-
-import asyncio
-# loop = asyncio.get_event_loop()
-from multiprocessing import Process, Queue
-
-import queue
-from ast import literal_eval
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
@@ -124,13 +116,9 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            # if not user_play_num % 10: # user가 10회 플레이할 때마다
-            ai_model(user_id)
+            if not user_play_num % 15: # user가 15회 플레이할 때마다
+                ai_model(user_id)
 
-            # user_queue(user_id)
-            # loop = asyncio.get_event_loop()
-            # loop.run_until_complete(json_update(user_id))
-            # loop.close()
 
             result = {
                 'userPlayNum': user_play_num,
@@ -233,7 +221,7 @@ def ai_model(user_id):
         except:
             continue
         products_list['products'].append({
-            'keywords': literal_eval(str(keywords)),
+            'keywords': keywords,
             'image': image,
             'title': title,
             'asin': asin_id
@@ -250,8 +238,8 @@ def ai_model(user_id):
 
     for asin_id in asin_id_list:
         try:
-            keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
-            # keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
+            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
             product = models.Product.query.filter_by(id=asin_id).first()
             product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
             pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
@@ -261,9 +249,9 @@ def ai_model(user_id):
             price = product.price
         except:
             continue
-
+        # literal_eval(str(keywords))
         products_result_list['products'].append({
-            'keywords': literal_eval(str(keywords)),
+            'keywords': keywords,
             'asin': asin_id,
             'price': price,
             'nlpResults': {
@@ -282,132 +270,4 @@ def ai_model(user_id):
     with open(file_path_result, 'w') as file:
         json.dump(products_result_list, file)
 
-    print('result update succeed')
     print('time:', time.time() - start)
-
-
-# # 큐 함수
-# async def user_queue(user_id):
-#     user_queue = queue.Queue()
-#     user_queue.put(user_id)
-#     return await json_update(user_queue)
-
-
-# 인공 지능 함수 결과 바탕으로 json 파일 업데이트
-# @bp.route('/ai-model', methods=['GET'])
-# @jwt_required()
-# @swag_from('../swagger_config/ai_model.yml')
-# def ai_model(user_id):
-#     start = time.time()
-#     # user_id = get_jwt_identity()
-
-#     # 리뷰파일 불러오기
-#     review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
-#     products_user_played = models.ProductUserPlayed.query.all()
-
-#     # 새로운 사용자 기록 추가하기
-#     for product in products_user_played:
-#         review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : product.asin_id, 'overall' : float(product.love_or_hate)}, ignore_index=True)
-
-#     # 데이터 가공
-#     data = Dataset.load_from_df(df=review_df, reader=Reader(rating_scale= (1, 5)))
-
-#     # 데이터 분할
-#     train = data.build_full_trainset()
-#     test = train.build_testset()
-
-#     # 훈련
-#     model = SVD(n_factors=100, n_epochs=20, random_state=10)
-#     model.fit(train)
-
-#     # 추천 정보를 받아 올 대상
-#     # 중복되지 않은 어신 리스트
-#     item_ids = list(set(review_df['asin'])) # 추천 대상 제품들
-
-#     # 추천결과에서 어신과 예상 별점만 추출
-#     asin_id_list = []
-#     for item_id in item_ids :
-#         result = model.predict(user_id, item_id, 0)
-#         if result[3] >= 3.65:
-#             asin_id_list.append(result[1])
-
-#     # 리뷰 만개로 컷
-#     asin_id_list = asin_id_list[:1000]
-# # -----------------------------------------------------------
-#     # print('ai result return time:', time.time() - start)
-
-#     json_update_game(user_id, asin_id_list)
-#     json_update_result(user_id, asin_id_list)
-#     # th_game = Process(target=json_update_game, args=(user_id, asin_id_list))
-#     # # th_result = Process(target=json_update_result, args=(user_id, asin_id_list))
-#     # th_game.start()
-#     # th_game.join()
-#     # # th_result.start()
-#     # # th_result.join()
-
-#     print('time:', time.time() - start)
-
-# def json_update_game(user_id, asin_id_list):
-#     products_list = {}
-#     products_list['products'] = []
-
-#     for asin_id in asin_id_list:
-#         keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
-#         try:
-#             product= models.Product.query.filter_by(id=asin_id).first()
-#             image = address_format.img(product.asin)
-#             title = product.title
-#         except:
-#             continue
-#         products_list['products'].append({
-#             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-#             'image': image,
-#             'title': title,
-#             'asin': asin_id
-#         })
-
-#     file_path = f'fashion/user_recommendations/game_{user_id}.json'
-
-#     with open(file_path, 'w') as outfile:
-#         json.dump(products_list, outfile)
-
-#     print('game update succeed')
-
-# def json_update_result(user_id, asin_id_list):
-#     products_result_list = {}
-#     products_result_list['products'] = []
-
-#     for asin_id in asin_id_list:
-#         try:
-#             keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]
-#             product = models.Product.query.filter_by(id=asin_id).first()
-#             product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
-#             pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
-#             title = product.title
-#             product_url = address_format.product(product.asin)
-#             image = address_format.img(product.asin)
-#             price = product.price
-#         except:
-#             continue
-
-#         products_result_list['products'].append({
-#             'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-#             'asin': asin_id,
-#             'price': price,
-#             'nlpResults': {
-#                             'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-#                             'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
-#                         },
-#             'starRating': round(product.rating, 2),
-#             'posReveiwRate': round(pos_review_rate, 2),
-#             'image': image,
-#             'productUrl': product_url,
-#             'title': title
-#         })
-
-#     file_path_result = f'fashion/user_recommendations/result_{user_id}.json'
-
-#     with open(file_path_result, 'w') as file:
-#         json.dump(products_result_list, file)
-
-#     print('result update succeed')
