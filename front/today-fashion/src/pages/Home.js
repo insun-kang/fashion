@@ -197,7 +197,7 @@ const Home = ({ location, history }) => {
           </DialogActions>
         </Dialog>
       )}
-      <Grid style={{ height: '80vh' }}></Grid>
+      <Grid style={{ height: '63vmax' }}></Grid>
       <Grid>
         <PCButton
           color="primary"
