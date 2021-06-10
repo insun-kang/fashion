@@ -21,9 +21,7 @@ import os
 import pandas as pd
 
 bp = Blueprint('auth', __name__, url_prefix='/')
-@bp.route('/', methods=['GET'])
-def d():
-    return 'test'
+
 
 
 # http://localhost:5000/oauth/url
