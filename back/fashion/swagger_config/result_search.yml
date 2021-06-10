@@ -15,7 +15,7 @@ requestBody:
         case1:
           summary: 키워드 존재
           value:
-            data_sizes: [0, 2, 8, 2, 8]
+            requestHistory: [0, 2, 8, 2, 8]
             existingKeywords: ["jeans", "blue"]
 
 responses:
