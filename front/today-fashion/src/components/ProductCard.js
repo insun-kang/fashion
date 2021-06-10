@@ -7,9 +7,6 @@ import {
   CardActionArea,
   CardMedia,
   IconButton,
-  Box,
-  ImageListItem,
-  ImageListItemBar,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -22,7 +19,7 @@ import animationData from '../lotties/58790-favourite-animation.json';
 import Lottie from 'react-lottie';
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 250,
+    maxWidth: 345,
   },
   media: {
     height: 0,
@@ -123,7 +120,7 @@ const ProductCard = memo(
               {productData.keywords.map((keyword, idx) => (
                 <div key={idx}>{keyword}</div>
               ))}
-            </Card>
+            </div>
             <div className="card-text-upper">
               <div>{productData.starRating}</div>
               <div>${productData.price}</div>
