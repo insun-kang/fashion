@@ -54,7 +54,7 @@ def search():
 
         if len(keyword) == 0:
             return {'msg': "You haven't entered anything", 'keywords': return_keywords}, 200
-        
+
         if len(find_keyword) == 0:
             return {'msg': 'No results were found for your search', 'keywords': return_keywords}, 200
 
@@ -107,13 +107,14 @@ def result_search():
         .all()
 
         for i in asin_ids:
-            
+
             asin_id=i.asin_id
             card={}
             keywords=[]
             #card['keywords']
-            keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
-            
+            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+            # keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+
             #card['price'],card['title']
             product=models.Product.query.filter_by(id=asin_id).first()
             #card['bookmark']
@@ -122,8 +123,8 @@ def result_search():
             #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
             review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
-
-            card['keywords']=literal_eval(str(keywords_by_asin))
+            card['keywords']=(keywords if len(keywords) <=6 else keywords[:6])
+            # card['keywords']=literal_eval(str(keywords_by_asin))
             card['asin']=product.id
             card['price']=product.price
             if not bookmark:
@@ -141,17 +142,16 @@ def result_search():
                                 'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
                                 'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
                 }
-                card['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)                        
+                card['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)
             card['starRating']=round(product.rating,2)
             card['image']=address_format.img(product.asin)
             card['productUrl']=address_format.product(product.asin)
             card['title']=product.title
-            
+
             cards.append(card)
-        
+
         return {'cards':cards}, 200
 
 
-# select asin, asin_id, count(product_keyword) as count from product_keyword 
+# select asin, asin_id, count(product_keyword) as count from product_keyword
 # where product_keyword="black" or product_keyword="red" group by asin having count = 2;
-

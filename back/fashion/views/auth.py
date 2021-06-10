@@ -23,6 +23,7 @@ import pandas as pd
 bp = Blueprint('auth', __name__, url_prefix='/')
 
 
+
 # http://localhost:5000/oauth/url
 @bp.route('/oauth/url')
 # @swag_from('../swagger_config/oauth_url.yml')
