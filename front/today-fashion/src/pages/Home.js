@@ -84,18 +84,16 @@ const Home = ({ location, history }) => {
     [history]
   );
   const handleClickKaKaoOAuth = () => {
-    //window.location.replace(SERVER_URL+"")
-    //카카오 로그인 요청하는 백엔드 경로로 이동
+    window.location.replace(SERVER_URL + '/oauth/url');
   };
+
   const handleKaKaoSignIn = useCallback(async (queryString) => {
-    //코드 백엔드로 보내는 요청
-    const authCode = new URLSearchParams(queryString).get('code');
-    //https://www.sitepoint.com/get-url-parameters-with-javascript/
+    const code = new URLSearchParams(queryString).get('code');
     try {
-      // const res = await axios.get('/kakao-Sign-in',{authCode})
-      // setToken(res.data.accessToken);
-      // setOpenSignIn(false);
-      // history.push('/main');
+      const res = await axios.post('/oauth', { code });
+      setToken(res.data.accessToken);
+      setOpenSignIn(false);
+      history.push('/main');
     } catch (error) {}
   }, []);
 
@@ -128,6 +126,7 @@ const Home = ({ location, history }) => {
       <div>
         <div style={{ height: '40vh' }}></div>
         <div className="home-button-group">
+          <button onClick={handleClickKaKaoOAuth}>Kakao Sign In</button>
           <PCButton
             color="primary"
             variant="contained"

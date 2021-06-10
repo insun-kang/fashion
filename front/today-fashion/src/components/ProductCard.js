@@ -63,31 +63,25 @@ const ProductCard = memo(
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log('click lottie');
+                  console.log(productData.asin);
                   if (!isBookMarked) {
                     setIsClicked(true);
                   }
                   setIsBookMarked(!isBookMarked);
                   handleBookMark({ asin: productData.asin });
                 }}
-                style={
-                  isClicked
-                    ? {
-                        background: 'inherit',
-                        border: 'none',
-                        boxShadow: 'none',
-                      }
-                    : isBookMarked
-                    ? { width: 50, height: 50, backgroundColor: 'red' }
-                    : { width: 50, height: 50, backgroundColor: 'grey' }
-                }
+                style={{
+                  background: 'inherit',
+                  border: 'none',
+                  boxShadow: 'none',
+                }}
               >
-                {isClicked && isBookMarked && (
+                {isClicked && isBookMarked ? (
                   <Lottie
                     options={defaultOptions}
                     isClickToPauseDisabled
-                    width={'50px'}
-                    height={'50px'}
+                    width={'80px'}
+                    height={'80px'}
                     speed={3}
                     eventListeners={[
                       {
@@ -97,6 +91,28 @@ const ProductCard = memo(
                         },
                       },
                     ]}
+                  />
+                ) : (
+                  <FavoriteIcon
+                    style={
+                      isBookMarked
+                        ? {
+                            width: 50,
+                            height: 50,
+                            color: 'red',
+                            fontSize: 40,
+                            padding: 10,
+                            margin: 10,
+                          }
+                        : {
+                            width: 50,
+                            height: 50,
+                            color: 'grey',
+                            fontSize: 40,
+                            padding: 10,
+                            margin: 10,
+                          }
+                    }
                   />
                 )}
               </button>

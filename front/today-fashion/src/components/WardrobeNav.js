@@ -8,11 +8,17 @@ const useStyles = makeStyles({
   },
 });
 
-const WardrobeNav = ({ categories, selectedCategory, setSelectedCategory }) => {
+const WardrobeNav = ({
+  categories,
+  selectedCategory,
+  setSelectedCategory,
+  setIsPending,
+}) => {
   const classes = useStyles();
 
   const handleTabChange = (event, newValue) => {
     setSelectedCategory(newValue);
+    setIsPending(true);
   };
 
   return (

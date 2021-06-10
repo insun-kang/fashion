@@ -8,25 +8,9 @@ import { Container, Grid } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
 import ProductCard from '../components/ProductCard';
 import InfiniteProducts from '../components/InfiniteProducts';
-// import animationData from '../lotties/58790-favourite-animation.json';
-// import Lottie from 'react-lottie';
-
-// const defaultOptions = {
-//   loop: true,
-//   autoplay: true,
-//   animationData: animationData,
-//   rendererSettings: {
-//     preserveAspectRatio: 'xMidYMid slice',
-//   },
-// };
 
 const Main = (props) => {
-  // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
-
-  // axios.defaults.baseURL = SERVER_URL;
-  // axios.defaults.headers.common['Authorization'] = AuthStr;
   const [searchKeywords, setSearchKeywords] = useState([]);
-  // const loading = useTrait(false);
 
   const handleSelectedTags = (items) => {
     setSearchKeywords(items);

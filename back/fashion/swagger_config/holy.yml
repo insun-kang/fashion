@@ -1,0 +1,14 @@
+summary: "holy api"
+description: "신성킴님이 쓰고 지우실 api"
+tags:
+  - holy
+produces:
+  - "application/json"
+responses:
+  200:
+    description: ok
+    content:
+      application/json:
+        schema:
+          type: object
+          example: { "result": [] }

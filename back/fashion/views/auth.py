@@ -316,3 +316,21 @@ def withdrawal():
 @swag_from("../swagger_config/protected.yml")
 def protected():
     return {'msg': 'Succeed accessing protected area'}, 200
+
+
+
+# -----------------------------------------------------------------------------
+@bp.route("/holy", methods=["GET"])
+@swag_from("../swagger_config/holy.yml")
+def holy():
+    
+    bookmarks=models.Bookmark.query.all()
+    cnt = 0 
+    b = []
+    for bookmark in bookmarks:
+        if cnt == 5:
+            break
+        b.append(bookmark)
+        cnt+=1
+
+    return {'msg': b}, 200
