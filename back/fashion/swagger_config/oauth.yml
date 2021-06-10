@@ -26,12 +26,8 @@ responses:
           type: object
           example:
             {
-              "access_token": "x6fPGGCaHyh9YUqgQg6QRUPJRvZ4L17aQ4DziQo9cxcAAAF58fX4Wg",
-              "expires_in": 21599,
-              "refresh_token": "vGQEfS6YCH1gaGRexOB8Cum-EFpkg9iiWsPoPAo9cxcAAAF58fX4WQ",
-              "refresh_token_expires_in": 5183999,
-              "scope": "profile",
-              "token_type": "bearer"
+              "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjIzMjk5MzU4LCJqdGkiOiI5MTliM2Y0Mi05N2YyLTQ0NTUtYjdiNS01MjgxOGI5YmViNGIiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo2LCJuYmYiOjE2MjMyOTkzNTgsImV4cCI6MTYyMzM4NTc1OH0.MKooTBkgZ4THtGXvEDl6IjSIBiCyXyuD6Vv2Dv4Rs6Q",
+              "nickname": "강인선"
             }
 
 definitions:
@@ -40,15 +36,12 @@ definitions:
     required:
       - email
       - pw
-      - name
       - nickname
       - birth
     properties:
       email:
         type: string
       pw:
-        type: string
-      name:
         type: string
       nickname:
         type: string
