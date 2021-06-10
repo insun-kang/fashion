@@ -25,6 +25,9 @@ from surprise import Reader, Dataset # SVD model의 dataset
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
+filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
@@ -116,9 +119,12 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 15: # user가 15회 플레이할 때마다
-                ai_model(user_id)
 
+            if not user_play_num % 55: # user가 55회 플레이할 때마다
+                ai_model_game(user_id,ai_model(user_id))
+
+            if not user_play_num % 1: # user가 15회 플레이할 때마다
+                ai_model_result(user_id,ai_model(user_id))
 
             result = {
                 'userPlayNum': user_play_num,
@@ -179,7 +185,7 @@ def result_cards():
 
 def ai_model(user_id):
     # 리뷰파일 불러오기
-    start = time.time()
+    # start = time.time()
     review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
     products_user_played = models.ProductUserPlayed.query.all()
 
@@ -211,34 +217,39 @@ def ai_model(user_id):
 
     asin_id_list = asin_id_list[:1000]
 
+    return asin_id_list
+
+def ai_model_game(user_id,asin_id_list):
+    global filtered
     products_list = {}
     products_list['products'] = []
 
     for asin_id in asin_id_list:
-        try:
-            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
-            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
-            product= models.Product.query.filter_by(id=asin_id).first()
-            image = address_format.img(product.asin)
-            title = product.title
-        except:
-            continue
-        products_list['products'].append({
-            'keywords': keywords if len(keywords) <=6 else keywords[:6],
-            'image': image,
-            'title': title,
-            'asin': asin_id
-        })
+        if asin_id not in filtered:
+            try:
+                keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+                product= models.Product.query.filter_by(id=asin_id).first()
+                image = address_format.img(product.asin)
+                title = product.title
+            except:
+                continue
+            products_list['products'].append({
+                'keywords': keywords if len(keywords) <=6 else keywords[:6],
+                'image': image,
+                'title': title,
+                'asin': asin_id
+            })
 
     file_path = f'fashion/user_recommendations/game_{user_id}.json'
 
     with open(file_path, 'w') as outfile:
         json.dump(products_list, outfile)
 
-    #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
-    asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate]
+    print('게임')
 
+def ai_model_result(user_id,asin_id_list):
+    products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
+    asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate] + filtered
 
     products_result_list = {}
     products_result_list['products'] = []
@@ -246,7 +257,6 @@ def ai_model(user_id):
     for asin_id in asin_id_list:
         if asin_id not in asin_ids_user_played:
             try:
-                # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
                 keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
                 product = models.Product.query.filter_by(id=asin_id).first()
                 product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
@@ -257,25 +267,25 @@ def ai_model(user_id):
                 price = product.price
             except:
                 continue
-        # literal_eval(str(keywords))
-        products_result_list['products'].append({
-            'keywords': keywords if len(keywords) <=6 else keywords[:6],
-            'asin': asin_id,
-            'price': price,
-            'nlpResults': {
-                            'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                            'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
-                        },
-            'starRating': round(product.rating, 2),
-            'posReveiwRate': round(pos_review_rate, 2),
-            'image': image,
-            'productUrl': product_url,
-            'title': title
-        })
+            products_result_list['products'].append({
+                'keywords': keywords if len(keywords) <=6 else keywords[:6],
+                'asin': asin_id,
+                'price': price,
+                'nlpResults': {
+                                'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                                'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                            },
+                'starRating': round(product.rating, 2),
+                'posReveiwRate': round(pos_review_rate, 2),
+                'image': image,
+                'productUrl': product_url,
+                'title': title
+            })
 
     file_path_result = f'fashion/user_recommendations/result_{user_id}.json'
 
     with open(file_path_result, 'w') as file:
         json.dump(products_result_list, file)
 
-    print('time:', time.time() - start)
+    print('추천')
+    # print('time:', time.time() - start)
