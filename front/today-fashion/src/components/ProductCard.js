@@ -5,14 +5,12 @@ import {
   AccordionSummary,
   Button,
   Card,
-  CardActionArea,
   CardMedia,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -25,7 +23,8 @@ import ProductCardDetail from './ProductCardDetail';
 import heartAnimationData from '../lotties/58790-favourite-animation.json';
 import alertAnimationData from '../lotties/surprised-emoji.json';
 import Lottie from 'react-lottie';
-import { SERVER_URL } from '../config';
+import axios from 'axios';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -64,15 +63,18 @@ const ProductCard = memo(
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const countReport = useRef();
     // https://codesandbox.io/s/b7pg4?file=/src/components/UncontrolledLottie.jsx
-    //https://github.com/chenqingspring/react-lottie/issues/81
 
     const handleReport = async () => {
       try {
-        // const res = await axios.post(SERVER_URL+'/')
+        const res = await axios.post('/report', {
+          asin: productData.asin,
+        });
         //데이터 받아오기
+        countReport.current = res.data.reportCount;
         setIsAlertOpen(true);
-        // countReport.current= res.data.count
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     return (
@@ -153,11 +155,6 @@ const ProductCard = memo(
                 onClick={(e) => {
                   e.stopPropagation();
                   handleReport();
-                  console.log(productData.asin);
-
-                  // alert(`This product is currently reported ${10}times. If a product is frequently reported, it can be deleted according to our inspection guide.
-                  // once when you report a product, you cannot undo it. will you proceed?`)
-                  // setIsReported(!isReported);
                 }}
                 style={{
                   background: 'inherit',
@@ -208,7 +205,7 @@ const ProductCard = memo(
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
                     This product is currently reported {countReport.current}
-                    times. If a product is frequently reported, it can be
+                    &nbsp;times. If a product is frequently reported, it can be
                     deleted according to our inspection guide. once when you
                     report a product, you cannot undo it. will you proceed?
                   </DialogContentText>
