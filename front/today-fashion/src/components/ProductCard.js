@@ -28,8 +28,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '350px',
     borderRadius: '30px',
-    boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.27)',
-    margin: '20px',
+    boxShadow: '0 2px 10px 3px rgba(0, 0, 0, 0.1)',
+    marginTop: '50px',
+    marginBottom: '50px',
   },
   media: {
     height: 0,
@@ -199,7 +200,7 @@ const ProductCard = memo(
                     style={{ marginRight: '10px', marginTop: '10px' }}
                   />
                 </a>
-                <div>
+                <div style={{ marginBottom: '2px' }}>
                   <h6
                     style={{
                       margin: 0,
@@ -226,13 +227,11 @@ const ProductCard = memo(
                     {String(productData.price.toFixed(2)).slice(-2)}
                   </h6>
                 </div>
-                <br />
                 <Rating
                   defaultValue={productData.starRating}
                   size="small"
                   readOnly
                 />
-
                 <p
                   style={{
                     margin: 0,
@@ -326,8 +325,8 @@ const ProductCard = memo(
                           Bad Point
                         </p>
                         <p style={{ fontSize: '12px', fontWeight: 300 }}>
-                          {(1 - productData.posReveiwRate) * 100}% of Customer
-                          were Unsatisfied
+                          {((1 - productData.posReveiwRate) * 100).toFixed(0)}%
+                          of Customer were Unsatisfied
                         </p>
                       </div>
                       <p fontWeight={400}>

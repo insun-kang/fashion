@@ -25,7 +25,7 @@ const CustomSignIn = (props) => {
                     <TextField
                       {...field}
                       id="email"
-                      type="text"
+                      type="email"
                       placeholder="Please Enter Your E-Mail Address"
                       label="Email"
                       variant="outlined"

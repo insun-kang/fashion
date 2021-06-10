@@ -12,14 +12,6 @@ const colorList = {
   5: 'default',
 };
 
-const styleBlock = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexWrap: 'wrap',
-  '& > *': { mx: '5px !important' },
-};
-
 const GameCard = (props) => {
   const { questionData, handleAnswerClick, setIsPending } = props;
   console.log(questionData);

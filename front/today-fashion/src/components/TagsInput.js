@@ -8,6 +8,7 @@ import { SERVER_URL } from '../config';
 import { Icon, InlineIcon } from '@iconify/react';
 import searchIcon from '@iconify-icons/akar-icons/search';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { useMediaQuery } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -34,6 +35,8 @@ const TagsInput = ({ ...props }) => {
   const [autoCompleteItems, setAutoCompleteItems] = useState([]);
   const [autoCompleteError, setAutoCompleteError] = useState();
   let cancelToken;
+
+  const isMobile = useMediaQuery('(max-width: 600px)');
 
   useEffect(() => {
     setSelectedItems(tags);
@@ -130,6 +133,13 @@ const TagsInput = ({ ...props }) => {
     }
   };
 
+  const [responseWidth, setResponseWidth] = useState();
+  useEffect(() => {
+    {
+      isMobile ? setResponseWidth('80%') : setResponseWidth('50%');
+    }
+  }, [isMobile]);
+
   return (
     <>
       <Downshift
@@ -150,10 +160,10 @@ const TagsInput = ({ ...props }) => {
             placeholder,
           });
           return (
-            <div style={{ width: '50%', margin: '0 Auto' }}>
+            <div style={{ width: responseWidth, margin: '0 Auto' }}>
               <TextField
                 style={{ border: '0px solid' }}
-                halfWidth
+                fullWidth
                 InputProps={{
                   startAdornment: selectedItems.map((item) => (
                     <Chip

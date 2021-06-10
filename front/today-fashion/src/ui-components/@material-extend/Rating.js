@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-// material
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
-import { withStyles, experimentalStyled as styled } from '@material-ui/core/styles';
+import {
+  withStyles,
+  experimentalStyled as styled,
+} from '@material-ui/core/styles';
 import { Box, Stack, Rating, Container } from '@material-ui/core';
 // routes
 import { PATH_PAGE } from '../../../routes/paths';
@@ -29,30 +31,30 @@ const labels = {
   3.5: 'Good',
   4: 'Good+',
   4.5: 'Excellent',
-  5: 'Excellent+'
+  5: 'Excellent+',
 };
 
 const customIcons = {
   1: {
     icon: <SentimentVeryDissatisfiedIcon />,
-    label: 'Very Dissatisfied'
+    label: 'Very Dissatisfied',
   },
   2: {
     icon: <SentimentDissatisfiedIcon />,
-    label: 'Dissatisfied'
+    label: 'Dissatisfied',
   },
   3: {
     icon: <SentimentSatisfiedIcon />,
-    label: 'Neutral'
+    label: 'Neutral',
   },
   4: {
     icon: <SentimentSatisfiedAltIcon />,
-    label: 'Satisfied'
+    label: 'Satisfied',
   },
   5: {
     icon: <SentimentVerySatisfiedIcon />,
-    label: 'Very Satisfied'
-  }
+    label: 'Very Satisfied',
+  },
 };
 
 const style = {
@@ -60,23 +62,23 @@ const style = {
   alignItems: 'center',
   justifyContent: 'center',
   flexWrap: 'wrap',
-  '& > *': { mx: '8px !important' }
+  '& > *': { mx: '8px !important' },
 };
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
 const StyledRating = withStyles({
   iconFilled: { color: '#FF4842' },
-  iconHover: { color: '#B72136' }
+  iconHover: { color: '#B72136' },
 })(Rating);
 
 // ----------------------------------------------------------------------
 
 IconContainer.propTypes = {
-  value: PropTypes.number
+  value: PropTypes.number,
 };
 
 function IconContainer(props) {
@@ -84,7 +86,7 @@ function IconContainer(props) {
   return <span {...other}>{customIcons[value].icon}</span>;
 }
 
-export default function RatingComponent() {
+export default function Rating() {
   const [value, setValue] = useState(2);
   const [hover, setHover] = useState(-1);
 
@@ -95,13 +97,17 @@ export default function RatingComponent() {
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === 'light' ? 'grey.200' : 'grey.800',
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="Rating"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'Rating' }]}
+            links={[
+              { name: 'Components', href: PATH_PAGE.components },
+              { name: 'Rating' },
+            ]}
             moreLink="https://next.material-ui.com/components/rating"
           />
         </Container>
@@ -132,13 +138,19 @@ export default function RatingComponent() {
               <Rating name="pristine" value={null} />
             </Block>
             <Block title="Custom empty icon" sx={style}>
-              <Rating name="customized-empty" defaultValue={2} precision={0.5} />
+              <Rating
+                name="customized-empty"
+                defaultValue={2}
+                precision={0.5}
+              />
             </Block>
             <Block title="Custom icon and color" sx={style}>
               <StyledRating
                 name="customized-color"
                 defaultValue={2}
-                getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                getLabelText={(value) =>
+                  `${value} Heart${value !== 1 ? 's' : ''}`
+                }
                 precision={0.5}
                 icon={<FavoriteIcon />}
                 emptyIcon={<FavoriteIcon />}
@@ -170,7 +182,9 @@ export default function RatingComponent() {
                   setHover(newHover);
                 }}
               />
-              {value !== null && <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>}
+              {value !== null && (
+                <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
+              )}
             </Block>
           </Stack>
 
@@ -178,11 +192,21 @@ export default function RatingComponent() {
             <Block title="Half ratings" sx={style}>
               <Rating name="half-rating" defaultValue={2.5} precision={0.5} />
               <br />
-              <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
+              <Rating
+                name="half-rating-read"
+                defaultValue={2.5}
+                precision={0.5}
+                readOnly
+              />
             </Block>
 
             <Block title="Sizes" sx={style}>
-              <Rating name="size-small" defaultValue={2} size="small" />
+              <Rating
+                name="size-small"
+                defaultValue={2}
+                size="small"
+                readOnly
+              />
               <br />
               <Rating name="size-medium" defaultValue={2} />
               <br />

@@ -213,16 +213,34 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const productRow1 = [];
   const productRow2 = [];
 
+  function SetProduct() {
+    mainProducts.map((product, index) => {
+      index % 2 === 0
+        ? productRow1.push(
+            <div key={index}>
+              <ProductCard
+                productData={product}
+                isSelected={match.params.asin === product.asin}
+              />
+            </div>
+          )
+        : productRow2.push(
+            <div key={index}>
+              <ProductCard
+                productData={product}
+                isSelected={match.params.asin === product.asin}
+              />
+            </div>
+          );
+    });
+  }
+
+  SetProduct();
+
   return (
     <div className="products-container">
-      {mainProducts.map((product, index) => (
-        <div key={index}>
-          <ProductCard
-            productData={product}
-            isSelected={match.params.asin === product.asin}
-          />
-        </div>
-      ))}
+      <Grid>{productRow1}</Grid>
+      <Grid>{productRow2}</Grid>
     </div>
   );
 };

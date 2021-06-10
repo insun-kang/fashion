@@ -1,16 +1,14 @@
-import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import LogoutButton from '../components/LogoutButton';
 import TagsInput from '../components/TagsInput';
-import { SERVER_URL } from '../config';
 import { Container, Grid } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
-import ProductCard from '../components/ProductCard';
 import InfiniteProductsMobile from '../components/InfiniteProductsMobile';
 import InfiniteProductsTablet from '../components/InfiniteProductsTablet';
 import InfiniteProductsPC from '../components/InfiniteProductsPC';
 import { useMediaQuery } from '@material-ui/core';
+import { SpeedDial } from '../ui-components/@material-extend';
 
 const Main = (props) => {
   const isTablet = useMediaQuery('(min-width: 700px)');
@@ -29,20 +27,24 @@ const Main = (props) => {
 
   return (
     <>
+      <SpeedDial />
       <Container>
-        <Grid item xs={12}>
-          <Grid container spacing={1} style={{ marginTop: '10px' }}>
-            <Grid>
+        <Grid width={window.innderWidth}>
+          <Grid
+            item
+            xs={12}
+            container
+            spacing={1}
+            style={{ marginTop: '10px' }}
+          >
+            <Grid item xs={5}>
               <img
-                src="/image/navlogo.png"
-                style={{ height: '30px', marginTop: '10px' }}
+                src="/image/onot.png"
+                style={{ height: '30%', marginTop: '10px' }}
               />
             </Grid>
-            <Grid item xs={8}></Grid>
-            <Grid item xs={1}>
+            <Grid item xs={7} style={{ textAlign: 'right' }}>
               <LogoutButton />
-            </Grid>
-            <Grid item xs={1}>
               <Link to="/mypage" style={{ textDecoration: 'none' }}>
                 <PCButton>My Page</PCButton>
               </Link>
@@ -52,7 +54,6 @@ const Main = (props) => {
       </Container>
       <TagsInput
         selectedTags={handleSelectedTags}
-        fullWidth
         variant="outlined"
         id="tags"
         name="tags"

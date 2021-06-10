@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/core/Alert';
+import '../theme/BlurCard.css';
 
 const Home = ({ location, history }) => {
   const [token, setToken] = useLocalStorage('access_token', null);
@@ -147,7 +148,7 @@ const Home = ({ location, history }) => {
   // const KakaoLoginButton = <PCButton style={{ backgroundColor: '#fee500' }} />;
 
   return (
-    <div className="App">
+    <div className="App" height={window.innderHeight}>
       {openSignIn && (
         <Dialog
           open={openSignIn}
@@ -157,7 +158,7 @@ const Home = ({ location, history }) => {
           onClose={handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          style={{ marginTop: '40vh' }}
+          style={{ marginTop: '20vh' }}
         >
           <DialogTitle
             id="alert-dialog-slide-title"
@@ -169,14 +170,13 @@ const Home = ({ location, history }) => {
           >
             Sign In
           </DialogTitle>
-          <DialogContent>
+          <DialogContent style={{ textAlign: 'center' }}>
             <CustomSignIn handleCustomSignIn={handleCustomSignIn} />
-          </DialogContent>
-          <DialogActions>
+            <br />
             <PCButton color="secondary" variant="text" onClick={handleClose}>
               Close
             </PCButton>
-          </DialogActions>
+          </DialogContent>
         </Dialog>
       )}
       {openSignUp && (
@@ -199,23 +199,16 @@ const Home = ({ location, history }) => {
             Sign Up
           </DialogTitle>
 
-          <DialogContent>
+          <DialogContent style={{ textAlign: 'center' }}>
             <UserInfoForm handleUserInfoForm={handleSignUp} />
-          </DialogContent>
-          <DialogActions>
-            <PCButton
-              color="secondary"
-              variant="text"
-              onClick={() => {
-                setOpenSignUp(!openSignUp);
-              }}
-            >
+            <br />
+            <PCButton color="secondary" variant="text" onClick={handleClose}>
               Close
             </PCButton>
-          </DialogActions>
+          </DialogContent>
         </Dialog>
       )}
-      <Grid style={{ height: '67vh' }}></Grid>
+      <Grid height={window.innerHeight * 0.67}></Grid>
       <Grid>
         <KakaoButton
           color="kakao"
