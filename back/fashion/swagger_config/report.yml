@@ -1,0 +1,49 @@
+summary: "신고하기"
+description: "신고하기 post api"
+tags:
+  - report
+produces:
+  - "application/json"
+requestBody:
+  description: asin을 받아옴
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/report'
+      examples:
+        case1:
+          summary: report
+          value:
+            asin: 38725
+
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {'msg' : 'Make report'}
+  400:
+    description: alr_reported
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "errorCode": "alr_reported",
+              "msg": "This product has already been reported"
+            }
+definitions:
+  report:
+    type: object
+    required:
+      - asin
+    properties:
+      report:
+        type: string
+security:
+  - ApiKeyAuth: []
