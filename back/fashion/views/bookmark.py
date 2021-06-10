@@ -25,11 +25,11 @@ def Bookmark():
     else:
         body = request.get_json()
         
-        asin = body['asin']
+        asin_id = body['asin']
         header = request.headers.get('Authorization')
 
         user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
-        bookmark = models.Bookmark.query.filter_by(asin=asin, user_id=user_id).first()
+        bookmark = models.Bookmark.query.filter_by(asin_id=asin_id, user_id=user_id).first()
 
         if bookmark is not None:
             models.db.session.delete(bookmark)
@@ -39,7 +39,7 @@ def Bookmark():
             
         else:
             bookmark = models.Bookmark(
-                            asin=asin,
+                            asin_id=asin_id,
                             user_id=user_id,
                             date=datetime.now()
                         )

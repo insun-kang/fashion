@@ -10,18 +10,18 @@ class UseDB:
         if self.con:
             self.con.close()
     # load_reveiw_summary
-    def review_summary_insert(self, asin, negative_review_summary, positive_review_summary, negative_review_number, positive_review_number):
-        sql = ''' insert into product_review(`asin`, `negative_review_summary`, `positive_review_summary`, `negative_review_number`, `positive_review_number`)
-              values(%s, %s, %s, %s, %s);  '''
+    def review_summary_insert(self, asin_id, asin, negative_review_summary, positive_review_summary, negative_review_number, positive_review_number):
+        sql = ''' insert into product_review(`asin_id`, `asin`, `negative_review_summary`, `positive_review_summary`, `negative_review_number`, `positive_review_number`)
+              values(%s, %s, %s, %s, %s, %s);  '''
         with self.con.cursor() as cursor:
-            cursor.execute(sql, (asin, negative_review_summary, positive_review_summary, negative_review_number, positive_review_number))
+            cursor.execute(sql, (asin_id, asin, negative_review_summary, positive_review_summary, negative_review_number, positive_review_number))
         self.con.commit()
     #
-    def product_keyword_insert(self, asin, type_keyword, product_keyword):
-        sql = ''' insert into product_keyword(`asin`, `type_keyword`, `product_keyword`)
-              values(%s, %s, %s);  '''
+    def product_keyword_insert(self, asin_id, asin, type_keyword, product_keyword,catagory):
+        sql = ''' insert into product_keyword(`asin_id`, `asin`, `type_keyword`, `product_keyword`, `catagory`)
+              values(%s, %s, %s, %s, %s);  '''
         with self.con.cursor() as cursor:
-            cursor.execute(sql, (asin, type_keyword, product_keyword))
+            cursor.execute(sql, (asin_id, asin, type_keyword, product_keyword, catagory))
         self.con.commit()
 
     def search_keyword_insert(self, keyword, count):
@@ -48,3 +48,14 @@ class UseDB:
         with self.con.cursor() as cursor:
             cursor.execute(sql, (asin, title, price, rating, shared))
         self.con.commit()
+
+    def product_select(self, asin):
+        sql = ''' SELECT id FROM product WHERE asin = %s;  '''
+        with self.con.cursor() as cursor:
+            cursor.execute(sql, (asin))
+            result = cursor.fetchall()
+        self.con.commit()
+        lst=[]
+        for i in result:
+            lst.append(i)
+        return lst

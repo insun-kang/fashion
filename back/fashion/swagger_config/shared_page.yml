@@ -1,0 +1,172 @@
+summary: "공유하기"
+description: "공유하기 post api"
+tags:
+  - share
+produces:
+  - "application/json"
+requestBody:
+  description: 공유
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/Share'
+      examples:
+        case1:
+          summary: post request
+          value:
+            asins: [23, 2, 232, 885]
+
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "cards": [
+                {
+                  "asin": 23,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B000072XXH&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    [
+                      "bag"
+                    ],
+                    [
+                      "bag"
+                    ],
+                    [
+                      "bag"
+                    ]
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "OMG! There is no negative review at all!;)",
+                    "posReviewSummary": "Oh no....there is no positive review at all...;("
+                  },
+                  "posReveiwRate": 0,
+                  "price": 10,
+                  "productUrl": "https://www.amazon.com/dp/B000072XXH",
+                  "starRating": 5,
+                  "title": "J. P. Ourse & Cie. Yellowstone Collection Ranger Shoulder Bag (Java)"
+                },
+                {
+                  "asin": 2,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1291691480&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    [
+                      "men"
+                    ],
+                    [
+                      "accessories"
+                    ],
+                    [
+                      "magnet"
+                    ],
+                    [
+                      "buckle"
+                    ],
+                    [
+                      "bracelet"
+                    ],
+                    [
+                      "jewelry"
+                    ],
+                    [
+                      "men"
+                    ],
+                    [
+                      "accessories"
+                    ],
+                    [
+                      "magnet"
+                    ],
+                    [
+                      "buckle"
+                    ],
+                    [
+                      "bracelet"
+                    ],
+                    [
+                      "jewelry"
+                    ]
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "OMG! There is no negative review at all!;)",
+                    "posReviewSummary": "Oh no....there is no positive review at all...;("
+                  },
+                  "posReveiwRate": 0,
+                  "price": 10,
+                  "productUrl": "https://www.amazon.com/dp/1291691480",
+                  "starRating": 5,
+                  "title": "XCC Qi promise new spider snake preparing men's accessories alloy fittings magnet buckle bracelet jewelry"
+                },
+                {
+                  "asin": 232,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00018CY4G&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    [
+                      "uniform"
+                    ],
+                    [
+                      "white"
+                    ],
+                    [
+                      "uniform"
+                    ],
+                    [
+                      "white"
+                    ],
+                    [
+                      "uniform"
+                    ],
+                    [
+                      "white"
+                    ]
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "OMG! There is no negative review at all!;)",
+                    "posReviewSummary": "Oh no....there is no positive review at all...;("
+                  },
+                  "posReveiwRate": 0,
+                  "price": 10,
+                  "productUrl": "https://www.amazon.com/dp/B00018CY4G",
+                  "starRating": 5,
+                  "title": "Amber Sporting Goods KAR-8-W-00 8oz Karate Uniform White Size 00"
+                },
+                {
+                  "asin": 885,
+                  "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B000B8M35Q&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
+                  "keywords": [
+                    [
+                      "cotton"
+                    ],
+                    [
+                      "comfort"
+                    ],
+                    [
+                      "men"
+                    ]
+                  ],
+                  "nlpResults": {
+                    "negReviewSummary": "OMG! There is no negative review at all!;)",
+                    "posReviewSummary": "Oh no....there is no positive review at all...;("
+                  },
+                  "posReveiwRate": 0,
+                  "price": 10,
+                  "productUrl": "https://www.amazon.com/dp/B000B8M35Q",
+                  "starRating": 5,
+                  "title": "Big Daddy Men's Poker Tee"
+                }
+              ],
+              "msg": "Loading success"
+            }
+definitions:
+  Share:
+    type: object
+    required:
+      - asin
+    properties:
+      keyword:
+        type: string

@@ -17,78 +17,47 @@ from .. import address_format
 bp = Blueprint('closet', __name__, url_prefix='/')
 
 
-@bp.route('/closet', methods=['POST'])
+@bp.route('/closet', methods=['GET'])
 @jwt_required()
 @swag_from('../swagger_config/closet.yml')
-def Closet():
-    if not request.is_json:
-        return error_code.missing_json_error
+def closet():
 
-    else:
-        body=request.get_json()
+    header = request.headers.get('Authorization')
 
-        catagory=body['catagory']
+    user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
 
-        header = request.headers.get('Authorization')
+    bookmark=models.Bookmark.query.filter_by(user_id=user_id).all()
 
-        user_id = decode_token(header[7:] , csrf_value = None , allow_expired = False)['sub']
+    data={'overall': [], 'top': [], 'bottom': [], 'etc': []}
+    
+    for i in bookmark:
+        asin_id=i.asin_id
+        card={}
+        catagory=''
 
-        bookmark=models.Bookmark.query.filter_by(user_id=user_id).all()
+        #card['keywords']
+        asin=models.ProductKeyword.query.filter_by(asin_id=asin_id).first()
+        catagory=asin.catagory
 
-        catagories=[]
+        #card['price'],card['title']
+        product=models.Product.query.filter_by(id=asin_id).first()
 
+
+        card['asin']=product.id
+        card['image']=address_format.img(product.asin)
+        card['title']=product.title
         
 
-        for i in bookmark:
-            asin=i.asin
-            card={}
-            keywords=[]
-            
-            #card['keywords']
-            keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
-            for keyword in keywords_by_asin:
-                if keyword not in keywords:
-                    keywords.append(keyword.product_keyword)
-            #card['price'],card['title']
-            product=models.Product.query.filter_by(asin=asin).first()
+        if catagory == 'overall':
+            data['overall'].append(card)
+        elif catagory == 'top':
+            data['top'].append(card)
+        elif catagory == 'bottom':
+            data['bottom'].append(card)
+        else:
+            data['etc'].append(card)
+    
 
-            #card['bookmark']
-            bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin=asin).first()
+    return { 'data':data, 'catagories': ['overall','top','bottom','etc']}, 200
 
-            #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
-            review = models.ProductReview.query.filter_by(asin=asin).first()
 
-            #catagory
-            keyword=models.ProductKeyword.query.filter_by(asin=asin, type_keyword='catagory').all()
-            for i in keyword:
-                if i.type_keyword not in catagories:
-                    catagories.append(i.type_keyword)
-
-            card['keywords']=keywords
-            card['asin']=asin
-            card['price']=product.price
-            if not bookmark:
-                card['bookmark']=False
-            else:
-                card['bookmark']=True
-            if not review:
-                card['nlpResults']={
-                                'posReviewSummary': 'Oh no....there is no positive review at all...;(', 
-                                'negReviewSummary': 'OMG! There is no negative review at all!;)'
-                                }
-            
-                card['posReveiwRate']=0
-            else:
-                card['nlpResults']={
-                                    'posReviewSummary': review.positive_review_summary, 
-                                    'negReviewSummary': review.negative_review_summary
-                                    }
-                card['posReveiwRate']=review.positive_review_number/(review.positive_review_number+review.negative_review_number)                        
-            card['starRating']=product.rating
-            card['image']=address_format.img(asin)
-            card['productUrl']=address_format.product(asin)
-            card['title']=product.title
-            
-            cards.append(card)
-        
-        return {'cards':cards, 'catagory': catagories}, 200

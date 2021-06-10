@@ -2,4 +2,6 @@ __pycache__/
 migrations/
 venv/
 
-1.json
+game*
+result*
+reviews_df.csv

@@ -4,6 +4,24 @@ tags:
   - cardgame
 produces:
   - "application/json"
+requestBody:
+        description: "페이지 넘버와 데이터 사이즈(pageNum & dataSize)"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/resultCard'
+            examples:
+              case1:
+                summary: 0페이지
+                value:
+                  pageNum: 0
+                  dataSize: 10
+              case2:
+                summary: 1페이지
+                value:
+                  pageNum: 1
+                  dataSize: 10
 responses:
   200:
     description: ok
@@ -394,3 +412,14 @@ responses:
             {'errorCode': 'play_too_little','msg': 'This user played game less than 5 times'}
 security:
   - ApiKeyAuth: []
+definitions:
+  resultCard:
+    type: object
+    required:
+      - pageNum
+      - dataSize
+    properties:
+      pageNum:
+        type: integer
+      dataSize:
+        type: integer

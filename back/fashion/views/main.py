@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask import Flask, request
 import bcrypt
 from flask_cors import CORS
@@ -8,18 +8,17 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, decode_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
 
-
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
 from .. import address_format
-
+from ast import literal_eval
 bp = Blueprint('main', __name__, url_prefix='/')
 
 
 @bp.route('/search', methods=['POST'])
 @swag_from('../swagger_config/search.yml')
-def Search():
+def search():
     if not request.is_json:
         return error_code.missing_json_error
 
@@ -51,10 +50,12 @@ def Search():
             # return {'msg': "신성하게 남다르게 강인하게 황송하게(황정하게) 이게 다인가 싶을 때 김건우, 이범석(코치님들) 화이팅", 'keywords': '인성 담당: 강인성'}, 200
             return '인성 담당: 강인성'
 
-        if not keyword:
+
+
+        if len(keyword) == 0:
             return {'msg': "You haven't entered anything", 'keywords': return_keywords}, 200
-        
-        if not find_keyword:
+
+        if len(find_keyword) == 0:
             return {'msg': 'No results were found for your search', 'keywords': return_keywords}, 200
 
         if not existing_keywords:
@@ -68,10 +69,11 @@ def Search():
                     return_keywords.append((i.keyword))
             return {'msg': 'success', 'keywords': return_keywords}, 200
 
+
 @bp.route('/result-search', methods=['POST'])
 @jwt_required()
 @swag_from('../swagger_config/result_search.yml')
-def ResultSearch():
+def result_search():
     if not request.is_json:
         return error_code.missing_json_error
 
@@ -90,39 +92,39 @@ def ResultSearch():
         size=len(existing_keywords)
 
         cards=[]
-        
+
         #limit, offset
-        asins = models.db.session.query(models.ProductKeyword.asin, models.func.count(models.ProductKeyword.product_keyword))\
+        asin_ids = models.db.session.query(models.ProductKeyword.asin_id, models.func.count(models.ProductKeyword.product_keyword))\
         .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))\
-        .group_by("asin")\
+        .group_by("asin_id")\
         .having(models.func.count(models.ProductKeyword.product_keyword)<=size)\
         .offset(page_num*data_size)\
         .limit(data_size)\
         .all()
 
-        
-        for i in asins:
-            
-            asin=i.asin
+
+
+
+        for i in asin_ids:
+
+            asin_id=i.asin_id
             card={}
             keywords=[]
             #card['keywords']
-            keywords_by_asin=models.ProductKeyword.query.filter_by(asin=asin).all()
-            for keyword in keywords_by_asin:
-                if keyword not in keywords:
-                    keywords.append(keyword.product_keyword)
-            #card['price'],card['title']
-            product=models.Product.query.filter_by(asin=asin).first()
+            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+            # keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
 
+            #card['price'],card['title']
+            product=models.Product.query.filter_by(id=asin_id).first()
             #card['bookmark']
-            bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin=asin).first()
+            bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin_id=asin_id).first()
 
             #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
-            review = models.ProductReview.query.filter_by(asin=asin).first()
+            review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
-
-            card['keywords']=keywords
-            card['asin']=asin
+            card['keywords']=(keywords if len(keywords) <=6 else keywords[:6])
+            # card['keywords']=literal_eval(str(keywords_by_asin))
+            card['asin']=product.id
             card['price']=product.price
             if not bookmark:
                 card['bookmark']=False
@@ -130,27 +132,25 @@ def ResultSearch():
                 card['bookmark']=True
             if not review:
                 card['nlpResults']={
-                                'posReviewSummary': 'Oh no....there is no positive review at all...;(', 
+                                'posReviewSummary': 'Oh no....there is no positive review at all...;(',
                                 'negReviewSummary': 'OMG! There is no negative review at all!;)'
-                                }
-            
-                card['posReveiwRate']=0
+                }
+                card['posReveiwRate']= 0
             else:
                 card['nlpResults']={
-                                    'posReviewSummary': review.positive_review_summary, 
-                                    'negReviewSummary': review.negative_review_summary
-                                    }
-                card['posReveiwRate']=review.positive_review_number/(review.positive_review_number+review.negative_review_number)                        
-            card['starRating']=product.rating
-            card['image']=address_format.img(asin)
-            card['productUrl']=address_format.product(asin)
+                                'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                                'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                }
+                card['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)
+            card['starRating']=round(product.rating,2)
+            card['image']=address_format.img(product.asin)
+            card['productUrl']=address_format.product(product.asin)
             card['title']=product.title
-            
+
             cards.append(card)
-        
+
         return {'cards':cards}, 200
 
 
-# select asin, count(product_keyword) as count from product_keyword 
+# select asin, asin_id, count(product_keyword) as count from product_keyword
 # where product_keyword="black" or product_keyword="red" group by asin having count = 2;
-

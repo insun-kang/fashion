@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import Flask, request
+from flask import Flask, request, redirect,jsonify
 import bcrypt
 from flask_cors import CORS
 from .. import models
@@ -8,19 +8,101 @@ from datetime import datetime, timedelta
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, decode_token,
                                 get_jwt_identity, unset_jwt_cookies, create_refresh_token)
 from ast import literal_eval
-
+from config import CLIENT_ID, REDIRECT_URI, CLIENT_SECRET
+from ..controller import Oauth
 # Flasgger
 from flasgger.utils import swag_from
 from .. import error_code
+import requests
 import json
 from .. import address_format
 import shutil
 import os
+import pandas as pd
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 @bp.route('/', methods=['GET'])
 def d():
     return 'test'
+
+
+# http://localhost:5000/oauth/url
+@bp.route('/oauth/url')
+# @swag_from('../swagger_config/oauth_url.yml')
+def oauth_url():
+    """
+    Kakao OAuth URL 가져오기
+    """
+    kakao_oauth_url="https://kauth.kakao.com/oauth/authorize?client_id=%s&response_type=code&redirect_uri=%s&response_type=code" \
+    % (CLIENT_ID, REDIRECT_URI)
+    return redirect(kakao_oauth_url)
+
+@bp.route('/oauth', methods=["POST"])
+@swag_from('../swagger_config/oauth.yml')
+def oauth_token():
+    if not request.is_json:
+        return error_code.missing_json_error
+
+    else:
+        oauth = Oauth()
+
+        body=request.get_json()
+
+        code = body['code']
+        auth_info = oauth.auth(code)
+        user = oauth.userinfo("Bearer " + auth_info['access_token'])
+
+        email=str(user["id"])+'@onod.email'
+        profile=user["kakao_account"]
+        nickname = profile["profile"]["nickname"]
+        usercheck = models.User.query.filter_by(email=email).first()
+
+
+        if usercheck is None:
+            user = models.User(
+                email=email,
+                nickname=nickname,
+                sign_up_date=datetime.now()
+            )
+            models.db.session.add(user)
+            models.db.session.commit()
+            # 추천 디폴트 json 파일 생성----------------------------------------------------------------------------------------------
+            queried = models.User.query.filter_by(email=email).first()
+            file_game = f'fashion/user_recommendations/game_{queried.id}.json'
+            file_result = f'fashion/user_recommendations/result_{queried.id}.json'
+
+            try:
+                shutil.copy2("fashion/user_recommendations/default_game.json", file_game)
+                shutil.copy2("fashion/user_recommendations/default_result.json", file_result)
+            except:
+                admin=models.User.query.filter_by(id=queried.id).first()
+                models.db.session.delete(admin)
+                models.db.session.commit()
+                if os.path.isfile(file_game) or os.path.isfile(file_result):
+                    os.remove(file_game)
+                    os.remove(file_result)
+                return error_code.error_body('failed_copying','Failed copying default json file')
+            # ----------------------------------------------------------------------------------------------------------------------------------
+            
+        user = models.User.query.filter_by(email=email).first()
+        accessToken = create_access_token(identity=user.id, fresh=True)
+        return {
+                     'accessToken': accessToken,
+                     'nickname': user.nickname
+                  }, 200
+            
+
+# @bp.route("/oauth/userinfo", methods=['POST'])
+# @swag_from('../swagger_config/oauth_userinfo.yml')
+# def oauth_userinfo():
+#     """
+#     # OAuth Userinfo API
+#     kakao access token을 인자로 받은 후,
+#     kakao에서 해당 유저의 실제 Userinfo를 가져옴
+#     """
+#     access_token = request.get_json()['access_token']
+#     result = Oauth().userinfo("Bearer " + access_token)
+#     return jsonify(result)
 
 @bp.route('/sign-up', methods=['POST'])
 @swag_from('../swagger_config/register.yml', validation=True)
@@ -33,7 +115,6 @@ def register():
 
         email = body['email']
         pw = body['pw']
-        name = body['name']
         nickname = body['nickname']
         birth = body['birth']
 
@@ -41,7 +122,7 @@ def register():
         emailcheck = models.User.query.filter_by(email=email).first()
         nicknamecheck = models.User.query.filter_by(nickname=nickname).first()
 
-        if not(name and email and pw and nickname):
+        if not(email and pw and nickname):
             return error_code.error_body('missing_param','Missing parameter in request')
         elif emailcheck is not None:
             return error_code.error_body('alr_signed_email','This email has already been signed up')
@@ -56,7 +137,6 @@ def register():
             user = models.User(
                 nickname=nickname,
                 email=email,
-                name=name,
                 pw=hashpw,
                 birth=birth,
                 sign_up_date=datetime.now()
@@ -65,18 +145,23 @@ def register():
             models.db.session.commit()
             # 추천 디폴트 json 파일 생성----------------------------------------------------------------------------------------------
             queried = models.User.query.filter_by(email=email).first()
+            file_game = f'fashion/user_recommendations/game_{queried.id}.json'
+            file_result = f'fashion/user_recommendations/result_{queried.id}.json'
 
             try:
-                shutil.copy2("fashion/user_recommendations/default.json", f"fashion/user_recommendations/{queried.id}.json")
+                shutil.copy2("fashion/user_recommendations/default_game.json", file_game)
+                shutil.copy2("fashion/user_recommendations/default_result.json", file_result)
             except:
                 admin=models.User.query.filter_by(id=queried.id).first()
                 models.db.session.delete(admin)
                 models.db.session.commit()
+                if os.path.isfile(file_game) or os.path.isfile(file_result):
+                    os.remove(file_game)
+                    os.remove(file_result)
                 return error_code.error_body('failed_copying','Failed copying default json file')
             # ----------------------------------------------------------------------------------------------------------------------------------
 
             #바로 로그인 실행
-            # queried = models.User.query.filter_by(email=email).first() # 위로 이동함
 
             accessToken = create_access_token(identity=queried.id, fresh=True)
 
@@ -116,8 +201,6 @@ def login():
 
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             accessToken = create_access_token(identity=queried.id, fresh=True)
-
-
             return {
                      'accessToken': accessToken,
                      'nickname': queried.nickname
@@ -166,7 +249,6 @@ def modify():
         return {
                     'nickname' : userinfo.nickname,
                     'email' : userinfo.email,
-                    'name' : userinfo.name,
                     'birth' : userinfo.birth,
                     'signUpDate' : userinfo.sign_up_date
                 }, 200
@@ -181,7 +263,6 @@ def modify():
 
             email = body['email']
             pw = body['pw']
-            name = body['name']
             nickname = body['nickname']
 
             hashpw = bcrypt.hashpw(
@@ -199,11 +280,7 @@ def modify():
                 if admin.pw != pw:
                     admin.pw=hashpw
                     models.db.session.commit()
-
-                if admin.name != name:
-                    admin.name=name
-                    models.db.session.commit()
-
+    
                 if admin.nickname != nickname and nicknamecheck is None:
                     admin.nickname=nickname
                     models.db.session.commit()
@@ -223,10 +300,12 @@ def withdrawal():
     models.db.session.delete(admin)
     models.db.session.commit()
 
-    file = f'fashion/user_recommendations/{user_id}.json'
+    file = f'fashion/user_recommendations/game_{user_id}.json'
+    file2 = f'fashion/user_recommendations/result_{user_id}.json'
 
-    if os.path.isfile(file):
+    if os.path.isfile(file) or os.path.isfile(file2):
         os.remove(file)
+        os.remove(file2)
 
     return {'msg': 'Succeed deleting members account'}, 200
 

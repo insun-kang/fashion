@@ -16,69 +16,15 @@ from .. import error_code
 from .. import address_format
 import json
 import os
+import time
 
-import datetime
-import redis
-
-red = redis.StrictRedis()
+# 인공지능
+import pandas as pd
+from surprise import SVD, accuracy # SVD model, 평가
+from surprise import Reader, Dataset # SVD model의 dataset
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
-# -------------------------------------------------------------------------------------
-# def event_stream():
-#     pub = redis.pubsub()
-#     pub.subscribe('sse_example_channel')
-#     for msg in pub.listen():
-#         if msg['type'] != 'subscribe':
-#             event, data = json.loads(msg['data'])
-#             yield u'event: {0}\ndata: {1}\n\n'.format(event, data)
-#         else:
-#             yield u'data: {0}\n\n'.format(msg['data'])
-
-
-# @app.route('/stream')
-# def get_pushes():
-#     return Response(event_stream(), mimetype="text/event-stream")
-
-# @app.route('/post')
-# def publish_data():
-#     # ...
-#     redis.publish('sse_example_channel', json.dumps([event, data]))
-
-# # ===================================================================
-
-
-# @bp.route('/stream')
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def stream():
-#     user_id = get_jwt_identity()
-
-#     def event_stream():
-#         pubsub = red.pubsub()
-#         pubsub.subscribe(user_id) # 채널이름 => user_id
-#         # TODO: handle client disconnection.
-#         for message in pubsub.listen():
-#             print (message)
-#             if message['type']=='message':
-#                 yield 'data: %s\n\n' % message['data'].decode('utf-8')
-
-#     return flask.Response(event_stream(), mimetype="text/event-stream")
-
-# @bp.route('/post', methods=['POST'])
-# @jwt_required()
-# # @swag_from('../swagger_config/backcard.yml', validation=True)
-# def post():
-#     user_id = get_jwt_identity()
-
-#     message = 'json file 생성 완료'
-#     user = models.User.query.filter(id=user_id).first()
-#     now = datetime.datetime.now().replace(microsecond=0).time()
-#     red.publish(user_id, u'[%s] %s: %s' % (now.isoformat(), user, message))
-#     return flask.Response(status=200)
-
-
-# -------------------------------------------------------------------------------------
 
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
@@ -93,6 +39,7 @@ def backcard():
         limit_num = body['limitNum']
 
         bg_products = models.Product.query.order_by(func.rand()).limit(limit_num).all()
+
         products_list = []
 
         products_list = [
@@ -118,20 +65,20 @@ def maincard():
 
         user_id = get_jwt_identity()
         products_user_played = models.ProductUserPlayed.query.filter_by(user_id=user_id).all()
-        asins_user_played = [product_user_played.asin for product_user_played in products_user_played]
+        asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played]
         # user 게임 플레이 횟수
-        user_play_num = len(asins_user_played)
+        user_play_num = len(asin_ids_user_played)
 
         # print('-'*50) print(os.getcwd()) print('-'*50) # /home/project/back
 
-        with open(f'fashion/user_recommendations/{user_id}.json', 'r') as f:
+        with open(f'fashion/user_recommendations/game_{user_id}.json', 'r') as f:
             json_data = json.load(f)
 
         products_list = []
 
         products_list_num = 0
         for product in json_data['products']:
-            if product['asin'] not in asins_user_played:
+            if product['asin'] not in asin_ids_user_played and product['keywords']:
                 products_list.append(product)
                 products_list_num += 1
             if products_list_num == 10:
@@ -155,21 +102,28 @@ def maincard():
             body=request.get_json()
 
             user_id = get_jwt_identity()
-            print(user_id)
-            product_asin = body['asin']
+
+            product_asin_id = body['asin']
             love_or_hate = body['loveOrHate']
 
             product_user_played = models.ProductUserPlayed(
                 user_id = user_id,
-                asin = product_asin,
+                asin_id = product_asin_id,
                 love_or_hate=love_or_hate,
             )
             models.db.session.add(product_user_played)
             models.db.session.commit()
 
+            user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
+
+            if not user_play_num % 15: # user가 15회 플레이할 때마다
+                ai_model(user_id)
+
+
             result = {
+                'userPlayNum': user_play_num,
                 'userId': user_id,
-                'productAsin': product_asin,
+                'asin': product_asin_id,
                 'loveOrHate': love_or_hate
             }
             return {
@@ -181,49 +135,139 @@ def maincard():
 @jwt_required()
 @swag_from('../swagger_config/result_cards.yml')
 def result_cards():
-
-    ai_result = ['0764443682','1291691480','1940280001','1940735033','1940967805',
-                    '1942705034','3293015344','5378828716','6041002984','630456984X','7106116521',
-                    '8037200124','8037200221','8279996567','9239282785','9239281533','9269808971',
-                    '9654263246','B00004T3SN','B00005OTJ8']
-
-    user_id = get_jwt_identity()
-    products_user_played = models.ProductUserPlayed.query.filter_by(user_id=user_id).all()
-    asins_user_played = [product_user_played.asin for product_user_played in products_user_played]
-    user_play_num = len(asins_user_played) # user 게임 플레이 횟수
-
-    # 추천 결과 페이지에서 사용자가 게임을 5번 미만 했다면 결과를 주지 말고 에러 반환해주세요!
-    if user_play_num < 5:
-        return error_code.error_body('play_too_little','This user played game less than 5 times')
+    if not request.is_json:
+        return error_code.missing_json_error
     else:
-        products_list = []
+        body=request.get_json()
 
-        for asin in ai_result:
-            bookmark = models.Bookmark.query.filter_by(asin=asin, user_id=user_id).first()
-            keywords = [product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin=asin).all()]
-            product = models.Product.query.filter_by(asin=asin).first()
-            product_review = models.ProductReview.query.filter_by(asin=asin).first()
+        page_num=body['pageNum']
+        data_size=body['dataSize']
+
+        user_id = get_jwt_identity()
+        products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
+        asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate]
+
+        user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
+
+        # 추천 결과 페이지에서 사용자가 게임을 5번 미만 했다면 결과를 주지 말고 에러 반환해주세요!
+        if user_play_num < 5:
+            return error_code.error_body('play_too_little','This user played game less than 5 times')
+        else:
+            with open(f'fashion/user_recommendations/result_{user_id}.json', 'r') as f:
+                json_data = json.load(f)
+
+            products_list = []
+
+            products_list_num = 0
+            for product in json_data['products'][page_num*data_size:]:
+                if product['asin'] not in asin_ids_user_played and product['keywords']:
+                    bookmark = models.Bookmark.query.filter_by(asin_id=product['asin'], user_id=user_id).first()
+                    product['bookmark'] = True if bookmark else False
+                    products_list.append(product)
+                    products_list_num += 1
+                if products_list_num == data_size:
+                    break
+            # 싫어요 횟수/전체 플레이 횟수 => 정확도가 낮아요 추가
+            return {
+                    'accuracy': round(len(asin_ids_user_played)/user_play_num, 2),
+                    'productsNum': len(products_list),
+                    'products': products_list
+                    }, 200
+
+def ai_model(user_id):
+    # 리뷰파일 불러오기
+    start = time.time()
+    review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
+    products_user_played = models.ProductUserPlayed.query.all()
+
+    # 새로운 사용자 기록 추가하기
+    for product in products_user_played:
+        review_df=review_df.append({'user_id' : str(product.user_id) , 'asin' : product.asin_id, 'overall' : float(product.love_or_hate)}, ignore_index=True)
+
+    # 데이터 가공
+    data = Dataset.load_from_df(df=review_df, reader=Reader(rating_scale= (1, 5)))
+
+    # 데이터 분할
+    train = data.build_full_trainset()
+    test = train.build_testset()
+
+    # 훈련
+    model = SVD(n_factors=100, n_epochs=20, random_state=10)
+    model.fit(train)
+
+    # 추천 정보를 받아 올 대상
+    # 중복되지 않은 어신 리스트
+    item_ids = list(set(review_df['asin'])) # 추천 대상 제품들
+
+    # 추천결과에서 어신과 예상 별점만 추출
+    asin_id_list = []
+    for item_id in item_ids :
+        result = model.predict(user_id, item_id, 0)
+        if result[3] >= 3.65:
+            asin_id_list.append(result[1])
+
+    asin_id_list = asin_id_list[:1000]
+
+    products_list = {}
+    products_list['products'] = []
+
+    for asin_id in asin_id_list:
+        try:
+            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+            product= models.Product.query.filter_by(id=asin_id).first()
+            image = address_format.img(product.asin)
+            title = product.title
+        except:
+            continue
+        products_list['products'].append({
+            'keywords': keywords if len(keywords) <=6 else keywords[:6],
+            'image': image,
+            'title': title,
+            'asin': asin_id
+        })
+
+    file_path = f'fashion/user_recommendations/game_{user_id}.json'
+
+    with open(file_path, 'w') as outfile:
+        json.dump(products_list, outfile)
+    print('game update succeed')
+
+    products_result_list = {}
+    products_result_list['products'] = []
+
+    for asin_id in asin_id_list:
+        try:
+            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+            product = models.Product.query.filter_by(id=asin_id).first()
+            product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
             pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
-            products_list.append({
-                'keywords': keywords if len(keywords) <= 6 else keywords[:6],
-                'asin': asin,
-                'price': product.price,
-                'bookmark' : True if bookmark else False, # 존재하면 True 아니면 False
-                'nlpResults': {
-                                'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                                'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
-                            },
-                'starRating': round(product.rating, 2),
-                'posReveiwRate': round(pos_review_rate, 2),
-                'image': address_format.img(asin),
-                'productUrl': address_format.product(asin),
-                'title': product.title
-            })
-        return {
-                'productsNum': len(products_list),
-                'products': products_list
-                }, 200
+            title = product.title
+            product_url = address_format.product(product.asin)
+            image = address_format.img(product.asin)
+            price = product.price
+        except:
+            continue
+        # literal_eval(str(keywords))
+        products_result_list['products'].append({
+            'keywords': keywords if len(keywords) <=6 else keywords[:6],
+            'asin': asin_id,
+            'price': price,
+            'nlpResults': {
+                            'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                            'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                        },
+            'starRating': round(product.rating, 2),
+            'posReveiwRate': round(pos_review_rate, 2),
+            'image': image,
+            'productUrl': product_url,
+            'title': title
+        })
 
-# 코드 위에 다 삽입해서 한번에 돌리기
-# json으로 이 위에 다 만들고
-# get 요청 오면 json import해서 보내주기
+    file_path_result = f'fashion/user_recommendations/result_{user_id}.json'
+
+    with open(file_path_result, 'w') as file:
+        json.dump(products_result_list, file)
+
+    print('time:', time.time() - start)
