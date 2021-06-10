@@ -5,6 +5,7 @@ import {
   AccordionSummary,
   Card,
   CardActionArea,
+  CardContent,
   CardMedia,
   IconButton,
 } from '@material-ui/core';
@@ -19,7 +20,10 @@ import animationData from '../lotties/58790-favourite-animation.json';
 import Lottie from 'react-lottie';
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: '350px',
+    borderRadius: '20px',
+    boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.27)',
+    margin: '20px',
   },
   media: {
     height: 0,
@@ -54,78 +58,99 @@ const ProductCard = memo(
       >
         {!isSelected ? (
           <>
-            <div className="card-img">
-              <CardMedia
-                className={classes.media}
-                image={productData.image}
-                title={productData.title}
-              />
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log(productData.asin);
-                  if (!isBookMarked) {
-                    setIsClicked(true);
-                  }
-                  setIsBookMarked(!isBookMarked);
-                  handleBookMark({ asin: productData.asin });
-                }}
+            <div>
+              <div
                 style={{
-                  background: 'inherit',
-                  border: 'none',
-                  boxShadow: 'none',
+                  position: 'relative',
+                  justifyContent: 'center',
+                  display: 'flex',
                 }}
               >
-                {isClicked && isBookMarked ? (
-                  <Lottie
-                    options={defaultOptions}
-                    isClickToPauseDisabled
-                    width={'80px'}
-                    height={'80px'}
-                    speed={3}
-                    eventListeners={[
-                      {
-                        eventName: 'complete',
-                        callback: () => {
-                          setIsClicked(!isClicked);
-                        },
-                      },
-                    ]}
-                  />
-                ) : (
-                  <FavoriteIcon
-                    style={
-                      isBookMarked
-                        ? {
-                            width: 50,
-                            height: 50,
-                            color: 'red',
-                            fontSize: 40,
-                            padding: 10,
-                            margin: 10,
-                          }
-                        : {
-                            width: 50,
-                            height: 50,
-                            color: 'grey',
-                            fontSize: 40,
-                            padding: 10,
-                            margin: 10,
-                          }
-                    }
-                  />
-                )}
-              </button>
-              <div>긍정 수치 {productData.posReveiwRate}</div>
+                <img
+                  src={productData.image}
+                  alt={productData.title}
+                  heigth="auto"
+                  width="80%"
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '78%',
+                  }}
+                >
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log(productData.asin);
+                      if (!isBookMarked) {
+                        setIsClicked(true);
+                      }
+                      setIsBookMarked(!isBookMarked);
+                      handleBookMark({ asin: productData.asin });
+                    }}
+                    style={{
+                      background: 'inherit',
+                      border: 'none',
+                      boxShadow: 'none',
+                    }}
+                  >
+                    {isClicked && isBookMarked ? (
+                      <Lottie
+                        options={defaultOptions}
+                        isClickToPauseDisabled
+                        width={'80px'}
+                        height={'80px'}
+                        speed={3}
+                        eventListeners={[
+                          {
+                            eventName: 'complete',
+                            callback: () => {
+                              setIsClicked(!isClicked);
+                            },
+                          },
+                        ]}
+                      />
+                    ) : (
+                      <FavoriteIcon
+                        style={
+                          isBookMarked
+                            ? {
+                                width: 50,
+                                height: 50,
+                                color: 'red',
+                                fontSize: 40,
+                                padding: 10,
+                                margin: 10,
+                              }
+                            : {
+                                width: 50,
+                                height: 50,
+                                color: 'grey',
+                                fontSize: 40,
+                                padding: 10,
+                                margin: 10,
+                              }
+                        }
+                      />
+                    )}
+                  </button>
+                </div>
+                <div style={{ position: 'absolute', top: '90%' }}>
+                  긍정 수치 {productData.posReveiwRate}
+                </div>
+              </div>
+            </div>
+            <CardContent>
               {productData.keywords.map((keyword, idx) => (
                 <div key={idx}>{keyword}</div>
               ))}
-            </div>
-            <div className="card-text-upper">
-              <div>{productData.starRating}</div>
-              <div>${productData.price}</div>
-              <div>{productData.title}</div>
-            </div>
+
+              <div className="card-text-upper">
+                <div>{productData.starRating}</div>
+                <div>${productData.price}</div>
+                <div>{productData.title}</div>
+              </div>
+            </CardContent>
             <div className="card-text-lower">
               <Accordion>
                 <AccordionSummary

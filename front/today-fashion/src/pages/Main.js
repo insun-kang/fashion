@@ -10,8 +10,11 @@ import ProductCard from '../components/ProductCard';
 import InfiniteProductsMobile from '../components/InfiniteProductsMobile';
 import InfiniteProductsTablet from '../components/InfiniteProductsTablet';
 import InfiniteProductsPC from '../components/InfiniteProductsPC';
+import { useMediaQuery } from '@material-ui/core';
 
 const Main = (props) => {
+  const isTablet = useMediaQuery('(min-width: 700px)');
+  const isPC = useMediaQuery('(min-width: 1280px)');
   const [searchKeywords, setSearchKeywords] = useState([]);
   const [screenSize, getScreenSize] = useState();
 
@@ -55,12 +58,13 @@ const Main = (props) => {
         name="tags"
         placeholder="Search Item by Keyword"
       />
-      {/* {window.innerWidth > 1279 ? (
+      {isPC ? (
         <InfiniteProductsPC {...props} searchKeywords={searchKeywords} />
-      ) : window.innerWidth > 599 ? (
+      ) : isTablet ? (
         <InfiniteProductsTablet {...props} searchKeywords={searchKeywords} />
-      ) : ( */}
-      <InfiniteProductsMobile {...props} searchKeywords={searchKeywords} />
+      ) : (
+        <InfiniteProductsMobile {...props} searchKeywords={searchKeywords} />
+      )}
     </>
   );
 };
