@@ -81,7 +81,8 @@ def result_search():
         body=request.get_json()
 
 
-        data_sizes=body['requestHistory']  #array
+        request_history=body['requestHistory']  #array
+        data_size=body['dataSize']
  
         existing_keywords=body['existingKeywords']  #array
 
@@ -94,8 +95,8 @@ def result_search():
 
         cards=[]
 
-        offset_num = sum(data_sizes)-data_sizes[-1]
-        limit_num = data_sizes[-1]
+        offset_num = sum(request_history)
+        limit_num = data_size
         
         
         #limit, offset
