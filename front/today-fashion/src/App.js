@@ -1,6 +1,12 @@
 import './App.css';
 import React, { useEffect, useCallback } from 'react';
-import { Route, Switch, useLocation, useHistory } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useLocation,
+  useHistory,
+  Redirect,
+} from 'react-router-dom';
 import Home from './pages/Home';
 import Main from './pages/Main';
 import AuthRoute from './AuthRoute';
@@ -51,40 +57,43 @@ function App() {
   //페이지가 변할때마다 로그인 여부 확인
 
   return (
-    <Switch>
-      <Route path="/" exact render={(props) => <Home {...props} />} />
-      {/* login 되어있다면 main("/main"), 되어있지 않다면 home("/")으로 처리 */}
-      <AuthRoute
-        path={['/main/:asin', '/main']}
-        render={(props) => <Main {...props} />}
-      />
-      <AuthRoute
-        path="/mypage"
-        exact
-        render={(props) => <MyPageIntro {...props} />}
-      />
-      <AuthRoute
-        path="/mypage/userinfo"
-        render={(props) => <UserInfo {...props} />}
-      />
-      <AuthRoute
-        path="/mypage/withdraw"
-        render={(props) => <WithDraw {...props} />}
-      />
-      <AuthRoute path="/game" render={(props) => <Game {...props} />} />
-      <Route
-        path="/wardrobe"
-        exact
-        render={(props) => <Wardrobe {...props} />}
-      />
-      <Route
-        path="/wardrobe/:items"
-        render={(props) => <SharedWardrobe {...props} />}
-      />
-      <Route path="/components" component={ComponentsChart} />
-      <Route path="/404" component={Page404} />
-      <Route path="/500" component={Page500} />
-    </Switch>
+    <div className="App">
+      <Switch>
+        <Route path="/" exact render={(props) => <Home {...props} />} />
+
+        <AuthRoute
+          path={['/main/:asin', '/main']}
+          render={(props) => <Main {...props} />}
+        />
+        <AuthRoute
+          path="/mypage"
+          exact
+          render={(props) => <MyPageIntro {...props} />}
+        />
+        <AuthRoute
+          path="/mypage/userinfo"
+          render={(props) => <UserInfo {...props} />}
+        />
+        <AuthRoute
+          path="/mypage/withdraw"
+          render={(props) => <WithDraw {...props} />}
+        />
+        <AuthRoute path="/game" render={(props) => <Game {...props} />} />
+        <AuthRoute
+          path="/wardrobe"
+          exact
+          render={(props) => <Wardrobe {...props} />}
+        />
+        <Route
+          path="/wardrobe/:items"
+          render={(props) => <SharedWardrobe {...props} />}
+        />
+        <Route path="/components" component={ComponentsChart} />
+        <Route path="/404" component={Page404} />
+        <Redirect to="/404" />
+        {/* Generic Not Found에 404 페이지 넣고 위 주석 해제 */}
+      </Switch>
+    </div>
   );
 }
 
