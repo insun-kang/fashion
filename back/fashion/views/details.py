@@ -66,7 +66,7 @@ def details():
         review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
 
-        datas['keywords']=keywords
+        datas['keywords']=(keywords if len(keywords) <=6 else keywords[:6])
         datas['asin']=asin_id
         datas['price']=product.price
         if not review:
