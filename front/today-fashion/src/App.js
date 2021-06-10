@@ -88,9 +88,7 @@ function App() {
           render={(props) => <SharedWardrobe {...props} />}
         />
         <Route path="/components" component={ComponentsChart} />
-        <Route path="/404" component={GenericNotFound} />
-        <Redirect to="/404" />
-        {/* Generic Not Found에 404 페이지 넣고 위 주석 해제 */}
+        <Route component={GenericNotFound} />
       </Switch>
     </div>
   );
