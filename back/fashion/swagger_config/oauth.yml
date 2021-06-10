@@ -1,0 +1,56 @@
+summary: "kakao oauth"
+description: "kakao oauth api"
+tags:
+  - oauth
+produces:
+  - "application/json"
+requestBody:
+        description: 유저에 관한 정보
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/User'
+            examples:
+              case1:
+                summary: 강인선
+                value:
+                  code: "3vXp4-sclWPa1oMAnZXRgM2GmRhBELP7dYRr87tgVMRLR0oJI3hYHpevAOg1rZ0vE4qWqQo9c-sAAAF58Uo_AA"
+
+responses:
+  200:
+    description: 회원가입 성공
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "access_token": "x6fPGGCaHyh9YUqgQg6QRUPJRvZ4L17aQ4DziQo9cxcAAAF58fX4Wg",
+              "expires_in": 21599,
+              "refresh_token": "vGQEfS6YCH1gaGRexOB8Cum-EFpkg9iiWsPoPAo9cxcAAAF58fX4WQ",
+              "refresh_token_expires_in": 5183999,
+              "scope": "profile",
+              "token_type": "bearer"
+            }
+
+definitions:
+  User:
+    type: object
+    required:
+      - email
+      - pw
+      - name
+      - nickname
+      - birth
+    properties:
+      email:
+        type: string
+      pw:
+        type: string
+      name:
+        type: string
+      nickname:
+        type: string
+      birth:
+        type: string
