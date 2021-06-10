@@ -102,7 +102,6 @@ const Game = () => {
 
   return (
     <div className="game-container">
-      <div>게임화면</div>
       {isPending && (
         <div
           style={{
@@ -110,16 +109,8 @@ const Game = () => {
             left: '50%',
             top: '30%',
           }}
-        >
-          <Lottie
-            options={defaultOptions}
-            width={'100px'}
-            height={'100px'}
-            isClickToPauseDisabled
-          />
-        </div>
+        ></div>
       )}
-      <div>{isPending ? null : totalPlayNum}</div>
       {totalPlayNum > 5 && (
         <Link to="/main">
           <input type="button" value="see result" />

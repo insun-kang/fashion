@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { styled } from '@material-ui/core/styles';
+import React from 'react';
 import { Grid, Card } from '@material-ui/core';
 import { PCChip, PCButton } from '../ui-components/@material-extend';
-import { Block } from '../ui-components/Block';
 import '../theme/BlurCard.css';
 
 const colorList = {

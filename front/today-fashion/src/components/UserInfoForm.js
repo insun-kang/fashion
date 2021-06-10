@@ -74,21 +74,33 @@ const UserInfoForm = (props) => {
               <Field name="email">
                 {({ field, form }) => (
                   <div>
-                    <TextField
-                      {...field}
-                      id="email"
-                      type="text"
-                      placeholder="Please Enter Your E-Mail Address"
-                      label="Email"
-                      variant="outlined"
-                      fullWidth
-                      error={form.errors.email && form.touched.email}
-                      helperText={
-                        form.errors.email && form.touched.email
-                          ? form.errors.email
-                          : null
-                      }
-                    />
+                    {isSignUp ? (
+                      <TextField
+                        {...field}
+                        id="email"
+                        type="text"
+                        placeholder="Please Enter Your E-Mail Address"
+                        label="Email"
+                        variant="outlined"
+                        fullWidth
+                        error={form.errors.email && form.touched.email}
+                        helperText={
+                          form.errors.email && form.touched.email
+                            ? form.errors.email
+                            : null
+                        }
+                      />
+                    ) : (
+                      <TextField
+                        {...field}
+                        label="Email"
+                        variant="outlined"
+                        fullWidth
+                        disabled
+                        value={initialValues.email}
+                        helperText="You can't change your email"
+                      />
+                    )}
                   </div>
                 )}
               </Field>

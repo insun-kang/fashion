@@ -6,6 +6,7 @@ import { PCButton, PCChip } from '../ui-components/@material-extend';
 import { Block } from '../ui-components/Block';
 import Page from '../ui-components/Page';
 import { StaticDatePicker } from '@material-ui/lab';
+import { ChartColumn } from '../ui-components/chart';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(8),
@@ -24,11 +25,12 @@ const onDelete = () => {};
 
 export default function Test() {
   const [value, setValue] = useState(new Date());
-
   return (
     <Grid container item xs={12} spacing={3}>
       <Grid item xs={12}>
-        <Block title="PC Default Button" sx={styleBlock}>
+        <ChartColumn data={1} />
+
+        {/* <Block title="PC Default Button" sx={styleBlock}>
           <PCButton variant="contained" color="primary">
             Primary
           </PCButton>
@@ -185,7 +187,7 @@ export default function Test() {
             }}
             renderInput={(params) => <TextField {...params} />}
           />
-        </Block>
+        </Block> */}
       </Grid>
       {/* <Grid>
         <Block title="PC Pop Up Button">
