@@ -14,7 +14,9 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import { handleBookMark } from './productCardFunctions';
 import ProductCardDetail from './ProductCardDetail';
-
+// import lottie from 'lottie-web';
+import animationData from '../lotties/58790-favourite-animation.json';
+import Lottie from 'react-lottie';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -30,6 +32,25 @@ const ProductCard = memo(
     const { productData, isSelected } = props;
     const classes = useStyles();
     const [isBookMarked, setIsBookMarked] = useState(productData.bookmark);
+    const [isClicked, setIsClicked] = useState(false);
+    // const bookmarkLottie = lottie.loadAnimation({
+    //   container: document.querySelector('.bookmark'),
+    //   renderer: 'svg',
+    //   loop: false,
+    //   autoplay: false,
+    //   animationData: animationData,
+    // });
+    // https://codesandbox.io/s/b7pg4?file=/src/components/UncontrolledLottie.jsx
+    //https://github.com/chenqingspring/react-lottie/issues/81
+    const defaultOptions = {
+      loop: false,
+      autoplay: true,
+      animationData: animationData,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+      },
+    };
+    console.log('isBookmarked', isBookMarked, 'isClicked', isClicked);
     return (
       <Card
         className={classes.root}
@@ -46,17 +67,49 @@ const ProductCard = memo(
                 image={productData.image}
                 title={productData.title}
               />
-              <IconButton
-                color={isBookMarked ? 'secondary' : 'grey'}
-                aria-label="add to favorites"
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  console.log('click lottie');
+                  if (!isBookMarked) {
+                    setIsClicked(true);
+                  }
                   setIsBookMarked(!isBookMarked);
                   handleBookMark({ asin: productData.asin });
                 }}
+                style={
+                  isClicked
+                    ? {
+                        background: 'inherit',
+                        border: 'none',
+                        boxShadow: 'none',
+                      }
+                    : isBookMarked
+                    ? { width: 50, height: 50, backgroundColor: 'red' }
+                    : { width: 50, height: 50, backgroundColor: 'grey' }
+                }
               >
-                <FavoriteIcon />
-              </IconButton>
+                {isClicked && isBookMarked && (
+                  <Lottie
+                    options={defaultOptions}
+                    isClickToPauseDisabled
+                    width={'50px'}
+                    height={'50px'}
+                    speed={2}
+                    eventListeners={[
+                      {
+                        eventName: 'complete',
+                        callback: () => {
+                          setIsClicked(!isClicked);
+                        },
+                      },
+                    ]}
+                    //event끝나면 isClicked = false
+                    // color={isBookMarked ? 'secondary' : 'grey'}
+                    // aria-label="add to favorites"
+                  />
+                )}
+              </button>
               <div>긍정 수치 {productData.posReveiwRate}</div>
               {productData.keywords.map((keyword, idx) => (
                 <div key={idx}>{keyword}</div>

@@ -65,12 +65,19 @@ const Wardrobe = () => {
   const addCard = useCallback(
     (item, atIndex) => {
       const found = coordinateItems.some((each) => each.asin === item.asin);
+      const isLimit = coordinateItems.length === 6 ? true : false;
       if (!found) {
-        setCoordinateItems(
-          update(coordinateItems, {
-            $splice: [[atIndex, 0, item]],
-          })
-        );
+        if (!isLimit) {
+          setCoordinateItems(
+            update(coordinateItems, {
+              $splice: [[atIndex, 0, item]],
+            })
+          );
+        } else {
+          setCoordinateItems(
+            update(coordinateItems, { [atIndex]: { $set: item } })
+          );
+        }
       } else {
         const { card, index } = findCard(item.asin);
         setCoordinateItems(
@@ -157,12 +164,18 @@ const Wardrobe = () => {
       accept: ItemTypes.CARD,
       drop: (item, monitor) => {
         const isOver = monitor.isOver({ shallow: true });
-        if (!coordinateItems.includes(item) && isOver) {
-          setCoordinateItems(
-            update(coordinateItems, {
-              $push: [item],
-            })
-          );
+        const found = coordinateItems.some((each) => each.asin === item.asin);
+        const isLimit = coordinateItems.length === 6 ? true : false;
+        if (!found && isOver) {
+          if (isLimit) {
+            setCoordinateItems(update(coordinateItems, { 5: { $set: item } }));
+          } else {
+            setCoordinateItems(
+              update(coordinateItems, {
+                $push: [item],
+              })
+            );
+          }
         }
       },
       collect: (monitor) => ({
