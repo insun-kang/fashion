@@ -116,8 +116,8 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            # if not user_play_num % 15: # user가 15회 플레이할 때마다
-            ai_model(user_id)
+            if not user_play_num % 15: # user가 15회 플레이할 때마다
+                ai_model(user_id)
 
 
             result = {
