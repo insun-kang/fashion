@@ -18,6 +18,7 @@ const GameCard = (props) => {
         value="yes"
         onClick={() => {
           handleAnswerClick(questionData.asin, 5);
+          console.log(questionData.asin);
         }}
       />
       <input
@@ -25,6 +26,7 @@ const GameCard = (props) => {
         value="no"
         onClick={() => {
           handleAnswerClick(questionData.asin, 1);
+          console.log(questionData.asin);
         }}
       />
     </div>

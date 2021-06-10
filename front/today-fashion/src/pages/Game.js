@@ -9,6 +9,17 @@ import {
   gameCount,
   gameQuestionsData,
 } from '../states/state';
+import animationData from '../lotties/58790-favourite-animation.json';
+import Lottie from 'react-lottie';
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
 
 const Game = () => {
   //TODO: 첫 게임일 경우 게임 3번 이상부터 결과보기 버튼 생성
@@ -87,12 +98,25 @@ const Game = () => {
     }
   }, [initPlayNum, questionIdx]);
 
-  console.log(totalPlayNum);
-
   return (
     <div className="game-container">
       <div>게임화면</div>
-      <div>{isPending && '로딩중'}</div>
+      {isPending && (
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '30%',
+          }}
+        >
+          <Lottie
+            options={defaultOptions}
+            width={'100px'}
+            height={'100px'}
+            isClickToPauseDisabled
+          />
+        </div>
+      )}
       <div>{isPending ? null : totalPlayNum}</div>
       {totalPlayNum > 5 && (
         <Link to="/main">

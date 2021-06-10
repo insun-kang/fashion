@@ -88,7 +88,7 @@ const ProductCard = memo(
                     isClickToPauseDisabled
                     width={'50px'}
                     height={'50px'}
-                    speed={2}
+                    speed={3}
                     eventListeners={[
                       {
                         eventName: 'complete',
