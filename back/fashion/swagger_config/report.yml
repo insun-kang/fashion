@@ -25,17 +25,8 @@ responses:
         schema:
           type: object
           example:
-            {'msg' : 'Make report'}
-  400:
-    description: alr_reported
-    content:
-      application/json:
-        schema:
-          type: object
-          example:
             {
-              "errorCode": "alr_reported",
-              "msg": "This product has already been reported"
+              "reportCount": 1
             }
 definitions:
   report:
