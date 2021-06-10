@@ -1,6 +1,12 @@
 import './App.css';
 import React, { useEffect, useCallback } from 'react';
-import { Route, Switch, useLocation, useHistory } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useLocation,
+  useHistory,
+  Redirect,
+} from 'react-router-dom';
 import Home from './pages/Home';
 import Main from './pages/Main';
 import AuthRoute from './AuthRoute';
@@ -14,6 +20,7 @@ import MyPageIntro from './pages/MyPageIntro';
 import ComponentsChart from './pages/ComponentsChart';
 import Wardrobe from './pages/Wardrobe';
 import SharedWardrobe from './pages/SharedWardrobe';
+import GenericNotFound from './pages/GenericNotFound';
 
 function App() {
   const location = useLocation();
@@ -52,7 +59,7 @@ function App() {
     <div className="App">
       <Switch>
         <Route path="/" exact render={(props) => <Home {...props} />} />
-        {/* login 되어있다면 main("/main"), 되어있지 않다면 home("/")으로 처리 */}
+
         <AuthRoute
           path={['/main/:asin', '/main']}
           render={(props) => <Main {...props} />}
@@ -71,7 +78,7 @@ function App() {
           render={(props) => <WithDraw {...props} />}
         />
         <AuthRoute path="/game" render={(props) => <Game {...props} />} />
-        <Route
+        <AuthRoute
           path="/wardrobe"
           exact
           render={(props) => <Wardrobe {...props} />}
@@ -81,6 +88,9 @@ function App() {
           render={(props) => <SharedWardrobe {...props} />}
         />
         <Route path="/components" component={ComponentsChart} />
+        <Route path="/404" component={GenericNotFound} />
+        <Redirect to="/404" />
+        {/* Generic Not Found에 404 페이지 넣고 위 주석 해제 */}
       </Switch>
     </div>
   );

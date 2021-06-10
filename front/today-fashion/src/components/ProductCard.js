@@ -43,7 +43,7 @@ const ProductCard = memo(
         preserveAspectRatio: 'xMidYMid slice',
       },
     };
-    console.log('isBookmarked', isBookMarked, 'isClicked', isClicked);
+
     return (
       <Card
         className={classes.root}
