@@ -80,8 +80,10 @@ def result_search():
     else:
         body=request.get_json()
 
-        page_num=body['pageNum']
+
+        request_history=body['requestHistory']  #array
         data_size=body['dataSize']
+ 
         existing_keywords=body['existingKeywords']  #array
 
         header = request.headers.get('Authorization')
@@ -93,17 +95,18 @@ def result_search():
 
         cards=[]
 
+        offset_num = sum(request_history)
+        limit_num = data_size
+        
+        
         #limit, offset
         asin_ids = models.db.session.query(models.ProductKeyword.asin_id, models.func.count(models.ProductKeyword.product_keyword))\
         .filter(models.ProductKeyword.product_keyword.in_(existing_keywords))\
         .group_by("asin_id")\
         .having(models.func.count(models.ProductKeyword.product_keyword)<=size)\
-        .offset(page_num*data_size)\
-        .limit(data_size)\
+        .offset(offset_num)\
+        .limit(limit_num)\
         .all()
-
-
-
 
         for i in asin_ids:
 

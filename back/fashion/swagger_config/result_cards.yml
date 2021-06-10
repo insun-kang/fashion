@@ -5,7 +5,7 @@ tags:
 produces:
   - "application/json"
 requestBody:
-        description: "페이지 넘버와 데이터 사이즈(pageNum & dataSize)"
+        description: "그동안 온 요청 기록과 이번에 오는 데이터 사이즈(requestHistory & dataSize)"
         required: true
         content:
           application/json:
@@ -13,15 +13,15 @@ requestBody:
               $ref: '#/definitions/resultCard'
             examples:
               case1:
-                summary: 0페이지
+                summary: 4페이지
                 value:
-                  pageNum: 0
-                  dataSize: 10
+                  requestHistory: [0, 48, 24, 36]
+                  dataSize: 24
               case2:
                 summary: 1페이지
                 value:
-                  pageNum: 1
-                  dataSize: 10
+                  requestHistory: [0]
+                  dataSize: 36
 responses:
   200:
     description: ok
@@ -416,10 +416,10 @@ definitions:
   resultCard:
     type: object
     required:
-      - pageNum
+      - requestHistory
       - dataSize
     properties:
-      pageNum:
-        type: integer
+      requestHistory:
+        type: array
       dataSize:
         type: integer

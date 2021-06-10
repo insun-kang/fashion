@@ -81,14 +81,14 @@ def oauth_token():
                     os.remove(file_result)
                 return error_code.error_body('failed_copying','Failed copying default json file')
             # ----------------------------------------------------------------------------------------------------------------------------------
-            
+
         user = models.User.query.filter_by(email=email).first()
         accessToken = create_access_token(identity=user.id, fresh=True)
         return {
                      'accessToken': accessToken,
                      'nickname': user.nickname
                   }, 200
-            
+
 
 # @bp.route("/oauth/userinfo", methods=['POST'])
 # @swag_from('../swagger_config/oauth_userinfo.yml')
@@ -197,6 +197,37 @@ def login():
         if not pw:
             return error_code.error_body('missing_pw','Missing password in request')
 
+        # products = models.Product.query.order_by(models.Product.rating.desc()).limit(1000).all()
+        # asin_ids = [product.id for product in products]
+
+        # print(f'asins 리스트 만들어짐 : {asin_ids[:5]}')
+
+        # products_list = {}
+        # products_list['products'] = []
+
+
+        # a = 0
+        # for asin_id in asin_ids:
+        #     keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+        #     product = models.Product.query.filter_by(id=asin_id).first()
+        #     products_list['products'].append({
+        #         'keywords': keywords if len(keywords) <= 6 else keywords[:6],
+        #         'image': address_format.img(product.asin),
+        #         'title': product.title,
+        #         'asin': asin_id
+        #     })
+        #     a += 1
+        #     print(f'{a}번째 데이터 생성')
+
+        # print(f'product_list 파일 만들어짐')
+
+        # file_path = "fashion/user_recommendations/default_game.json"
+
+        # with open(file_path, 'w') as outfile:
+        #     json.dump(products_list, outfile)
+        # print('파일 생성 끝')
+
+
         if bcrypt.checkpw(pw.encode('utf-8'), queried.pw.encode('utf-8')):
             accessToken = create_access_token(identity=queried.id, fresh=True)
             return {
@@ -278,7 +309,7 @@ def modify():
                 if admin.pw != pw:
                     admin.pw=hashpw
                     models.db.session.commit()
-    
+
                 if admin.nickname != nickname and nicknamecheck is None:
                     admin.nickname=nickname
                     models.db.session.commit()
