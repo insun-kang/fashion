@@ -1,24 +1,22 @@
 import { motion } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Typography, Container } from '@material-ui/core';
+import { Box, Button, Typography, Container } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
-import { MotionContainer, varBounceIn } from '../components/animate';
+import { MotionContainer, varBounceIn } from '../animate';
 
 export default function Page404() {
   return (
-    <RootStyle
+    <div
       title="500 Internal Server Error"
       style={{
         display: 'flex',
         minHeight: '100%',
         alignItems: 'center',
-        paddingTop: theme.spacing(15),
-        paddingBottom: theme.spacing(10),
       }}
     >
       <Container>
         <MotionContainer initial="initial" open>
-          <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
+          <Box sx={{ maxWidth: 640, margin: 'auto', textAlign: 'center' }}>
             <motion.div variants={varBounceIn}>
               <Typography variant="h3" paragraph>
                 Sorry, 500 Internal Server Error
@@ -28,21 +26,30 @@ export default function Page404() {
               Sorry, There was an error, please try again later.
             </Typography>
 
-            <motion.div variants={varBounceIn}>
-              <img src="./image/page500.png" height="260px" />
-            </motion.div>
-
-            <PCButton
-              to="/"
-              size="large"
-              variant="contained"
-              component={RouterLink}
+            <motion.div
+              variants={varBounceIn}
+              style={{
+                marginTop: '50px',
+                marginBottom: '50px',
+                justifyContent: 'center',
+                display: 'flex',
+              }}
             >
-              Go to Home
-            </PCButton>
+              <img src="./image/page500.png" height="400px" />
+            </motion.div>
+            <motion.div variants={varBounceIn}>
+              <PCButton
+                to="/"
+                variant="contained"
+                component={RouterLink}
+                style={{ width: '175px' }}
+              >
+                Go to Home
+              </PCButton>
+            </motion.div>
           </Box>
         </MotionContainer>
       </Container>
-    </RootStyle>
+    </div>
   );
 }

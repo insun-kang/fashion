@@ -14,6 +14,8 @@ import MyPageIntro from './pages/MyPageIntro';
 import ComponentsChart from './pages/ComponentsChart';
 import Wardrobe from './pages/Wardrobe';
 import SharedWardrobe from './pages/SharedWardrobe';
+import Page404 from './pages/Page404';
+import Page500 from './pages/Page500';
 
 function App() {
   const location = useLocation();
@@ -80,6 +82,8 @@ function App() {
         render={(props) => <SharedWardrobe {...props} />}
       />
       <Route path="/components" component={ComponentsChart} />
+      <Route path="/404" component={Page404} />
+      <Route path="/500" component={Page500} />
     </Switch>
   );
 }
