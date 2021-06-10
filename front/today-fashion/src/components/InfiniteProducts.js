@@ -176,6 +176,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     if (!loading.get()) {
       loading.set(true);
       pageNum.set(0);
+      setIsMore(true);
       requestHistory.current = [0];
       setDataSizeRef(24);
       if (searchKeywords.length === 0) {
@@ -206,7 +207,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     return null;
   }
   console.log(requestHistory);
-  console.log(loading.get());
+  console.log(isBottom, isMore, loading.get());
   return (
     <div className="products-container">
       {loading.get() && (

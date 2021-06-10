@@ -140,8 +140,8 @@ def result_cards():
     else:
         body=request.get_json()
 
-        request_history=body['requestHistory']  #array
-        data_size=body['dataSize']
+        request_history=body['requestHistory']  #array[0, ]
+        data_size=body['dataSize'] #30
         offset_num = sum(request_history)
 
 
