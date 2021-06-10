@@ -116,8 +116,8 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 15: # user가 15회 플레이할 때마다
-                ai_model(user_id)
+            # if not user_play_num % 15: # user가 15회 플레이할 때마다
+            ai_model(user_id)
 
 
             result = {
@@ -140,8 +140,10 @@ def result_cards():
     else:
         body=request.get_json()
 
-        page_num=body['pageNum']
+        request_history=body['requestHistory']  #array
         data_size=body['dataSize']
+        offset_num = sum(request_history)
+
 
         user_id = get_jwt_identity()
         products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
@@ -157,10 +159,11 @@ def result_cards():
                 json_data = json.load(f)
 
             products_list = []
-
+            # 24/36/48
             products_list_num = 0
-            for product in json_data['products'][page_num*data_size:]:
-                if product['asin'] not in asin_ids_user_played and product['keywords']:
+            for product in json_data['products'][offset_num:]:
+                if product['keywords']:
+                # if product['asin'] not in asin_ids_user_played and product['keywords']:
                     bookmark = models.Bookmark.query.filter_by(asin_id=product['asin'], user_id=user_id).first()
                     product['bookmark'] = True if bookmark else False
                     products_list.append(product)
@@ -231,24 +234,29 @@ def ai_model(user_id):
 
     with open(file_path, 'w') as outfile:
         json.dump(products_list, outfile)
-    print('game update succeed')
+
+    #-------------------------------------------------------------------------------------------------------------------------------------------------------
+    products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
+    asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate]
+
 
     products_result_list = {}
     products_result_list['products'] = []
 
     for asin_id in asin_id_list:
-        try:
-            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
-            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
-            product = models.Product.query.filter_by(id=asin_id).first()
-            product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
-            pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
-            title = product.title
-            product_url = address_format.product(product.asin)
-            image = address_format.img(product.asin)
-            price = product.price
-        except:
-            continue
+        if asin_id not in asin_ids_user_played:
+            try:
+                # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+                keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+                product = models.Product.query.filter_by(id=asin_id).first()
+                product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
+                pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
+                title = product.title
+                product_url = address_format.product(product.asin)
+                image = address_format.img(product.asin)
+                price = product.price
+            except:
+                continue
         # literal_eval(str(keywords))
         products_result_list['products'].append({
             'keywords': keywords if len(keywords) <=6 else keywords[:6],
