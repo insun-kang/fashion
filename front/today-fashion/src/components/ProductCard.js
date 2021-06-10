@@ -1,22 +1,31 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Card,
   CardActionArea,
   CardMedia,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import SentimentDissatisfiedRoundedIcon from '@material-ui/icons/SentimentDissatisfiedRounded';
 import { Link } from 'react-router-dom';
 import { handleBookMark } from './productCardFunctions';
 import ProductCardDetail from './ProductCardDetail';
 // import lottie from 'lottie-web';
-import animationData from '../lotties/58790-favourite-animation.json';
+import heartAnimationData from '../lotties/58790-favourite-animation.json';
+import alertAnimationData from '../lotties/surprised-emoji.json';
 import Lottie from 'react-lottie';
+import { SERVER_URL } from '../config';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -27,21 +36,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const heartDefaultOptions = {
+  loop: false,
+  autoplay: true,
+  animationData: heartAnimationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
+
+const alertDefaultOptions = {
+  loop: false,
+  autoplay: true,
+  animationData: alertAnimationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
+
 const ProductCard = memo(
   (props) => {
     const { productData, isSelected } = props;
     const classes = useStyles();
     const [isBookMarked, setIsBookMarked] = useState(productData.bookmark);
     const [isClicked, setIsClicked] = useState(false);
+    const [isReported, setIsReported] = useState(false);
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const countReport = useRef();
     // https://codesandbox.io/s/b7pg4?file=/src/components/UncontrolledLottie.jsx
     //https://github.com/chenqingspring/react-lottie/issues/81
-    const defaultOptions = {
-      loop: false,
-      autoplay: true,
-      animationData: animationData,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice',
-      },
+
+    const handleReport = async () => {
+      try {
+        // const res = await axios.post(SERVER_URL+'/')
+        //데이터 받아오기
+        setIsAlertOpen(true);
+        // countReport.current= res.data.count
+      } catch (error) {}
     };
 
     return (
@@ -60,10 +91,10 @@ const ProductCard = memo(
                 image={productData.image}
                 title={productData.title}
               />
+              {/* 좋아요 버튼 */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log(productData.asin);
                   if (!isBookMarked) {
                     setIsClicked(true);
                   }
@@ -76,9 +107,9 @@ const ProductCard = memo(
                   boxShadow: 'none',
                 }}
               >
-                {isClicked && isBookMarked ? (
+                {isClicked ? (
                   <Lottie
-                    options={defaultOptions}
+                    options={heartDefaultOptions}
                     isClickToPauseDisabled
                     width={'80px'}
                     height={'80px'}
@@ -116,6 +147,94 @@ const ProductCard = memo(
                   />
                 )}
               </button>
+
+              {/* 신고버튼 */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleReport();
+                  console.log(productData.asin);
+
+                  // alert(`This product is currently reported ${10}times. If a product is frequently reported, it can be deleted according to our inspection guide.
+                  // once when you report a product, you cannot undo it. will you proceed?`)
+                  // setIsReported(!isReported);
+                }}
+                style={{
+                  background: 'inherit',
+                  border: 'none',
+                  boxShadow: 'none',
+                }}
+              >
+                {isReported ? (
+                  <Lottie
+                    options={alertDefaultOptions}
+                    isClickToPauseDisabled
+                    width={'80px'}
+                    height={'80px'}
+                    speed={3}
+                    eventListeners={[
+                      {
+                        eventName: 'complete',
+                        callback: () => {
+                          setIsReported(false);
+                        },
+                      },
+                    ]}
+                  />
+                ) : (
+                  <SentimentDissatisfiedRoundedIcon
+                    style={{
+                      width: 50,
+                      height: 50,
+                      fontSize: 40,
+                      padding: 10,
+                      margin: 10,
+                    }}
+                  />
+                )}
+              </button>
+
+              <Dialog
+                open={isAlertOpen}
+                onClose={() => {
+                  setIsAlertOpen(false);
+                }}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {'Do you want to report this product?'}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    This product is currently reported {countReport.current}
+                    times. If a product is frequently reported, it can be
+                    deleted according to our inspection guide. once when you
+                    report a product, you cannot undo it. will you proceed?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      setIsAlertOpen(false);
+                      setIsReported(true);
+                    }}
+                    color="primary"
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsAlertOpen(false);
+                    }}
+                    color="primary"
+                    autoFocus
+                  >
+                    No
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
               <div>긍정 수치 {productData.posReveiwRate}</div>
               {productData.keywords.map((keyword, idx) => (
                 <div key={idx}>{keyword}</div>
