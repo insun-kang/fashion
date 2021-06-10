@@ -33,13 +33,6 @@ const ProductCard = memo(
     const classes = useStyles();
     const [isBookMarked, setIsBookMarked] = useState(productData.bookmark);
     const [isClicked, setIsClicked] = useState(false);
-    // const bookmarkLottie = lottie.loadAnimation({
-    //   container: document.querySelector('.bookmark'),
-    //   renderer: 'svg',
-    //   loop: false,
-    //   autoplay: false,
-    //   animationData: animationData,
-    // });
     // https://codesandbox.io/s/b7pg4?file=/src/components/UncontrolledLottie.jsx
     //https://github.com/chenqingspring/react-lottie/issues/81
     const defaultOptions = {
@@ -104,9 +97,6 @@ const ProductCard = memo(
                         },
                       },
                     ]}
-                    //event끝나면 isClicked = false
-                    // color={isBookMarked ? 'secondary' : 'grey'}
-                    // aria-label="add to favorites"
                   />
                 )}
               </button>
