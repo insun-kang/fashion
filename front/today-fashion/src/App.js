@@ -23,18 +23,23 @@ import SharedWardrobe from './pages/SharedWardrobe';
 import GenericNotFound from './pages/GenericNotFound';
 
 function App() {
-  const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
+  // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const location = useLocation();
   const history = useHistory();
 
   const [token, setToken] = useLocalStorage('access_token', null);
 
-  axios.defaults.baseURL = SERVER_URL;
-  axios.defaults.headers.common['Authorization'] = AuthStr;
+  // axios.defaults.baseURL = SERVER_URL;
+  // axios.defaults.headers.common['Authorization'] = AuthStr;
 
   const checkTokenState = useCallback(async () => {
+    const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
     try {
-      await axios.get('/protected');
+      const res = await axios.get(SERVER_URL + '/protected', {
+        headers: {
+          Authorization: AuthStr,
+        },
+      });
     } catch (error) {
       alert(error);
       // setToken(null);
