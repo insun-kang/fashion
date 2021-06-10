@@ -37,14 +37,15 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getRecommendationResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-cards', {
           pageNum: num,
-          dataSize: dataSizeRef.current,
+          dataSize: dataSize,
           requestHistory: requestHistory.current,
         });
         let history = [...requestHistory.current];
-        history.push(dataSizeRef.current);
+        history.push(dataSize);
         requestHistory.current = history;
         console.log(res);
 
@@ -75,16 +76,17 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getSearchResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-search', {
           pageNum: num,
-          dataSize: dataSizeRef.current,
+          dataSize: dataSize,
           requestHistory: requestHistory.current,
           existingKeywords: searchKeywords,
         });
         console.log(res);
         let history = [...requestHistory.current];
-        history.push(dataSizeRef.current);
+        history.push(dataSize);
         requestHistory.current = history;
 
         if (res.data.cards.length === 0) {
@@ -204,7 +206,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     return null;
   }
   console.log(requestHistory);
-
+  console.log(loading.get());
   return (
     <div className="products-container">
       {loading.get() && (
