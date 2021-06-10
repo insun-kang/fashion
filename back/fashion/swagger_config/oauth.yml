@@ -1,0 +1,49 @@
+summary: "kakao oauth"
+description: "kakao oauth api"
+tags:
+  - oauth
+produces:
+  - "application/json"
+requestBody:
+        description: 유저에 관한 정보
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/User'
+            examples:
+              case1:
+                summary: 강인선
+                value:
+                  code: "3vXp4-sclWPa1oMAnZXRgM2GmRhBELP7dYRr87tgVMRLR0oJI3hYHpevAOg1rZ0vE4qWqQo9c-sAAAF58Uo_AA"
+
+responses:
+  200:
+    description: 회원가입 성공
+    content:
+      application/json:
+        schema:
+          type: object
+          example:
+            {
+              "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjIzMjk5MzU4LCJqdGkiOiI5MTliM2Y0Mi05N2YyLTQ0NTUtYjdiNS01MjgxOGI5YmViNGIiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo2LCJuYmYiOjE2MjMyOTkzNTgsImV4cCI6MTYyMzM4NTc1OH0.MKooTBkgZ4THtGXvEDl6IjSIBiCyXyuD6Vv2Dv4Rs6Q",
+              "nickname": "강인선"
+            }
+
+definitions:
+  User:
+    type: object
+    required:
+      - email
+      - pw
+      - nickname
+      - birth
+    properties:
+      email:
+        type: string
+      pw:
+        type: string
+      nickname:
+        type: string
+      birth:
+        type: string
