@@ -80,7 +80,8 @@ def result_search():
     else:
         body=request.get_json()
 
-        data_sizes=body['data_sizes']  #array
+
+        data_sizes=body['requestHistory']  #array
  
         existing_keywords=body['existingKeywords']  #array
 
