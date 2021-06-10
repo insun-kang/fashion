@@ -1,17 +1,13 @@
 import React from 'react';
 import { Field, Form, Formik } from 'formik';
-import DatePicker from 'react-datepicker';
 import {
-  validateBirth,
   validateConfirmPassword,
   validateEmail,
-  validateName,
   validateNickName,
   validatePassword,
 } from './formValidations';
 import { LinearProgress, TextField, Box } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
-import { StaticDatePicker } from '@material-ui/lab';
 
 const UserInfoForm = (props) => {
   const { handleUserInfoForm } = props;
@@ -24,7 +20,6 @@ const UserInfoForm = (props) => {
     initialValues = {
       birth: new Date(),
       email: '',
-      name: '',
       nickname: '',
       pw: '',
       confirmPw: '',
@@ -40,17 +35,9 @@ const UserInfoForm = (props) => {
           // 수정할때는 initial value를 유저 정보에서 받아온 값으로 하기
           validate={(values) => {
             const errors = {};
-            const birth = validateBirth(values.birth);
-            if (birth) {
-              errors.birth = birth;
-            }
             const email = validateEmail(values.email);
             if (email) {
               errors.email = email;
-            }
-            const name = validateName(values.name);
-            if (name) {
-              errors.name = name;
             }
             const nickname = validateNickName(values.nickname);
             if (nickname) {
@@ -84,30 +71,6 @@ const UserInfoForm = (props) => {
         >
           {(props) => (
             <Form>
-              <Field name="name">
-                {({ field, form }) => (
-                  <div>
-                    <TextField
-                      {...field}
-                      id="name"
-                      type="text"
-                      placeholder="Please Enter Your Full-Name"
-                      label="Full Name"
-                      variant="outlined"
-                      fullWidth
-                      error={
-                        form.errors.name && form.touched.name ? true : false
-                      }
-                      helperText={
-                        form.errors.name && form.touched.name
-                          ? form.errors.name
-                          : null
-                      }
-                    />
-                  </div>
-                )}
-              </Field>
-              <Box margin={2} />
               <Field name="email">
                 {({ field, form }) => (
                   <div>

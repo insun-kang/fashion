@@ -9,7 +9,7 @@ import {
   gameCount,
   gameQuestionsData,
 } from '../states/state';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress, Paper } from '@material-ui/core';
 
 const Game = () => {
   //TODO: 첫 게임일 경우 게임 3번 이상부터 결과보기 버튼 생성
@@ -93,14 +93,17 @@ const Game = () => {
   return (
     <div>
       {/*로티로 대체*/}
-      <div>{isPending && <LinearProgress />}</div>
-      <div>{isPending ? null : totalPlayNum}</div>
-      {totalPlayNum > 5 && (
-        <Link to="/main">
-          <input type="button" value="see result" />
-        </Link>
-      )}
-      {!isMore && 'No game left!'}
+      <div>
+        <div>{isPending && <LinearProgress />}</div>
+        {/* <div>{isPending ? null : totalPlayNum}</div> */}
+
+        {totalPlayNum > 5 && (
+          <Link to="/main">
+            <input type="button" value="see result" />
+          </Link>
+        )}
+        {!isMore && 'No game left!'}
+      </div>
       {/* pending일때도 result 보기 할 수 있게 수정*/}
       {/* <div className="background">
         {background &&
@@ -115,28 +118,47 @@ const Game = () => {
       {questions &&
         isMore &&
         questions.map((question, idx) => {
-          let zIndex = 10 - idx;
+          let zIndex = 30 - idx * 3;
           if (idx < questionIdx) {
             zIndex *= -1;
           }
           return (
-            <div
-              key={idx}
-              style={{
-                zIndex: zIndex,
-                position: 'absolute',
-                //위치 임의로 지정함
-                backgroundColor: 'white',
-                //backgroundColor을 지정해주지 않으면 뒤의 게임 문항이 비쳐보임. 필수!
-                display: isPending ? 'none' : 'block',
-              }}
-            >
-              <GameCard
-                questionData={question}
-                handleAnswerClick={handleAnswerClick}
-                setIsPending={setIsPending}
+            <>
+              <div
+                key={question.asin}
+                style={{
+                  zIndex: zIndex,
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  display: isPending ? 'none' : 'flex',
+                }}
+              >
+                <GameCard
+                  questionData={question}
+                  handleAnswerClick={handleAnswerClick}
+                  setIsPending={setIsPending}
+                />
+              </div>
+              <img
+                src="./image/bg.jpg"
+                width="100%"
+                heigth="100%"
+                style={{
+                  position: 'absolute',
+                  zIndex: zIndex - 1,
+                }}
               />
-            </div>
+              <Paper
+                width={window.innerWidth}
+                heigth={window.innerHeight}
+                style={{
+                  position: 'absolute',
+                  zIndex: zIndex - 2,
+                }}
+              ></Paper>
+            </>
           );
         })}
     </div>

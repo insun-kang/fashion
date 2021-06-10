@@ -7,7 +7,9 @@ import { SERVER_URL } from '../config';
 import { Container, Grid } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
 import ProductCard from '../components/ProductCard';
-import InfiniteProducts from '../components/InfiniteProducts';
+import InfiniteProductsMobile from '../components/InfiniteProductsMobile';
+import InfiniteProductsTablet from '../components/InfiniteProductsTablet';
+import InfiniteProductsPC from '../components/InfiniteProductsPC';
 
 const Main = (props) => {
   // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -15,6 +17,11 @@ const Main = (props) => {
   // axios.defaults.baseURL = SERVER_URL;
   // axios.defaults.headers.common['Authorization'] = AuthStr;
   const [searchKeywords, setSearchKeywords] = useState([]);
+  const [screenSize, getScreenSize] = useState();
+
+  // useEffect(() => {
+  //   getScreenSize(window.innerWidth);
+  // }, []);
 
   const handleSelectedTags = (items) => {
     setSearchKeywords(items);
@@ -44,7 +51,6 @@ const Main = (props) => {
           </Grid>
         </Grid>
       </Container>
-
       <TagsInput
         selectedTags={handleSelectedTags}
         fullWidth
@@ -53,8 +59,12 @@ const Main = (props) => {
         name="tags"
         placeholder="Search Item by Keyword"
       />
-
-      <InfiniteProducts {...props} searchKeywords={searchKeywords} />
+      {/* {window.innerWidth > 1279 ? (
+        <InfiniteProductsPC {...props} searchKeywords={searchKeywords} />
+      ) : window.innerWidth > 599 ? (
+        <InfiniteProductsTablet {...props} searchKeywords={searchKeywords} />
+      ) : ( */}
+      <InfiniteProductsMobile {...props} searchKeywords={searchKeywords} />
     </>
   );
 };

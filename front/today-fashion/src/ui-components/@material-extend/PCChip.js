@@ -70,7 +70,6 @@ const EllipsisText = (props) => {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        minWidth: 70,
         fontWeight: 700,
       }}
     >

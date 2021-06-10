@@ -7,6 +7,9 @@ import {
   CardActionArea,
   CardMedia,
   IconButton,
+  Box,
+  ImageListItem,
+  ImageListItemBar,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -17,7 +20,7 @@ import ProductCardDetail from './ProductCardDetail';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 250,
   },
   media: {
     height: 0,
@@ -30,6 +33,7 @@ const ProductCard = memo(
     const { productData, isSelected } = props;
     const classes = useStyles();
     const [isBookMarked, setIsBookMarked] = useState(productData.bookmark);
+
     return (
       <Card
         className={classes.root}
@@ -40,28 +44,38 @@ const ProductCard = memo(
       >
         {!isSelected ? (
           <>
-            <div className="card-img">
-              <CardMedia
-                className={classes.media}
-                image={productData.image}
-                title={productData.title}
-              />
-              <IconButton
-                color={isBookMarked ? 'secondary' : 'grey'}
-                aria-label="add to favorites"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsBookMarked(!isBookMarked);
-                  handleBookMark({ asin: productData.asin });
-                }}
-              >
-                <FavoriteIcon />
-              </IconButton>
+            <Card style={{ width: '250px' }}>
+              <Box sx={{ pt: '100%', position: 'relative' }}>
+                <img
+                  alt={productData.title}
+                  src={productData.image}
+                  loading="lazy"
+                />
+                <ImageListItemBar
+                  position="top"
+                  actionIcon={
+                    <IconButton
+                      color={isBookMarked ? 'secondary' : 'grey'}
+                      aria-label="add to favorites"
+                      style={{ position: 'absolute', zIndex: 2 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsBookMarked(!isBookMarked);
+                        handleBookMark({ asin: productData.asin });
+                      }}
+                    >
+                      <FavoriteIcon />
+                    </IconButton>
+                  }
+                  actionPosition="right"
+                />
+              </Box>
+
               <div>긍정 수치 {productData.posReveiwRate}</div>
               {productData.keywords.map((keyword, idx) => (
                 <div key={idx}>{keyword}</div>
               ))}
-            </div>
+            </Card>
             <div className="card-text-upper">
               <div>{productData.starRating}</div>
               <div>${productData.price}</div>
