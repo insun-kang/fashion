@@ -58,13 +58,15 @@ const Main = (props) => {
         name="tags"
         placeholder="Search Item by Keyword"
       />
-      {isPC ? (
-        <InfiniteProductsPC {...props} searchKeywords={searchKeywords} />
-      ) : isTablet ? (
-        <InfiniteProductsTablet {...props} searchKeywords={searchKeywords} />
-      ) : (
-        <InfiniteProductsMobile {...props} searchKeywords={searchKeywords} />
-      )}
+      <div style={{ justifyContent: 'center', display: 'flex' }}>
+        {isPC ? (
+          <InfiniteProductsPC {...props} searchKeywords={searchKeywords} />
+        ) : isTablet ? (
+          <InfiniteProductsTablet {...props} searchKeywords={searchKeywords} />
+        ) : (
+          <InfiniteProductsMobile {...props} searchKeywords={searchKeywords} />
+        )}
+      </div>
     </>
   );
 };

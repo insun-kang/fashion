@@ -14,7 +14,7 @@ export default function Page404() {
         alignItems: 'center',
       }}
     >
-      <Container>
+      <Container style={{ marginTop: '50px' }}>
         <MotionContainer initial="initial" open>
           <Box sx={{ maxWidth: 640, margin: 'auto', textAlign: 'center' }}>
             <motion.div variants={varBounceIn}>
