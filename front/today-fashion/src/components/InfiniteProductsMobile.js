@@ -3,7 +3,17 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
-import { Grid } from '@material-ui/core';
+import animationData from '../lotties/58790-favourite-animation.json';
+import Lottie from 'react-lottie';
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
 
 const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -16,9 +26,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const loading = useTrait(false);
 
   const dataSizeRef = useRef(24);
-
-  let cancelToken;
-
   const setDataSizeRef = (cur) => {
     dataSizeRef.current = cur;
   };
@@ -30,22 +37,12 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     async (num) => {
       console.log(typeof num);
       num = typeof num !== 'undefined' ? num : pageNum.get();
-
-      if (typeof cancelToken != typeof undefined) {
-        cancelToken.cancel('Operation canceled due to new request.');
-      }
-      cancelToken = axios.CancelToken.source();
-
       try {
         console.log(num);
-        const res = await axios.post(
-          '/result-cards',
-          {
-            pageNum: num,
-            dataSize: dataSizeRef.current,
-          },
-          { cancelToken: cancelToken.token }
-        );
+        const res = await axios.post('/result-cards', {
+          pageNum: num,
+          dataSize: dataSizeRef.current,
+        });
         console.log(res);
 
         if (res.data.products.length === 0) {
@@ -75,21 +72,13 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getSearchResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
-      if (typeof cancelToken != typeof undefined) {
-        cancelToken.cancel('Operation canceled due to new request.');
-      }
-      cancelToken = axios.CancelToken.source();
       try {
         console.log(pageNum.get());
-        const res = await axios.post(
-          '/result-search',
-          {
-            pageNum: num,
-            dataSize: dataSizeRef.current,
-            existingKeywords: searchKeywords,
-          },
-          { cancelToken: cancelToken.token }
-        );
+        const res = await axios.post('/result-search', {
+          pageNum: num,
+          dataSize: dataSizeRef.current,
+          existingKeywords: searchKeywords,
+        });
         console.log(res);
         if (res.data.cards.length === 0) {
           setIsMore(false);
@@ -212,6 +201,21 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
 
   return (
     <div className="products-container">
+      {loading.get() && (
+        <div
+          style={{
+            left: '50%',
+            top: '30%',
+          }}
+        >
+          <Lottie
+            options={defaultOptions}
+            width={'100px'}
+            height={'100px'}
+            isClickToPauseDisabled
+          />
+        </div>
+      )}
       {mainProducts.map((product, index) => (
         <div key={index}>
           <ProductCard

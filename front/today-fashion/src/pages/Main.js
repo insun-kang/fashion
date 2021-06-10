@@ -12,10 +12,6 @@ import InfiniteProductsTablet from '../components/InfiniteProductsTablet';
 import InfiniteProductsPC from '../components/InfiniteProductsPC';
 
 const Main = (props) => {
-  // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
-
-  // axios.defaults.baseURL = SERVER_URL;
-  // axios.defaults.headers.common['Authorization'] = AuthStr;
   const [searchKeywords, setSearchKeywords] = useState([]);
   const [screenSize, getScreenSize] = useState();
 

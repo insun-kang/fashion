@@ -5,7 +5,7 @@ tags:
 produces:
   - "application/json"
 requestBody:
-  description: 수정할 정보(email,pw,name,nickname)
+  description: 수정할 정보(email,pw,nickname)
   required: true
   content:
     application/json:
@@ -17,14 +17,12 @@ requestBody:
           value:
             email: "sunink1@naver.com"
             pw: "qwer!@6789"
-            name: "강인성"
             nickname: "인성킹"
         case2:
           summary: 김다인
           value:
             email: "dainlinda@gmail.com"
             pw: "dainlinda!@1234"
-            name: "김다인"
             nickname: "어른익명"
 responses:
   200:
@@ -72,14 +70,11 @@ definitions:
     required:
       - email
       - pw
-      - name
       - nickname
     properties:
       email:
         type: string
       pw:
-        type: string
-      name:
         type: string
       nickname:
         type: string

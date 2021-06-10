@@ -26,6 +26,7 @@ const GameCard = (props) => {
   const { questionData, handleAnswerClick, setIsPending } = props;
   console.log(questionData);
   return (
+<<<<<<< HEAD
     <Card
       className="Blur-Card"
       style={{
@@ -41,6 +42,33 @@ const GameCard = (props) => {
           margin: '0 auto',
           backgroundColor: 'white',
           borderRadius: '25px',
+=======
+    <div className="question-card">
+      <img
+        alt={questionData.title}
+        src={questionData.image}
+        onLoad={() => {
+          setIsPending(false);
+        }}
+      ></img>
+      {questionData.keywords.map((keyword, idx) => (
+        <div key={idx}>{keyword}</div>
+      ))}
+      <input
+        type="button"
+        value="yes"
+        onClick={() => {
+          handleAnswerClick(questionData.asin, 5);
+          console.log(questionData.asin);
+        }}
+      />
+      <input
+        type="button"
+        value="no"
+        onClick={() => {
+          handleAnswerClick(questionData.asin, 1);
+          console.log(questionData.asin);
+>>>>>>> 10b09f3e90955919fa24c4552cb4674e82416bb7
         }}
       >
         <div

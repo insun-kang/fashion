@@ -10,6 +10,7 @@ from flask_jwt_extended import (JWTManager, jwt_required, create_access_token,
 import pymysql
 from flask_cors import CORS
 import config
+import json
 
 # Flasgger
 from flask import request
@@ -30,9 +31,11 @@ def create_app():
     migrate.init_app(app, db)
 
     CORS(app, supports_credentials=True)
+
     # 블루프린트
 # --------------------------------------------------------------------------- #
     from .views import auth, main, cardgame, share, bookmark, details, closet, cody
+
     app.register_blueprint(auth.bp)
     app.register_blueprint(main.bp)
     app.register_blueprint(cardgame.bp)
@@ -49,6 +52,27 @@ def create_app():
 
     jwt = JWTManager(app)
     bcrypt = Bcrypt(app)
+
+    #kakao oauth
+    @app.route('/oauth')
+    def oauth():
+        code = str(request.args.get('code'))
+        resToken = getAccessToken("4a3d0a9c3e37f3f000598e652cc812d1",str(code))  #XXXXXXXXX 자리에 RESET API KEY값을 사용
+        return 'code=' + str(code) + '<br/>response for token=' + str(resToken)
+
+    def getAccessToken(clientId, code) :  # 세션 코드값 code 를 이용해서 ACESS TOKEN과 REFRESH TOKEN을 발급 받음
+        url = "https://kauth.kakao.com/oauth/token"
+        payload = "grant_type=authorization_code"
+        payload += "&client_id=" + clientId
+        payload += "&redirect_url=http%3A%2F%2Flocalhost%3A5000%2Foauth&code=" + code
+        headers = {
+            'Content-Type' : "application/x-www-form-urlencoded",
+            'Cache-Control' : "no-cache",
+        }
+        reponse = requests.request("POST",url,data=payload, headers=headers)
+        
+        access_token = json.loads(((reponse.text).encode('utf-8')))
+        return access_token
 
     # Flasgger
     app.config["SWAGGER"] = {"title": "오늘옷데 API", "openapi": "3.0.2"}

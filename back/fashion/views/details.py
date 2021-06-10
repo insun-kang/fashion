@@ -27,7 +27,7 @@ def details():
 
         asin_id=body['asin']
 
-            
+
         datas={}
         keywords=[]
 
@@ -81,8 +81,8 @@ def details():
                             'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
             }
             datas['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)
-        datas['positive_review_number']=review.positive_review_number   
-        datas['negative_review_number']=review.negative_review_number    
+        datas['positive_review_number']=review.positive_review_number
+        datas['negative_review_number']=review.negative_review_number
 
         datas['starRating']=product.rating
         datas['image']=address_format.img(product.asin)
@@ -92,6 +92,5 @@ def details():
         datas['bookmark_count']=bookmark_count
         datas['share_date']= share_date
         datas['share_count']=share_count
-        
+
         return {'datas':datas}, 200
-            

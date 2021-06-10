@@ -13,7 +13,7 @@ const style = {
   backgroundColor: 'white',
   cursor: 'move',
 };
-const WardrobeCard = memo(({ asin, image, title }) => {
+const WardrobeCard = memo(({ idx, asin, image, title, setIsPending }) => {
   const [{ isDragging, getItem }, drag] = useDrag(
     () => ({
       type: ItemTypes.CARD,
@@ -29,7 +29,16 @@ const WardrobeCard = memo(({ asin, image, title }) => {
   const opacity = isDragging ? 0 : 1;
   return (
     <div ref={drag} style={{ ...style, opacity }}>
-      <img style={{ width: '100%', height: '100%' }} src={image} alt={title} />
+      <img
+        style={{ width: '100%', height: '100%' }}
+        src={image}
+        alt={title}
+        onLoad={() => {
+          if (idx === 0) {
+            setIsPending(false);
+          }
+        }}
+      />
     </div>
   );
 });

@@ -17,7 +17,9 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import { handleBookMark } from './productCardFunctions';
 import ProductCardDetail from './ProductCardDetail';
-
+// import lottie from 'lottie-web';
+import animationData from '../lotties/58790-favourite-animation.json';
+import Lottie from 'react-lottie';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 250,
@@ -33,7 +35,18 @@ const ProductCard = memo(
     const { productData, isSelected } = props;
     const classes = useStyles();
     const [isBookMarked, setIsBookMarked] = useState(productData.bookmark);
-
+    const [isClicked, setIsClicked] = useState(false);
+    // https://codesandbox.io/s/b7pg4?file=/src/components/UncontrolledLottie.jsx
+    //https://github.com/chenqingspring/react-lottie/issues/81
+    const defaultOptions = {
+      loop: false,
+      autoplay: true,
+      animationData: animationData,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+      },
+    };
+    console.log('isBookmarked', isBookMarked, 'isClicked', isClicked);
     return (
       <Card
         className={classes.root}
@@ -44,33 +57,68 @@ const ProductCard = memo(
       >
         {!isSelected ? (
           <>
-            <Card style={{ width: '250px' }}>
-              <Box sx={{ pt: '100%', position: 'relative' }}>
-                <img
-                  alt={productData.title}
-                  src={productData.image}
-                  loading="lazy"
-                />
-                <ImageListItemBar
-                  position="top"
-                  actionIcon={
-                    <IconButton
-                      color={isBookMarked ? 'secondary' : 'grey'}
-                      aria-label="add to favorites"
-                      style={{ position: 'absolute', zIndex: 2 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsBookMarked(!isBookMarked);
-                        handleBookMark({ asin: productData.asin });
-                      }}
-                    >
-                      <FavoriteIcon />
-                    </IconButton>
+            <div className="card-img">
+              <CardMedia
+                className={classes.media}
+                image={productData.image}
+                title={productData.title}
+              />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log(productData.asin);
+                  if (!isBookMarked) {
+                    setIsClicked(true);
                   }
-                  actionPosition="right"
-                />
-              </Box>
-
+                  setIsBookMarked(!isBookMarked);
+                  handleBookMark({ asin: productData.asin });
+                }}
+                style={{
+                  background: 'inherit',
+                  border: 'none',
+                  boxShadow: 'none',
+                }}
+              >
+                {isClicked && isBookMarked ? (
+                  <Lottie
+                    options={defaultOptions}
+                    isClickToPauseDisabled
+                    width={'80px'}
+                    height={'80px'}
+                    speed={3}
+                    eventListeners={[
+                      {
+                        eventName: 'complete',
+                        callback: () => {
+                          setIsClicked(!isClicked);
+                        },
+                      },
+                    ]}
+                  />
+                ) : (
+                  <FavoriteIcon
+                    style={
+                      isBookMarked
+                        ? {
+                            width: 50,
+                            height: 50,
+                            color: 'red',
+                            fontSize: 40,
+                            padding: 10,
+                            margin: 10,
+                          }
+                        : {
+                            width: 50,
+                            height: 50,
+                            color: 'grey',
+                            fontSize: 40,
+                            padding: 10,
+                            margin: 10,
+                          }
+                    }
+                  />
+                )}
+              </button>
               <div>긍정 수치 {productData.posReveiwRate}</div>
               {productData.keywords.map((keyword, idx) => (
                 <div key={idx}>{keyword}</div>

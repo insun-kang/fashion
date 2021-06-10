@@ -11,6 +11,18 @@ import {
 } from '../states/state';
 import { LinearProgress, Paper } from '@material-ui/core';
 
+import animationData from '../lotties/58790-favourite-animation.json';
+import Lottie from 'react-lottie';
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
+
 const Game = () => {
   //TODO: 첫 게임일 경우 게임 3번 이상부터 결과보기 버튼 생성
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -88,22 +100,32 @@ const Game = () => {
     }
   }, [initPlayNum, questionIdx]);
 
-  console.log(totalPlayNum);
-
   return (
-    <div>
-      {/*로티로 대체*/}
-      <div>
-        <div>{isPending && <LinearProgress />}</div>
-        {/* <div>{isPending ? null : totalPlayNum}</div> */}
-
-        {totalPlayNum > 5 && (
-          <Link to="/main">
-            <input type="button" value="see result" />
-          </Link>
-        )}
-        {!isMore && 'No game left!'}
-      </div>
+    <div className="game-container">
+      <div>게임화면</div>
+      {isPending && (
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '30%',
+          }}
+        >
+          <Lottie
+            options={defaultOptions}
+            width={'100px'}
+            height={'100px'}
+            isClickToPauseDisabled
+          />
+        </div>
+      )}
+      <div>{isPending ? null : totalPlayNum}</div>
+      {totalPlayNum > 5 && (
+        <Link to="/main">
+          <input type="button" value="see result" />
+        </Link>
+      )}
+      {!isMore && 'No game left!'}
       {/* pending일때도 result 보기 할 수 있게 수정*/}
       {/* <div className="background">
         {background &&

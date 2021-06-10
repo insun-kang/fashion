@@ -7,6 +7,18 @@ import axios from 'axios';
 import { SERVER_URL } from '../config';
 import KakaoShareButton from '../components/KaKaoShareButton';
 import WardrobeNav from '../components/WardrobeNav';
+import animationData from '../lotties/58790-favourite-animation.json';
+import Lottie from 'react-lottie';
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
+
 const ItemTypes = {
   CARD: 'card',
 };
@@ -29,6 +41,7 @@ const Wardrobe = () => {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [social, setSocial] = useState({ totalBookmark: 0, totalShared: 0 });
   const [shareUrl, setShareUrl] = useState();
+  const [isPending, setIsPending] = useState(true);
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
 
@@ -65,12 +78,19 @@ const Wardrobe = () => {
   const addCard = useCallback(
     (item, atIndex) => {
       const found = coordinateItems.some((each) => each.asin === item.asin);
+      const isLimit = coordinateItems.length === 6 ? true : false;
       if (!found) {
-        setCoordinateItems(
-          update(coordinateItems, {
-            $splice: [[atIndex, 0, item]],
-          })
-        );
+        if (!isLimit) {
+          setCoordinateItems(
+            update(coordinateItems, {
+              $splice: [[atIndex, 0, item]],
+            })
+          );
+        } else {
+          setCoordinateItems(
+            update(coordinateItems, { [atIndex]: { $set: item } })
+          );
+        }
       } else {
         const { card, index } = findCard(item.asin);
         setCoordinateItems(
@@ -157,12 +177,18 @@ const Wardrobe = () => {
       accept: ItemTypes.CARD,
       drop: (item, monitor) => {
         const isOver = monitor.isOver({ shallow: true });
-        if (!coordinateItems.includes(item) && isOver) {
-          setCoordinateItems(
-            update(coordinateItems, {
-              $push: [item],
-            })
-          );
+        const found = coordinateItems.some((each) => each.asin === item.asin);
+        const isLimit = coordinateItems.length === 6 ? true : false;
+        if (!found && isOver) {
+          if (isLimit) {
+            setCoordinateItems(update(coordinateItems, { 5: { $set: item } }));
+          } else {
+            setCoordinateItems(
+              update(coordinateItems, {
+                $push: [item],
+              })
+            );
+          }
         }
       },
       collect: (monitor) => ({
@@ -180,6 +206,22 @@ const Wardrobe = () => {
   }
   return (
     <>
+      {isPending && (
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '80%',
+          }}
+        >
+          <Lottie
+            options={defaultOptions}
+            width={'100px'}
+            height={'100px'}
+            isClickToPauseDisabled
+          />
+        </div>
+      )}
       <div ref={drop} style={{ ...style, backgroundColor }}>
         {coordinateItems.map((card) =>
           card ? (
@@ -208,14 +250,21 @@ const Wardrobe = () => {
       </div>
       <div style={style}>
         {bookmarkItems &&
-          bookmarkItems.map((card) => (
-            <WardrobeCard key={card.asin} asin={card.asin} image={card.image} />
+          bookmarkItems.map((card, idx) => (
+            <WardrobeCard
+              idx={idx}
+              key={card.asin}
+              asin={card.asin}
+              image={card.image}
+              setIsPending={setIsPending}
+            />
           ))}
       </div>
       <WardrobeNav
         categories={categories}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        setIsPending={setIsPending}
       />
     </>
   );

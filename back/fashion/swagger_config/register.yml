@@ -42,7 +42,6 @@ requestBody:
                 value:
                   email: "sunink1@naver.com"
                   pw: "qwer!@6789"
-                  name: "강인선"
                   nickname: "강인성"
                   birth: "19950310"
               case2:
@@ -50,7 +49,6 @@ requestBody:
                 value:
                   email: "dainlinda@naver.com"
                   pw: "dainlinda!@1234"
-                  name: "김다인"
                   nickname: "익명이"
                   birth: "19960325"
 >>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
@@ -163,15 +161,12 @@ definitions:
     required:
       - email
       - pw
-      - name
       - nickname
       - birth
     properties:
       email:
         type: string
       pw:
-        type: string
-      name:
         type: string
       nickname:
         type: string
