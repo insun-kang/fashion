@@ -5,23 +5,68 @@ tags:
 produces:
   - "application/json"
 requestBody:
-  description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:1, 싫어요: 0)"
-  required: true
-  content:
-    application/json:
-      schema:
-        $ref: "#/definitions/Maincard"
-      examples:
-        case1:
-          summary: 강인선
-          value:
-            asin: "1234567"
-            loveOrHate: 1
-        case2:
-          summary: 김다인
-          value:
-            asin: "1023658"
-            loveOrHate: 0
+        description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:5, 싫어요: 1)"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Maincard'
+            examples:
+              case1:
+                summary: 데이터 1
+                value:
+                  asin: "0764443682"
+                  loveOrHate: 5
+              case2:
+                summary: 데이터 2
+                value:
+                  asin: "1291691480"
+                  loveOrHate: 1
+              case3:
+                summary: 데이터 3
+                value:
+                  asin: "1940280001"
+                  loveOrHate: 1
+              case4:
+                summary: 데이터 4
+                value:
+                  asin: "1940735033"
+                  loveOrHate: 5
+              case5:
+                summary: 데이터 5
+                value:
+                  asin: "1940967805"
+                  loveOrHate: 5
+              case6:
+                summary: 데이터 6
+                value:
+                  asin: "1942705034"
+                  loveOrHate: 5
+              case7:
+                summary: 데이터 7
+                value:
+                  asin: "3293015344"
+                  loveOrHate: 1
+              case8:
+                summary: 데이터 8
+                value:
+                  asin: "5378828716"
+                  loveOrHate: 1
+              case9:
+                summary: 데이터 9
+                value:
+                  asin: "6041002984"
+                  loveOrHate: 5
+              case10:
+                summary: 데이터 10
+                value:
+                  asin: "630456984X"
+                  loveOrHate: 5
+              case11:
+                summary: 데이터 11
+                value:
+                  asin: "7106116521"
+                  loveOrHate: 5
 responses:
   200:
     description: OK
@@ -32,7 +77,7 @@ responses:
           example:
             {
               "result":
-                { "loveOrHate": 1, "productAsin": "B00007GDFV", "userId": "1" },
+                { "loveOrHate": 5, "productAsin": "B00007GDFV", "userId": "1" },
             }
   400:
     description: Missing JSON in request
@@ -55,6 +100,6 @@ definitions:
       asin:
         type: string
       loveOrHate:
-        type: boolean
+        type: integer
 security:
   - ApiKeyAuth: []
