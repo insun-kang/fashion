@@ -244,14 +244,7 @@ const Wardrobe = () => {
             left: '50%',
             top: '80%',
           }}
-        >
-          {/* <Lottie
-            options={defaultOptions}
-            width={'100px'}
-            height={'100px'}
-            isClickToPauseDisabled
-          /> */}
-        </div>
+        ></div>
       )}
       <div ref={drop} style={{ ...style, backgroundColor }}>
         {coordinateItems.map((card) =>

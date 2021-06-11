@@ -246,7 +246,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
 
   return (
     <div className="products-container">
-      <Grid item xs={12} container spacing={7}>
+      <Grid item xs={12} container spacing={5}>
         <Grid item xs={4}>
           {productRow1}
         </Grid>

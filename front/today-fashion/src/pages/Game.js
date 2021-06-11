@@ -117,7 +117,11 @@ const Game = () => {
       )}
       {totalPlayNum > 5 && (
         <Snackbar anchorOrigin={{ vertical, horizontal }} open="open">
-          <Alert severity="success" style={{ textAlign: 'left' }}>
+          <Alert
+            variant="contained"
+            severity="success"
+            style={{ textAlign: 'left' }}
+          >
             <p
               style={{
                 fontSize: '15px',
