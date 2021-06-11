@@ -137,6 +137,9 @@ const Wardrobe = () => {
       const res = await axios.get('/closet');
       setTotalBookMarkItems(res.data.data);
       setBookMarkItems(res.data.data[categories[selectedCategory]]);
+      if (res.data.data[categories[selectedCategory]].length === 0) {
+        setIsPending(false);
+      }
     } catch (error) {}
   }, []);
 

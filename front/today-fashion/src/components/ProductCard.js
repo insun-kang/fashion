@@ -66,7 +66,7 @@ const ProductCard = memo(
 
     const handleReport = async () => {
       try {
-        const res = await axios.post('/report_result', {
+        const res = await axios.post('/report', {
           asin: productData.asin,
         });
         //데이터 받아오기
@@ -77,7 +77,7 @@ const ProductCard = memo(
 
     const getReport = async () => {
       try {
-        const res = await axios.post('/report', {
+        const res = await axios.post('/report_result', {
           asin: productData.asin,
         });
         countReport.current = res.data.reportCount;
@@ -176,7 +176,7 @@ const ProductCard = memo(
                     boxShadow: 'none',
                   }}
                 >
-                  {isReported ? (
+                  {!isAlertOpen && isReported ? (
                     <Lottie
                       options={alertDefaultOptions}
                       isClickToPauseDisabled
