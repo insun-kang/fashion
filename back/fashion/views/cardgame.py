@@ -83,7 +83,28 @@ def maincard():
             if products_list_num == 10:
                 break
 
+        if user_play_num >= 50:
+            bg_sentence = '50번 이상 플레이한 당신이 패션의 그랜드마스터!'
+        elif user_play_num >= 40:
+            bg_sentence = '40번 이상 플레이하다니....패션(passion)황이신가요?'
+        elif user_play_num >= 30:
+            bg_sentence = '30번 이상 플레이한 사람은 당신이 처음이야! 반해버렸어요!'
+        elif user_play_num >= 20:
+            bg_sentence = '20번 이상 플레이하셨군요! 아주 칭찬해!'
+        elif user_play_num >= 10:
+            bg_sentence = '팁: 15번 이상 플레이하면 더 좋은 결과를 받을 수 있어요! 5번 남았답니다!'
+        elif user_play_num >= 5:
+            bg_sentence = '흠! 아직은 잘 모르겠어요. 그래도 결과는 보실 수 있어요!'
+        elif user_play_num >= 3:
+            bg_sentence = '스타일 평가를 많이 할 수록 추천이 정확해져요!'
+        elif user_play_num == 2:
+            bg_sentence = '이런 스타일은 어떠세요?'
+        else:
+            bg_sentence = '당신의 스타일이면 좋아요를 눌러주세요!'
+
+
         return {
+            'bgSentence': bg_sentence,
             'firstPlay': True if user_play_num == 0 else False,
             'userPlayNum': user_play_num,
             'products': products_list
