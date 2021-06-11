@@ -94,102 +94,106 @@ const ProductCard = memo(
                 title={productData.title}
               />
               {/* 좋아요 버튼 */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (!isBookMarked) {
-                    setIsClicked(true);
-                  }
-                  setIsBookMarked(!isBookMarked);
-                  handleBookMark({ asin: productData.asin });
-                }}
-                style={{
-                  background: 'inherit',
-                  border: 'none',
-                  boxShadow: 'none',
-                }}
-              >
-                {isClicked ? (
-                  <Lottie
-                    options={heartDefaultOptions}
-                    isClickToPauseDisabled
-                    width={'80px'}
-                    height={'80px'}
-                    speed={3}
-                    eventListeners={[
-                      {
-                        eventName: 'complete',
-                        callback: () => {
-                          setIsClicked(!isClicked);
-                        },
-                      },
-                    ]}
-                  />
-                ) : (
-                  <FavoriteIcon
-                    style={
-                      isBookMarked
-                        ? {
-                            width: 50,
-                            height: 50,
-                            color: 'red',
-                            fontSize: 40,
-                            padding: 10,
-                            margin: 10,
-                          }
-                        : {
-                            width: 50,
-                            height: 50,
-                            color: 'grey',
-                            fontSize: 40,
-                            padding: 10,
-                            margin: 10,
-                          }
+              <div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isBookMarked) {
+                      setIsClicked(true);
                     }
-                  />
-                )}
-              </button>
-
-              {/* 신고버튼 */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleReport();
-                }}
-                style={{
-                  background: 'inherit',
-                  border: 'none',
-                  boxShadow: 'none',
-                }}
-              >
-                {isReported ? (
-                  <Lottie
-                    options={alertDefaultOptions}
-                    isClickToPauseDisabled
-                    width={'80px'}
-                    height={'80px'}
-                    speed={3}
-                    eventListeners={[
-                      {
-                        eventName: 'complete',
-                        callback: () => {
-                          setIsReported(false);
+                    setIsBookMarked(!isBookMarked);
+                    handleBookMark({ asin: productData.asin });
+                  }}
+                  style={{
+                    background: 'inherit',
+                    border: 'none',
+                    boxShadow: 'none',
+                  }}
+                >
+                  {isClicked ? (
+                    <Lottie
+                      options={heartDefaultOptions}
+                      isClickToPauseDisabled
+                      width={'100px'}
+                      height={'100px'}
+                      style={{ left: 0 }}
+                      eventListeners={[
+                        {
+                          eventName: 'complete',
+                          callback: () => {
+                            setIsClicked(!isClicked);
+                          },
                         },
-                      },
-                    ]}
-                  />
-                ) : (
-                  <SentimentDissatisfiedRoundedIcon
-                    style={{
-                      width: 50,
-                      height: 50,
-                      fontSize: 40,
-                      padding: 10,
-                      margin: 10,
-                    }}
-                  />
-                )}
-              </button>
+                      ]}
+                    />
+                  ) : (
+                    <FavoriteIcon
+                      style={
+                        isBookMarked
+                          ? {
+                              width: 50,
+                              height: 50,
+                              color: '#ff5239',
+                              fontSize: 40,
+                              padding: 10,
+                              marginTop: 20,
+                              cursor: 'pointer',
+                            }
+                          : {
+                              width: 50,
+                              height: 50,
+                              color: 'grey',
+                              fontSize: 40,
+                              padding: 10,
+                              marginTop: 20,
+                              cursor: 'pointer',
+                            }
+                      }
+                    />
+                  )}
+                </button>
+
+                {/* 신고버튼 */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleReport();
+                  }}
+                  style={{
+                    background: 'inherit',
+                    border: 'none',
+                    boxShadow: 'none',
+                  }}
+                >
+                  {isReported ? (
+                    <Lottie
+                      options={alertDefaultOptions}
+                      isClickToPauseDisabled
+                      width={'50px'}
+                      height={'50px'}
+                      eventListeners={[
+                        {
+                          eventName: 'complete',
+                          callback: () => {
+                            setIsReported(false);
+                          },
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <SentimentDissatisfiedRoundedIcon
+                      style={{
+                        width: 50,
+                        height: 50,
+                        fontSize: 40,
+                        padding: 10,
+                        marginTop: 20,
+                        cursor: 'pointer',
+                      }}
+                    />
+                  )}
+                </button>
+              </div>
 
               <Dialog
                 open={isAlertOpen}
