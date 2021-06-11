@@ -18,7 +18,7 @@ bp = Blueprint('report', __name__, url_prefix='/')
 @bp.route('/report', methods=['POST'])
 @jwt_required()
 @swag_from('../swagger_config/report.yml')
-def Report():
+def report():
     if not request.is_json:
         return error_code.missing_json_error
     else:
@@ -39,3 +39,17 @@ def Report():
             return {'reportCount': report_count}, 200
         else:
             return {'reportCount': report_count}, 200
+
+@bp.route('/report_result', methods=['POST'])
+@jwt_required()
+@swag_from('../swagger_config/report_result.yml')
+def report_result():
+    if not request.is_json:
+        return error_code.missing_json_error
+    else:
+        body = request.get_json()
+        asin_id = body['asin']
+
+        report_count = models.Report.query.filter_by(asin_id=asin_id).count()
+
+        return {'reportCount': report_count}, 200
