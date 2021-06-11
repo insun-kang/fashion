@@ -2,14 +2,6 @@ import CustomSignIn from '../components/CustomSignIn';
 import UserInfoForm from '../components/UserInfoForm';
 import { SERVER_URL } from '../config';
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
-import { userNick } from '../states/state';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Redirect } from 'react-router';
-import { useLocalStorage } from '../customHooks/useLocalStorage';
-
-const Home = ({ location, history }) => {
-  const [user, setUser] = useRecoilState(userNick);
 import React, { useCallback, useEffect, useState, forwardRef } from 'react';
 import { Redirect } from 'react-router';
 import { useLocalStorage } from '../customHooks/useLocalStorage';
@@ -33,62 +25,63 @@ const Home = ({ location, history }) => {
 
   const { from } = location.state || { from: { pathname: '/main' } };
 
+  axios.defaults.baseURL = SERVER_URL;
+
   const handleSignUp = useCallback(
     async (data) => {
       try {
-        const res = await axios.post(SERVER_URL + '/sign-up', data);
+        const res = await axios.post('/sign-up', data);
         setToken(res.data.accessToken);
-
         setOpenSignUp(false);
-        history.push('/main');
-        //로그인 시켜준 후 게임 화면으로 이동
+        history.push('/game');
+        //회원가입이 되면 바로 로그인 + 게임 화면으로 이동
       } catch (error) {
-
-        if (error.response.data.errorCode === 'alr_signed_email') {
-          alert(error.response.data.msg);
-          setOpenSignUp(false);
-          setOpenSignIn(true);
-        } else if (error.response.data.errorCode === 'alr_signed_nickname') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'invalid_pw') {
-
-          alert(error.response.data.msg);
-        } else {
-          alert(error);
+        switch (error.response.data.errorCode) {
+          case 'alr_signed_email':
+            alert(error.response.data.msg);
+            setOpenSignUp(false);
+            setOpenSignIn(true);
+            break;
+          case 'alr_signed_nickname':
+            alert(error.response.data.msg);
+            break;
+          default:
+            alert(error);
         }
       }
     },
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-
+    [history]
   );
 
   const handleCustomSignIn = useCallback(
     async (data) => {
       try {
-        const res = await axios.post(SERVER_URL + '/sign-in', data);
-
+        const res = await axios.post('/sign-in', data);
         setToken(res.data.accessToken);
         setOpenSignIn(false);
         history.push('/main');
       } catch (error) {
-        if (error.response.data.errorCode === 'not_exists') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'missing_email') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'missing_pw') {
-          alert(error.response.data.msg);
-        } else if (error.response.data.errorCode === 'incorrect_pw') {
-          alert(error.response.data.msg);
-        } else {
-          alert(error);
+        switch (error.response.data.errorCode) {
+          case 'not_exists':
+            alert(error.response.data.msg); //적절하게 메세지 수정하기
+            break;
+          case 'missing_email':
+            alert(error.response.data.msg);
+            break;
+          case 'missing_pw':
+            alert(error.response.data.msg);
+            break;
+          case 'incorrect_pw':
+            alert(error.response.data.msg);
+            break;
+          default:
+            alert(error);
         }
       }
     },
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [history]
-
   );
 
   useEffect(() => {
@@ -110,8 +103,6 @@ const Home = ({ location, history }) => {
         src="/image/logo.png"
         style={{ marginTop: '10vh', marginLeft: '35vw', height: '20vw' }}
       />
-      {/* 이부분 꼭 있어야하는 부분인가요? */}
-      {/* {!openSignIn && !openSignUp && ( */}
       <div>
         <div style={{ height: '40vh' }}></div>
         <div className="home-button-group">
@@ -136,9 +127,7 @@ const Home = ({ location, history }) => {
             Sign Up
           </PCButton>
         </div>
-
       </div>
-      {/* )} */}
       {openSignIn && (
         <Dialog
           open={openSignIn}
@@ -172,10 +161,6 @@ const Home = ({ location, history }) => {
             </PCButton>
           </DialogActions>
         </Dialog>
-
-        // <div className="signin-modal">
-
-        // </div>
       )}
       {openSignUp && (
         <Dialog
@@ -211,18 +196,6 @@ const Home = ({ location, history }) => {
             </PCButton>
           </DialogActions>
         </Dialog>
-
-        // <div className="signup-modal">
-        //   <UserInfoForm handleUserInfoForm={handleSignUp} />
-        //   <button
-        //     type="button"
-        //     onClick={() => {
-        //       setOpenSignUp(!openSignUp);
-        //     }}
-        //   >
-        //     &#10006;
-        //   </button>
-        // </div>
       )}
     </div>
   );
