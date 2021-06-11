@@ -3,7 +3,18 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
+import animationData from '../lotties/58790-favourite-animation.json';
+import Lottie from 'react-lottie';
 import { Grid } from '@material-ui/core';
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
 
 const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -15,10 +26,8 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const pageNum = useTrait(0);
   const loading = useTrait(false);
 
+  const requestHistory = useRef([0]);
   const dataSizeRef = useRef(24);
-
-  let cancelToken;
-
   const setDataSizeRef = (cur) => {
     dataSizeRef.current = cur;
   };
@@ -28,24 +37,16 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
 
   const getRecommendationResults = useCallback(
     async (num) => {
-      console.log(typeof num);
       num = typeof num !== 'undefined' ? num : pageNum.get();
-
-      if (typeof cancelToken != typeof undefined) {
-        cancelToken.cancel('Operation canceled due to new request.');
-      }
-      cancelToken = axios.CancelToken.source();
-
       try {
-        console.log(num);
-        const res = await axios.post(
-          '/result-cards',
-          {
-            pageNum: num,
-            dataSize: dataSizeRef.current,
-          },
-          { cancelToken: cancelToken.token }
-        );
+        const res = await axios.post('/result-cards', {
+          pageNum: num,
+          dataSize: dataSizeRef.current,
+          requestHistory: requestHistory.current,
+        });
+        let history = [...requestHistory.current];
+        history.push(dataSizeRef.current);
+        requestHistory.current = history;
         console.log(res);
 
         if (res.data.products.length === 0) {
@@ -75,22 +76,18 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getSearchResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
-      if (typeof cancelToken != typeof undefined) {
-        cancelToken.cancel('Operation canceled due to new request.');
-      }
-      cancelToken = axios.CancelToken.source();
       try {
-        console.log(pageNum.get());
-        const res = await axios.post(
-          '/result-search',
-          {
-            pageNum: num,
-            dataSize: dataSizeRef.current,
-            existingKeywords: searchKeywords,
-          },
-          { cancelToken: cancelToken.token }
-        );
+        const res = await axios.post('/result-search', {
+          pageNum: num,
+          dataSize: dataSizeRef.current,
+          requestHistory: requestHistory.current,
+          existingKeywords: searchKeywords,
+        });
         console.log(res);
+        let history = [...requestHistory.current];
+        history.push(dataSizeRef.current);
+        requestHistory.current = history;
+
         if (res.data.cards.length === 0) {
           setIsMore(false);
           loading.set(false);
@@ -119,8 +116,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     if (scrollTop + clientHeight * 3 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
       //모든 디바이스에서 되는지는 확인 필요
-      // console.log('scroll end');
-      // console.log(dataSize, dataSizeRef);
       setIsBottom(true);
     }
   };
@@ -180,6 +175,8 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     if (!loading.get()) {
       loading.set(true);
       pageNum.set(0);
+      requestHistory.current = [0];
+      setDataSizeRef(24);
       if (searchKeywords.length === 0) {
         // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
         // -> 캐싱 안되나? 나중에 기능 추가
@@ -196,8 +193,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
       //더 불러오기
       //같은 호출을 여러번 하는 걸 막고싶은데...지금보다 더 좋은 방법이 있을까?
       loading.set(true);
-      console.log(loading.get());
-      console.log(dataSizeRef);
       if (searchKeywords.length === 0) {
         getRecommendationResults();
       } else {
@@ -209,6 +204,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   if (!mainProducts || mainProducts.length === 0) {
     return null;
   }
+  console.log(requestHistory);
 
   const productRow1 = [];
   const productRow2 = [];
@@ -239,8 +235,14 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
 
   return (
     <div className="products-container">
-      <Grid>{productRow1}</Grid>
-      <Grid>{productRow2}</Grid>
+      <Grid item xs={12} container spacing={7}>
+        <Grid item xs={6}>
+          {productRow1}
+        </Grid>
+        <Grid item xs={6}>
+          {productRow2}
+        </Grid>
+      </Grid>
     </div>
   );
 };

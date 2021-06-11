@@ -6,13 +6,15 @@ import { Container, Grid } from '@material-ui/core';
 import { PCButton } from '../ui-components/@material-extend';
 import InfiniteProductsMobile from '../components/InfiniteProductsMobile';
 import InfiniteProductsTablet from '../components/InfiniteProductsTablet';
+import InfiniteProductsLaptop from '../components/InfiniteProductsLaptop';
 import InfiniteProductsPC from '../components/InfiniteProductsPC';
 import { useMediaQuery } from '@material-ui/core';
 import { SpeedDial } from '../ui-components/@material-extend';
 
 const Main = (props) => {
-  const isTablet = useMediaQuery('(min-width: 700px)');
-  const isPC = useMediaQuery('(min-width: 1280px)');
+  const isTablet = useMediaQuery('(min-width: 800px)');
+  const isLaptop = useMediaQuery('(min-width: 1280px');
+  const isPC = useMediaQuery('(min-width: 1600px)');
   const [searchKeywords, setSearchKeywords] = useState([]);
   const [screenSize, getScreenSize] = useState();
 
@@ -62,6 +64,8 @@ const Main = (props) => {
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         {isPC ? (
           <InfiniteProductsPC {...props} searchKeywords={searchKeywords} />
+        ) : isLaptop ? (
+          <InfiniteProductsLaptop {...props} searchKeywords={searchKeywords} />
         ) : isTablet ? (
           <InfiniteProductsTablet {...props} searchKeywords={searchKeywords} />
         ) : (

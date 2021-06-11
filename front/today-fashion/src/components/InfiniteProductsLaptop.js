@@ -209,11 +209,10 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const productRow1 = [];
   const productRow2 = [];
   const productRow3 = [];
-  const productRow4 = [];
 
   function SetProduct() {
     mainProducts.map((product, index) => {
-      if (index % 4 === 0) {
+      if (index % 3 === 0) {
         productRow1.push(
           <div key={index}>
             <ProductCard
@@ -222,7 +221,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
             />
           </div>
         );
-      } else if (index % 4 === 1) {
+      } else if (index % 3 === 1) {
         productRow2.push(
           <div key={index}>
             <ProductCard
@@ -231,17 +230,8 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
             />
           </div>
         );
-      } else if (index % 4 === 2) {
+      } else if (index % 3 === 2) {
         productRow3.push(
-          <div key={index}>
-            <ProductCard
-              productData={product}
-              isSelected={match.params.asin === product.asin}
-            />
-          </div>
-        );
-      } else if (index % 4 === 3) {
-        productRow4.push(
           <div key={index}>
             <ProductCard
               productData={product}
@@ -257,17 +247,14 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   return (
     <div className="products-container">
       <Grid item xs={12} container spacing={7}>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           {productRow1}
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           {productRow2}
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           {productRow3}
-        </Grid>
-        <Grid item xs={3}>
-          {productRow4}
         </Grid>
       </Grid>
     </div>

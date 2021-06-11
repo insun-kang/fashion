@@ -243,7 +243,6 @@ const Home = ({ location, history }) => {
       </Grid>
       <Snackbar
         open={catchError.state}
-        autoHideDuration={2000}
         onClose={errorClear}
         TransitionComponent={Transition}
         anchorOrigin={{ vertical, horizontal }}

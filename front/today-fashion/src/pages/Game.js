@@ -9,10 +9,11 @@ import {
   gameCount,
   gameQuestionsData,
 } from '../states/state';
-import { LinearProgress, Paper } from '@material-ui/core';
+import { Paper, Snackbar, Alert, Grid } from '@material-ui/core';
 
 import animationData from '../lotties/58790-favourite-animation.json';
 import Lottie from 'react-lottie';
+import { PCButton } from '../ui-components/@material-extend';
 
 const defaultOptions = {
   loop: true,
@@ -100,8 +101,11 @@ const Game = () => {
     }
   }, [initPlayNum, questionIdx]);
 
+  const vertical = 'top';
+  const horizontal = 'right';
+
   return (
-    <div className="game-container">
+    <div className="game-container" minHeight="750px">
       {isPending && (
         <div
           style={{
@@ -112,22 +116,33 @@ const Game = () => {
         ></div>
       )}
       {totalPlayNum > 5 && (
-        <Link to="/main">
-          <input type="button" value="see result" />
-        </Link>
+        <Snackbar anchorOrigin={{ vertical, horizontal }} open="open">
+          <Alert severity="success" style={{ textAlign: 'left' }}>
+            <p
+              style={{
+                fontSize: '15px',
+                fontWeight: 700,
+                marginLeft: '50px',
+              }}
+            >
+              Let's check your styles 😄
+            </p>
+            <p style={{ marginLeft: '50px' }}>AI recommendation is ready</p>
+            <div style={{ textAlign: 'right' }}>
+              <Link to="/main" style={{ textDecoration: 'none' }}>
+                <PCButton size="xs" variant="text" color="success">
+                  Let's Check
+                </PCButton>
+              </Link>
+            </div>
+          </Alert>
+        </Snackbar>
       )}
-      {!isMore && 'No game left!'}
-      {/* pending일때도 result 보기 할 수 있게 수정*/}
-      {/* <div className="background">
-        {background &&
-          background.map((product, idx) => (
-            <img
-              src={product.productImage}
-              alt={product.productTitle}
-              key={idx}
-            />
-          ))}
-      </div> */}
+      {!isMore && (
+        <Alert severity="warning" sx={{ width: '100%' }}>
+          No game left!
+        </Alert>
+      )}
       {questions &&
         isMore &&
         questions.map((question, idx) => {
@@ -155,12 +170,13 @@ const Game = () => {
                 />
               </div>
               <img
-                src="./image/bg.jpg"
-                width="100%"
-                heigth="100%"
+                src="./image/gamebg.jpg"
                 style={{
                   position: 'absolute',
                   zIndex: zIndex - 1,
+                  width: window.innerWidth,
+                  height: window.innerHeight,
+                  objectFit: 'cover',
                 }}
               />
               <Paper
