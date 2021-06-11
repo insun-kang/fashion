@@ -34,7 +34,7 @@ def create_app():
 
     # 블루프린트
 # --------------------------------------------------------------------------- #
-    from .views import auth, main, cardgame, share, bookmark, details, closet, cody
+    from .views import auth, main, cardgame, share, bookmark, details, closet, cody, report
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(main.bp)
@@ -44,6 +44,8 @@ def create_app():
     app.register_blueprint(details.bp)
     app.register_blueprint(closet.bp)
     app.register_blueprint(cody.bp)
+    app.register_blueprint(report.bp)
+
 
     app.config['JWT_SECRET_KEY'] = 'fashion'
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
@@ -70,7 +72,7 @@ def create_app():
             'Cache-Control' : "no-cache",
         }
         reponse = requests.request("POST",url,data=payload, headers=headers)
-        
+
         access_token = json.loads(((reponse.text).encode('utf-8')))
         return access_token
 

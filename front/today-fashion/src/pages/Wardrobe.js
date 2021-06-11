@@ -9,6 +9,7 @@ import KakaoShareButton from '../components/KaKaoShareButton';
 import WardrobeNav from '../components/WardrobeNav';
 import animationData from '../lotties/58790-favourite-animation.json';
 import Lottie from 'react-lottie';
+import Preview, { usePreview } from 'react-dnd-preview';
 
 const defaultOptions = {
   loop: true,
@@ -30,6 +31,25 @@ const style = {
   flexWrap: 'wrap',
   border: '1px solid black',
 };
+const generatePreview = ({ itemType, item, style }) => {
+  console.log(item);
+
+  return (
+    <div className="item-list__item" style={style}>
+      <div
+        style={{
+          color: 'white',
+          fontWeight: 'bold',
+          backgroundColor: '#C9DFF3',
+          padding: '10px',
+          borderRadius: '25px',
+        }}
+      >
+        drop me!
+      </div>
+    </div>
+  );
+};
 
 const Wardrobe = () => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -42,8 +62,14 @@ const Wardrobe = () => {
   const [social, setSocial] = useState({ totalBookmark: 0, totalShared: 0 });
   const [shareUrl, setShareUrl] = useState();
   const [isPending, setIsPending] = useState(true);
+  const [isMobile, setIsMobile] = useState();
+
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
+
+  // const { display, itemType, previewItem, previewStyle, monitor } =
+  //   usePreview();
+  // console.log(display, itemType, previewItem, previewStyle, monitor);
 
   const findCard = useCallback(
     (asin) => {
@@ -111,6 +137,9 @@ const Wardrobe = () => {
       const res = await axios.get('/closet');
       setTotalBookMarkItems(res.data.data);
       setBookMarkItems(res.data.data[categories[selectedCategory]]);
+      if (res.data.data[categories[selectedCategory]].length === 0) {
+        setIsPending(false);
+      }
     } catch (error) {}
   }, []);
 
@@ -123,6 +152,9 @@ const Wardrobe = () => {
 
   //didmount 시점에 찜한 상품, 코디 상품 불러오기
   useEffect(() => {
+    if ('ontouchstart' in window) {
+      setIsMobile(true);
+    }
     getBookmarkItems();
     getCoordinateItems();
   }, []);
@@ -132,6 +164,7 @@ const Wardrobe = () => {
       setBookMarkItems(totalBookMarkItems[categories[selectedCategory]]);
     }
   }, [selectedCategory]);
+
   useEffect(() => {
     if (coordinateItems) {
       setShareUrl(
@@ -143,6 +176,7 @@ const Wardrobe = () => {
       );
     }
   }, [coordinateItems]);
+
   const handleSaveButton = async () => {
     const sharedData = [...coordinateItems];
     const data = sharedData.map((item) => item.asin);
@@ -202,7 +236,7 @@ const Wardrobe = () => {
 
   let backgroundColor;
   if (isActive) {
-    backgroundColor = '#B2CFF1';
+    backgroundColor = '#F1F6FA';
   }
   return (
     <>
@@ -237,6 +271,7 @@ const Wardrobe = () => {
           ) : null
         )}
       </div>
+      {isMobile && <Preview generator={generatePreview} />}
       <div className="coordinate-button-group">
         <input type="button" value="clear" onClick={handleClearButton} />
         <input type="button" value="save" onClick={handleSaveButton} />
@@ -260,6 +295,7 @@ const Wardrobe = () => {
             />
           ))}
       </div>
+
       <WardrobeNav
         categories={categories}
         selectedCategory={selectedCategory}

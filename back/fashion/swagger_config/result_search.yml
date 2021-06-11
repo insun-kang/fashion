@@ -15,8 +15,8 @@ requestBody:
         case1:
           summary: 키워드 존재
           value:
-            pageNum: 20
-            dataSize: 4
+            requestHistory: [0, 2, 8, 2]
+            dataSize: 8
             existingKeywords: ["jeans", "blue"]
 
 responses:

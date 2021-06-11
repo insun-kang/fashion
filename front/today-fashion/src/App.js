@@ -24,10 +24,14 @@ import Page404 from './pages/Page404';
 import Page500 from './pages/Page500';
 
 function App() {
+  // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
   const location = useLocation();
   const history = useHistory();
 
   const [token, setToken] = useLocalStorage('access_token', null);
+
+  // axios.defaults.baseURL = SERVER_URL;
+  // axios.defaults.headers.common['Authorization'] = AuthStr;
 
   const checkTokenState = useCallback(async () => {
     const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;

@@ -59,3 +59,24 @@ class UseDB:
         for i in result:
             lst.append(i)
         return lst
+
+    def mockuser_insert(self, email, nickname, pw, birth, sign_up_date):
+        sql = ''' insert into user(`email`, `nickname`, `pw`, `birth`, `sign_up_date`)
+              values(%s, %s, %s, %s, %s);  '''
+        with self.con.cursor() as cursor:
+            cursor.execute(sql, (email, nickname, pw, birth, sign_up_date))
+        self.con.commit()
+
+    def mockshare_insert(self, asin_id, user_id, shared_date):
+        sql = ''' insert into share(`asin_id`, `user_id`, `shared_date`)
+              values(%s, %s, %s);  '''
+        with self.con.cursor() as cursor:
+            cursor.execute(sql, (asin_id, user_id, shared_date))
+        self.con.commit()
+
+    def mockbookmark_insert(self, asin_id, user_id, date):
+        sql = ''' insert into bookmark(`asin_id`, `user_id`, `date`)
+              values(%s, %s, %s);  '''
+        with self.con.cursor() as cursor:
+            cursor.execute(sql, (asin_id, user_id, date))
+        self.con.commit()

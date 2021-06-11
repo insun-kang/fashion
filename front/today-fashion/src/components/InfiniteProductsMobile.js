@@ -37,14 +37,17 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getRecommendationResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      console.log(typeof num);
+      console.log(num);
+      let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-cards', {
           pageNum: num,
-          dataSize: dataSizeRef.current,
+          dataSize: dataSize,
           requestHistory: requestHistory.current,
         });
         let history = [...requestHistory.current];
-        history.push(dataSizeRef.current);
+        history.push(dataSize);
         requestHistory.current = history;
         console.log(res);
 
@@ -59,32 +62,34 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
           setMainProducts([...mainProducts].concat(res.data.products));
         }
         pageNum.set(num + 1);
+        console.log(pageNum.get());
         loading.set(false);
         setIsBottom(false);
       } catch (error) {
-        if (error.response.data.errorCode === 'play_too_little') {
+        if (error.response?.data?.errorCode === 'play_too_little') {
           //게임 진행 수가 없어서 게임화면으로 이동한다는 alert 띄워주기
           history.push('/game');
         }
         console.log(error);
       }
     },
-    [mainProducts, dataSizeRef]
+    [mainProducts, dataSizeRef, requestHistory, pageNum, loading]
   );
 
   const getSearchResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-search', {
           pageNum: num,
-          dataSize: dataSizeRef.current,
+          dataSize: dataSize,
           requestHistory: requestHistory.current,
           existingKeywords: searchKeywords,
         });
         console.log(res);
         let history = [...requestHistory.current];
-        history.push(dataSizeRef.current);
+        history.push(dataSize);
         requestHistory.current = history;
 
         if (res.data.cards.length === 0) {
@@ -104,7 +109,14 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         console.log(error);
       }
     },
-    [mainProducts, pageNum, dataSizeRef, searchKeywords]
+    [
+      mainProducts,
+      dataSizeRef,
+      requestHistory,
+      pageNum,
+      loading,
+      searchKeywords,
+    ]
   );
 
   const infiniteScroll = () => {
@@ -174,6 +186,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     if (!loading.get()) {
       loading.set(true);
       pageNum.set(0);
+      setIsMore(true);
       requestHistory.current = [0];
       setDataSizeRef(24);
       if (searchKeywords.length === 0) {
@@ -204,7 +217,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     return null;
   }
   console.log(requestHistory);
-
+  console.log(isBottom, isMore, loading.get());
   return (
     <div className="products-container">
       {loading.get() && (

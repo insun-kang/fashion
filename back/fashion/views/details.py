@@ -66,7 +66,7 @@ def details():
         review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
 
-        datas['keywords']=keywords
+        datas['keywords']=(keywords if len(keywords) <=6 else keywords[:6])
         datas['asin']=asin_id
         datas['price']=product.price
         if not review:
@@ -84,7 +84,7 @@ def details():
         datas['positive_review_number']=review.positive_review_number
         datas['negative_review_number']=review.negative_review_number
 
-        datas['starRating']=product.rating
+        datas['starRating']=round(product.rating,2)
         datas['image']=address_format.img(product.asin)
         datas['productUrl']=address_format.product(product.asin)
         datas['title']=product.title

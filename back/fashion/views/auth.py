@@ -81,14 +81,14 @@ def oauth_token():
                     os.remove(file_result)
                 return error_code.error_body('failed_copying','Failed copying default json file')
             # ----------------------------------------------------------------------------------------------------------------------------------
-            
+
         user = models.User.query.filter_by(email=email).first()
         accessToken = create_access_token(identity=user.id, fresh=True)
         return {
                      'accessToken': accessToken,
                      'nickname': user.nickname
                   }, 200
-            
+
 
 # @bp.route("/oauth/userinfo", methods=['POST'])
 # @swag_from('../swagger_config/oauth_userinfo.yml')
@@ -281,7 +281,7 @@ def modify():
                 if admin.pw != pw:
                     admin.pw=hashpw
                     models.db.session.commit()
-    
+
                 if admin.nickname != nickname and nicknamecheck is None:
                     admin.nickname=nickname
                     models.db.session.commit()

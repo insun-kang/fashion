@@ -25,7 +25,6 @@ from surprise import Reader, Dataset # SVD model의 dataset
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
-
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
 @jwt_required()
@@ -116,9 +115,12 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-            if not user_play_num % 15: # user가 15회 플레이할 때마다
-                ai_model(user_id)
 
+            if not user_play_num % 55: # user가 55회 플레이할 때마다
+                ai_model_game(user_id,ai_model(user_id))
+
+            if not user_play_num % 15: # user가 15회 플레이할 때마다
+                ai_model_result(user_id,ai_model(user_id))
 
             result = {
                 'userPlayNum': user_play_num,
@@ -140,8 +142,10 @@ def result_cards():
     else:
         body=request.get_json()
 
-        page_num=body['pageNum']
-        data_size=body['dataSize']
+        request_history=body['requestHistory']  #array[0, ]
+        data_size=body['dataSize'] #30
+        offset_num = sum(request_history)
+
 
         user_id = get_jwt_identity()
         products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
@@ -157,10 +161,11 @@ def result_cards():
                 json_data = json.load(f)
 
             products_list = []
-
+            # 24/36/48
             products_list_num = 0
-            for product in json_data['products'][page_num*data_size:]:
-                if product['asin'] not in asin_ids_user_played and product['keywords']:
+            for product in json_data['products'][offset_num:]:
+                if product['keywords']:
+                # if product['asin'] not in asin_ids_user_played and product['keywords']:
                     bookmark = models.Bookmark.query.filter_by(asin_id=product['asin'], user_id=user_id).first()
                     product['bookmark'] = True if bookmark else False
                     products_list.append(product)
@@ -206,68 +211,88 @@ def ai_model(user_id):
         if result[3] >= 3.65:
             asin_id_list.append(result[1])
 
-    asin_id_list = asin_id_list[:1000]
+    asin_id_list = asin_id_list[:5]
+    print(asin_id_list)
+    return asin_id_list
 
+def ai_model_game(user_id,asin_id_list):
+    start = time.time()
+
+    filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
     products_list = {}
     products_list['products'] = []
 
     for asin_id in asin_id_list:
-        try:
-            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
-            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
-            product= models.Product.query.filter_by(id=asin_id).first()
-            image = address_format.img(product.asin)
-            title = product.title
-        except:
-            continue
-        products_list['products'].append({
-            'keywords': keywords if len(keywords) <=6 else keywords[:6],
-            'image': image,
-            'title': title,
-            'asin': asin_id
-        })
+        if asin_id not in filtered:
+            try:
+                keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+                product= models.Product.query.filter_by(id=asin_id).first()
+                image = address_format.img(product.asin)
+                title = product.title
+            except:
+                continue
+            products_list['products'].append({
+                'keywords': keywords if len(keywords) <=6 else keywords[:6],
+                'image': image,
+                'title': title,
+                'asin': asin_id
+            })
 
     file_path = f'fashion/user_recommendations/game_{user_id}.json'
 
     with open(file_path, 'w') as outfile:
         json.dump(products_list, outfile)
-    print('game update succeed')
+
+    print('게임')
+    print('게임 time:', time.time() - start)
+
+
+def ai_model_result(user_id,asin_id_list):
+    start = time.time()
+
+    filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
+
+    products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
+    asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate] + filtered
 
     products_result_list = {}
     products_result_list['products'] = []
 
     for asin_id in asin_id_list:
-        try:
-            # keywords=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
-            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
-            product = models.Product.query.filter_by(id=asin_id).first()
-            product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
-            pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
-            title = product.title
-            product_url = address_format.product(product.asin)
-            image = address_format.img(product.asin)
-            price = product.price
-        except:
-            continue
-        # literal_eval(str(keywords))
-        products_result_list['products'].append({
-            'keywords': keywords if len(keywords) <=6 else keywords[:6],
-            'asin': asin_id,
-            'price': price,
-            'nlpResults': {
-                            'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                            'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
-                        },
-            'starRating': round(product.rating, 2),
-            'posReveiwRate': round(pos_review_rate, 2),
-            'image': image,
-            'productUrl': product_url,
-            'title': title
-        })
+        if asin_id not in asin_ids_user_played:
+            try:
+                keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+                product = models.Product.query.filter_by(id=asin_id).first()
+                product_review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
+                pos_review_rate = product_review.positive_review_number / (product_review.positive_review_number + product_review.negative_review_number)
+                title = product.title
+                product_url = address_format.product(product.asin)
+                image = address_format.img(product.asin)
+                price = product.price
+            except:
+                continue
+            products_result_list['products'].append({
+                'keywords': keywords if len(keywords) <=6 else keywords[:6],
+                'asin': asin_id,
+                'price': price,
+                'nlpResults': {
+                                'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                                'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                            },
+                'starRating': round(product.rating, 2),
+                'posReveiwRate': round(pos_review_rate, 2),
+                'image': image,
+                'productUrl': product_url,
+                'title': title
+            })
 
     file_path_result = f'fashion/user_recommendations/result_{user_id}.json'
 
     with open(file_path_result, 'w') as file:
         json.dump(products_result_list, file)
 
-    print('time:', time.time() - start)
+    print('결과time:', time.time() - start)
