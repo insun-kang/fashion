@@ -17,6 +17,7 @@ const KakaoShareButton = ({
       window.Kakao.init(KAKAO_KEY);
     }
   }, []);
+  console.log(window.Kakao?.isInitialized());
 
   const doKakaoShare = () => {
     kakao.Link.sendDefault({
@@ -44,6 +45,7 @@ const KakaoShareButton = ({
         },
       ],
     });
+    console.log('공유');
     handleShareKakaoButton();
   };
 
