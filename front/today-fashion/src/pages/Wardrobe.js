@@ -24,11 +24,8 @@ const ItemTypes = {
   CARD: 'card',
 };
 const style = {
-  width: '800px',
-  height: '600px',
-  overflow: 'auto',
-  display: 'flex',
-  flexWrap: 'wrap',
+  width: '400px',
+  height: '400px',
   border: '1px solid black',
 };
 const generatePreview = ({ itemType, item, style }) => {
@@ -248,12 +245,12 @@ const Wardrobe = () => {
             top: '80%',
           }}
         >
-          <Lottie
+          {/* <Lottie
             options={defaultOptions}
             width={'100px'}
             height={'100px'}
             isClickToPauseDisabled
-          />
+          /> */}
         </div>
       )}
       <div ref={drop} style={{ ...style, backgroundColor }}>
@@ -283,7 +280,7 @@ const Wardrobe = () => {
           />
         }
       </div>
-      <div style={style}>
+      <div style={style} position="absolute">
         {bookmarkItems &&
           bookmarkItems.map((card, idx) => (
             <WardrobeCard
@@ -294,14 +291,15 @@ const Wardrobe = () => {
               setIsPending={setIsPending}
             />
           ))}
+        <div position="relative" style={{ top: '350px' }}>
+          <WardrobeNav
+            categories={categories}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            setIsPending={setIsPending}
+          />
+        </div>
       </div>
-
-      <WardrobeNav
-        categories={categories}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        setIsPending={setIsPending}
-      />
     </>
   );
 };
