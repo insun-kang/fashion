@@ -50,7 +50,7 @@ def oauth_token():
         auth_info = oauth.auth(code)
         user = oauth.userinfo("Bearer " + auth_info['access_token'])
 
-        email=str(user["id"])+'@onod.email'
+        email=str(user["id"])+'@onot.email'
         profile=user["kakao_account"]
         nickname = profile["profile"]["nickname"]
         usercheck = models.User.query.filter_by(email=email).first()
@@ -223,6 +223,9 @@ def check_pw():
         queried = models.User.query.filter_by(id=user_id).first()
 
         pw=body['pw']
+
+        if queried.email[-8:] == 'onot.com' or 'onod.com':
+            return error_code.kakao_user
 
         if not pw:
             return error_code.error_body('missing_pw','Missing password in request')
