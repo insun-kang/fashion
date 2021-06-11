@@ -1,46 +1,12 @@
 summary: "키워드 검색"
 description: "키워드 검색 api"
 tags:
-<<<<<<< HEAD
-  - main
-consumes:
-=======
     - main
 consumes: 
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   - application/json
 produces:
   - "application/json"
 requestBody:
-<<<<<<< HEAD
-  description: 검색어
-  required: true
-  content:
-    application/json:
-      schema:
-        $ref: "#/definitions/Search"
-      examples:
-        case1:
-          summary: 존재 키워드 없을때
-          value:
-            keyword: "sh"
-            existingKeywords: []
-        case2:
-          summary: 존재 키워드 있을때
-          value:
-            keyword: "sh"
-            existingKeywords: ["shawl", "sholder"]
-        case3:
-          summary: 검색어가 없을때
-          value:
-            keyword: ""
-            existingKeywords: []
-        case4:
-          summary: 일치하는 keyword가 없을때
-          value:
-            keyword: "qwersdafas"
-            existingKeywords: []
-=======
         description: 검색어
         required: true
         content:
@@ -68,7 +34,6 @@ requestBody:
                 value:
                   keyword: "qwersdafas"
                   existingKeywords: []
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 responses:
   200:
     description: OK
@@ -77,8 +42,6 @@ responses:
         schema:
           type: object
           example: { "keywords": [], "msg": "You haven't entered anything" }
-<<<<<<< HEAD
-=======
   200.1:
     description: OK
     content:
@@ -112,7 +75,6 @@ responses:
               ],
               "msg": "You haven't entered anything"
             }
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   200.1:
     description: OK
     content:
@@ -152,8 +114,5 @@ definitions:
     properties:
       keyword:
         type: string
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6

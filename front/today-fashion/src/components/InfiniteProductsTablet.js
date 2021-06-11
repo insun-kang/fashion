@@ -27,7 +27,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const loading = useTrait(false);
 
   const requestHistory = useRef([0]);
-  const dataSizeRef = useRef(24);
+  const dataSizeRef = useRef(36);
   const setDataSizeRef = (cur) => {
     dataSizeRef.current = cur;
   };
@@ -38,14 +38,17 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getRecommendationResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      console.log(typeof num);
+      console.log(num);
+      let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-cards', {
           pageNum: num,
-          dataSize: dataSizeRef.current,
+          dataSize: dataSize,
           requestHistory: requestHistory.current,
         });
         let history = [...requestHistory.current];
-        history.push(dataSizeRef.current);
+        history.push(dataSize);
         requestHistory.current = history;
         console.log(res);
 
@@ -60,32 +63,34 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
           setMainProducts([...mainProducts].concat(res.data.products));
         }
         pageNum.set(num + 1);
+        console.log(pageNum.get());
         loading.set(false);
         setIsBottom(false);
       } catch (error) {
-        if (error.response.data.errorCode === 'play_too_little') {
+        if (error.response?.data?.errorCode === 'play_too_little') {
           //게임 진행 수가 없어서 게임화면으로 이동한다는 alert 띄워주기
           history.push('/game');
         }
         console.log(error);
       }
     },
-    [mainProducts, dataSizeRef]
+    [mainProducts, dataSizeRef, requestHistory, pageNum, loading]
   );
 
   const getSearchResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-search', {
           pageNum: num,
-          dataSize: dataSizeRef.current,
+          dataSize: dataSize,
           requestHistory: requestHistory.current,
           existingKeywords: searchKeywords,
         });
         console.log(res);
         let history = [...requestHistory.current];
-        history.push(dataSizeRef.current);
+        history.push(dataSize);
         requestHistory.current = history;
 
         if (res.data.cards.length === 0) {
@@ -105,7 +110,14 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         console.log(error);
       }
     },
-    [mainProducts, pageNum, dataSizeRef, searchKeywords]
+    [
+      mainProducts,
+      dataSizeRef,
+      requestHistory,
+      pageNum,
+      loading,
+      searchKeywords,
+    ]
   );
 
   const infiniteScroll = () => {
@@ -113,7 +125,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
 
-    if (scrollTop + clientHeight * 3 >= scrollHeight) {
+    if (scrollTop + clientHeight * 5 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
       //모든 디바이스에서 되는지는 확인 필요
       setIsBottom(true);
@@ -152,12 +164,12 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
     const curDataSize = dataSizeRef.current;
-    if (speed <= 100 && curDataSize !== 24) {
-      setDataSizeRef(24);
-    } else if (speed <= 200 && curDataSize !== 36) {
+    if (speed <= 100 && curDataSize !== 36) {
       setDataSizeRef(36);
-    } else if (speed > 400 && curDataSize !== 48) {
+    } else if (speed <= 200 && curDataSize !== 48) {
       setDataSizeRef(48);
+    } else if (speed > 400 && curDataSize !== 60) {
+      setDataSizeRef(60);
     }
   };
 
@@ -175,6 +187,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     if (!loading.get()) {
       loading.set(true);
       pageNum.set(0);
+      setIsMore(true);
       requestHistory.current = [0];
       setDataSizeRef(24);
       if (searchKeywords.length === 0) {

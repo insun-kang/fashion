@@ -26,7 +26,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const loading = useTrait(false);
 
   const requestHistory = useRef([0]);
-  const dataSizeRef = useRef(24);
+  const dataSizeRef = useRef(36);
   const setDataSizeRef = (cur) => {
     dataSizeRef.current = cur;
   };
@@ -124,7 +124,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
 
-    if (scrollTop + clientHeight * 3 >= scrollHeight) {
+    if (scrollTop + clientHeight * 5 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
       //모든 디바이스에서 되는지는 확인 필요
       setIsBottom(true);
@@ -163,12 +163,12 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
     const curDataSize = dataSizeRef.current;
-    if (speed <= 100 && curDataSize !== 24) {
-      setDataSizeRef(24);
-    } else if (speed <= 200 && curDataSize !== 36) {
+    if (speed <= 100 && curDataSize !== 36) {
       setDataSizeRef(36);
-    } else if (speed > 400 && curDataSize !== 48) {
+    } else if (speed <= 200 && curDataSize !== 48) {
       setDataSizeRef(48);
+    } else if (speed > 400 && curDataSize !== 60) {
+      setDataSizeRef(60);
     }
   };
 
@@ -212,7 +212,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
       }
     }
   }, [isBottom]);
-
   if (!mainProducts || mainProducts.length === 0) {
     return null;
   }
