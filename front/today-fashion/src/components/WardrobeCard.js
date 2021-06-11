@@ -1,7 +1,5 @@
 import { memo } from 'react';
 import { useDrag } from 'react-dnd';
-import { usePreview } from 'react-dnd-multi-backend';
-
 const ItemTypes = {
   CARD: 'card',
 };
@@ -15,8 +13,6 @@ const style = {
   cursor: 'move',
 };
 const WardrobeCard = memo(({ idx, asin, image, title, setIsPending }) => {
-  // const { display, itemType, previewItem, previewStyle } = usePreview();
-  // console.log(display, previewItem);
   const [{ isDragging, getItem }, drag] = useDrag(
     () => ({
       type: ItemTypes.CARD,
@@ -32,20 +28,6 @@ const WardrobeCard = memo(({ idx, asin, image, title, setIsPending }) => {
   const opacity = isDragging ? 0 : 1;
   return (
     <>
-      {/* {display && (
-        <div ref={drag} style={{ ...style, previewStyle }}>
-          <img
-            style={{ width: '100%', height: '100%' }}
-            src={image}
-            alt={title}
-            onLoad={() => {
-              if (idx === 0) {
-                setIsPending(false);
-              }
-            }}
-          />
-        </div>
-      )} */}
       <div ref={drag} style={{ ...style, opacity }}>
         <img
           style={{ width: '100%', height: '100%' }}

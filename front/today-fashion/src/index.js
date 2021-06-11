@@ -9,8 +9,6 @@ import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { RecoilRoot } from 'recoil';
 import ThemeConfig from './theme';
-// import { DndProvider } from 'react-dnd';
-// import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   DndProvider,
   TouchTransition,
@@ -18,7 +16,6 @@ import {
 } from 'react-dnd-multi-backend';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
-
 const HTML5toTouch = {
   backends: [
     {

@@ -84,7 +84,7 @@ def details():
         datas['positive_review_number']=review.positive_review_number
         datas['negative_review_number']=review.negative_review_number
 
-        datas['starRating']=product.rating
+        datas['starRating']=round(product.rating,2)
         datas['image']=address_format.img(product.asin)
         datas['productUrl']=address_format.product(product.asin)
         datas['title']=product.title

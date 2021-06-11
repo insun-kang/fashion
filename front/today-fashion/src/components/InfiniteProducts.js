@@ -37,6 +37,8 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getRecommendationResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      console.log(typeof num);
+      console.log(num);
       let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-cards', {
@@ -60,17 +62,18 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
           setMainProducts([...mainProducts].concat(res.data.products));
         }
         pageNum.set(num + 1);
+        console.log(pageNum.get());
         loading.set(false);
         setIsBottom(false);
       } catch (error) {
-        if (error.response.data.errorCode === 'play_too_little') {
+        if (error.response?.data?.errorCode === 'play_too_little') {
           //게임 진행 수가 없어서 게임화면으로 이동한다는 alert 띄워주기
           history.push('/game');
         }
         console.log(error);
       }
     },
-    [mainProducts, dataSizeRef]
+    [mainProducts, dataSizeRef, requestHistory, pageNum, loading]
   );
 
   const getSearchResults = useCallback(
@@ -106,7 +109,14 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         console.log(error);
       }
     },
-    [mainProducts, pageNum, dataSizeRef, searchKeywords]
+    [
+      mainProducts,
+      dataSizeRef,
+      requestHistory,
+      pageNum,
+      loading,
+      searchKeywords,
+    ]
   );
 
   const infiniteScroll = () => {
