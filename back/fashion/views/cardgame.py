@@ -25,10 +25,6 @@ from surprise import Reader, Dataset # SVD model의 dataset
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
-reported = [i.asin_id for i in models.Report.query.all()] + [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
-        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
-        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
-
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
 @jwt_required()
@@ -140,14 +136,14 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-
+        
             if not user_play_num % 30: # user가 55회 플레이할 때마다
                 ai_model_game(user_id,ai_model(user_id))
 
             if not user_play_num % 15: # user가 15회 플레이할 때마다
                 ai_model_result(user_id,ai_model(user_id))
 
-            # print(user_play_num)
+            # print(reported)
             result = {
                 'userPlayNum': user_play_num,
                 'userId': user_id,
@@ -257,12 +253,14 @@ def ai_model(user_id):
 
 def ai_model_game(user_id,asin_id_list):
     start = time.time()
-    
+    reported = [i.asin_id for i in models.Report.query.all()] + [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+                                                                         66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+                                                                         7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
     products_list = {}
     products_list['products'] = []
 
     for asin_id in asin_id_list:
-        if asin_id not in filtered:
+        if asin_id not in reported:
             try:
                 keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
                 product = models.Product.query.filter_by(id=asin_id).first()
@@ -288,7 +286,9 @@ def ai_model_game(user_id,asin_id_list):
 
 def ai_model_result(user_id,asin_id_list):
     start = time.time()
-
+    reported = [i.asin_id for i in models.Report.query.all()] + [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+                                                                         66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+                                                                         7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
     products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
     asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate] + reported
 
