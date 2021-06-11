@@ -123,7 +123,7 @@ def maincard():
             if not user_play_num % 55: # user가 55회 플레이할 때마다
                 ai_model_game(user_id,ai_model(user_id))
 
-            if not user_play_num % 1: # user가 15회 플레이할 때마다
+            if not user_play_num % 15: # user가 15회 플레이할 때마다
                 ai_model_result(user_id,ai_model(user_id))
 
             result = {

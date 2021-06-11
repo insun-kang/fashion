@@ -9,12 +9,35 @@ import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { RecoilRoot } from 'recoil';
 import ThemeConfig from './theme';
-import { DndProvider } from 'react-dnd';
+// import { DndProvider } from 'react-dnd';
+// import { HTML5Backend } from 'react-dnd-html5-backend';
+import {
+  DndProvider,
+  TouchTransition,
+  MouseTransition,
+} from 'react-dnd-multi-backend';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 
+const HTML5toTouch = {
+  backends: [
+    {
+      id: 'html5',
+      backend: HTML5Backend,
+      transition: MouseTransition,
+    },
+    {
+      id: 'touch',
+      backend: TouchBackend,
+      options: { enableMouseEvents: true },
+      preview: true,
+      transition: TouchTransition,
+    },
+  ],
+};
 ReactDOM.render(
   <React.StrictMode>
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider options={HTML5toTouch}>
       <RecoilRoot>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <SettingsProvider>
