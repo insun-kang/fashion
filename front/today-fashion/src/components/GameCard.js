@@ -80,10 +80,10 @@ const GameCard = (props) => {
               >
                 <PCChip
                   color={colorList[idx]}
-                  variant="outlined"
+                  variant="contained"
                   key={keyword + idx}
                   label={'#' + keyword}
-                  style={{ fontSize: '12px' }}
+                  style={{ fontSize: '14px' }}
                 />
               </div>
             ))}

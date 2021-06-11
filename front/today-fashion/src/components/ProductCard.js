@@ -139,10 +139,19 @@ const ProductCard = memo(
                   }}
                 >
                   <LCheckbox
+                    checked={isBookMarked}
                     color="error"
                     style={{ fontSize: '40px' }}
                     icon={<FavoriteBorder style={{ fontSize: '40px' }} />}
                     checkedIcon={<Favorite style={{ fontSize: '40px' }} />}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (!isBookMarked) {
+                        setIsClicked(true);
+                      }
+                      setIsBookMarked(!isBookMarked);
+                      handleBookMark({ asin: productData.asin });
+                    }}
                   />
                 </div>
                 <div

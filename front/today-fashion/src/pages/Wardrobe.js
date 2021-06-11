@@ -8,8 +8,8 @@ import { SERVER_URL } from '../config';
 import KakaoShareButton from '../components/KaKaoShareButton';
 import WardrobeNav from '../components/WardrobeNav';
 import animationData from '../lotties/58790-favourite-animation.json';
-import Lottie from 'react-lottie';
 import Preview, { usePreview } from 'react-dnd-preview';
+import { Grid, Paper, Button } from '@material-ui/core';
 
 const defaultOptions = {
   loop: true,
@@ -23,11 +23,7 @@ const defaultOptions = {
 const ItemTypes = {
   CARD: 'card',
 };
-const style = {
-  width: '400px',
-  height: '400px',
-  border: '1px solid black',
-};
+
 const generatePreview = ({ itemType, item, style }) => {
   console.log(item);
 
@@ -236,64 +232,90 @@ const Wardrobe = () => {
     backgroundColor = '#F1F6FA';
   }
   return (
-    <>
-      {isPending && (
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '80%',
-          }}
-        ></div>
-      )}
-      <div ref={drop} style={{ ...style, backgroundColor }}>
-        {coordinateItems.map((card) =>
-          card ? (
-            <CoordinateCard
-              key={card.asin}
-              asin={card.asin}
-              image={card.image}
-              title={card.title}
-              moveCard={moveCard}
-              findCard={findCard}
-              addCard={addCard}
-            />
-          ) : null
-        )}
-      </div>
-      {isMobile && <Preview generator={generatePreview} />}
-      <div className="coordinate-button-group">
-        <input type="button" value="clear" onClick={handleClearButton} />
-        <input type="button" value="save" onClick={handleSaveButton} />
-        {
-          <KakaoShareButton
-            handleShareKakaoButton={handleShareKakaoButton}
-            coordinateItems={coordinateItems}
-            social={social}
-          />
-        }
-      </div>
-      <div style={style} position="absolute">
-        {bookmarkItems &&
-          bookmarkItems.map((card, idx) => (
-            <WardrobeCard
-              idx={idx}
-              key={card.asin}
-              asin={card.asin}
-              image={card.image}
+    <div style={{ marginTop: '15vh', marginLeft: '15vw', marginRight: '15vw' }}>
+      <Grid item xs={12} container spacing={5}>
+        <Grid item xs={6}>
+          <Paper
+            ref={drop}
+            style={{
+              width: '100%',
+              height: '70vh',
+              overflowY: 'scroll',
+            }}
+          >
+            <Grid item xs={12} container spacing={2} overFlowY="auto">
+              <Grid item xs={3}>
+                {coordinateItems.map((card) =>
+                  card ? (
+                    <CoordinateCard
+                      key={card.asin}
+                      asin={card.asin}
+                      image={card.image}
+                      title={card.title}
+                      moveCard={moveCard}
+                      findCard={findCard}
+                      addCard={addCard}
+                    />
+                  ) : null
+                )}
+              </Grid>
+            </Grid>
+            {isMobile && <Preview generator={generatePreview} />}
+          </Paper>
+          <div>
+            <Button value="clear" onClick={handleClearButton} />
+            <Button value="save" onClick={handleSaveButton} />
+            {
+              <KakaoShareButton
+                handleShareKakaoButton={handleShareKakaoButton}
+                coordinateItems={coordinateItems}
+                social={social}
+              />
+            }
+          </div>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Paper position="absolute" style={{ width: '100%', height: '70vh' }}>
+            <Grid item xs={12} container spacing={2} overFlowY="auto">
+              {bookmarkItems &&
+                bookmarkItems.map((card, idx) => (
+                  <Grid
+                    item
+                    xs={4}
+                    style={{
+                      display: 'flex',
+                      maxHeight: '100%',
+                    }}
+                  >
+                    <WardrobeCard
+                      idx={idx}
+                      key={card.asin}
+                      asin={card.asin}
+                      image={card.image}
+                      setIsPending={setIsPending}
+                      width="100%"
+                    />
+                  </Grid>
+                ))}
+            </Grid>
+          </Paper>
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+            }}
+          >
+            <WardrobeNav
+              categories={categories}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
               setIsPending={setIsPending}
             />
-          ))}
-        <div position="relative" style={{ top: '350px' }}>
-          <WardrobeNav
-            categories={categories}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            setIsPending={setIsPending}
-          />
-        </div>
-      </div>
-    </>
+          </div>
+        </Grid>
+      </Grid>
+    </div>
   );
 };
 

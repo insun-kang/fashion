@@ -13,6 +13,7 @@ import SpeedDialAction from '@material-ui/core/SpeedDialAction';
 import SaveIcon from '@material-ui/icons/Save';
 import PrintIcon from '@material-ui/icons/Print';
 import ShareIcon from '@material-ui/icons/Share';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
   position: 'absolute',
@@ -26,7 +27,17 @@ const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
   },
 }));
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+    /* you can also use 'auto' behaviour
+       in place of 'smooth' */
+  });
+};
+
 const actions = [
+  { icon: <ArrowUpwardIcon />, name: 'Top', link: scrollToTop },
   { icon: <img src="./image/heart.png" />, name: 'wardobe', link: '/wardrobe' },
   { icon: <img src="./image/gamepad.png" />, name: 'Game', link: '/game' },
 ];

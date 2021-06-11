@@ -7,7 +7,6 @@ const ItemTypes = {
 const style = {
   width: 200,
   height: 200,
-  border: '1px dashed gray',
   padding: '0.5rem 1rem',
   marginBottom: '.5rem',
   backgroundColor: 'white',
