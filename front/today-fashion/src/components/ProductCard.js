@@ -66,12 +66,23 @@ const ProductCard = memo(
 
     const handleReport = async () => {
       try {
-        const res = await axios.post('/report', {
+        const res = await axios.post('/report_result', {
           asin: productData.asin,
         });
         //데이터 받아오기
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const getReport = async () => {
+      try {
+        const res = await axios.post('/report', {
+          asin: productData.asin,
+        });
         countReport.current = res.data.reportCount;
         setIsAlertOpen(true);
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -157,7 +168,7 @@ const ProductCard = memo(
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleReport();
+                    getReport();
                   }}
                   style={{
                     background: 'inherit',
@@ -217,6 +228,7 @@ const ProductCard = memo(
                 <DialogActions>
                   <Button
                     onClick={() => {
+                      handleReport();
                       setIsAlertOpen(false);
                       setIsReported(true);
                     }}
