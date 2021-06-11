@@ -19,11 +19,14 @@ const MyPageIntro = () => {
       await axios.post('/mypage', { pw: password });
       history.push('/mypage/userinfo');
     } catch (error) {
-      switch (error.response.data.errorCode) {
+      switch (error.response?.data?.errorCode) {
         case 'incorrect_pw':
           alert(error.response.data.msg);
           break;
         case 'missing_pw':
+          alert(error.response.data.msg);
+          break;
+        case 'kakao_user':
           alert(error.response.data.msg);
           break;
         default:

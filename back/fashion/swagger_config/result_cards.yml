@@ -4,8 +4,6 @@ tags:
   - cardgame
 produces:
   - "application/json"
-<<<<<<< HEAD
-=======
 requestBody:
         description: "그동안 온 요청 기록과 이번에 오는 데이터 사이즈(requestHistory & dataSize)"
         required: true
@@ -22,14 +20,8 @@ requestBody:
               case2:
                 summary: 1페이지
                 value:
-<<<<<<< HEAD
-                  pageNum: 1
-                  dataSize: 10
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
-=======
                   requestHistory: [0]
                   dataSize: 36
->>>>>>> ba30374e3c7c2e3e319137183b1411c108b94c33
 responses:
   200:
     description: ok
@@ -39,64 +31,6 @@ responses:
           type: object
           example:
             {
-<<<<<<< HEAD
-              "products":
-                [
-                  {
-                    "asin": "B00HGRB3CE",
-                    "badReviewRating": "20%",
-                    "bookmark": true,
-                    "goodReviewRating": "80%",
-                    "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HGRB3CE&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "keywords": ["flower", "dress", "red", "summer", "womens"],
-                    "nlpResults":
-                      {
-                        "badReviews": ["small", "dirty", "smelly"],
-                        "goodReviews": ["reasonable", "pretty", "cute"],
-                      },
-                    "price": 300000,
-                    "productUrl": "https://www.amazon.com/dp/B00HGRB3CE",
-                    "starRating": 5,
-                    "title": "women's flower sundress",
-                  },
-                  {
-                    "asin": "B07PGCYWRJ",
-                    "badReviewRating": "45%",
-                    "bookmark": false,
-                    "goodReviewRating": "55%",
-                    "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07PGCYWRJ&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "keywords":
-                      ["flower", "pants", "green", "winter", "womens"],
-                    "nlpResults":
-                      {
-                        "badReviews": ["expensive", "not useful", "ugly"],
-                        "goodReviews": ["clean", "good quality", "cute"],
-                      },
-                    "price": 1000,
-                    "productUrl": "https://www.amazon.com/dp/B07PGCYWRJ",
-                    "starRating": 3,
-                    "title": "women's flower green pants",
-                  },
-                  {
-                    "asin": "1975421663",
-                    "badReviewRating": "20%",
-                    "bookmark": true,
-                    "goodReviewRating": "80%",
-                    "image": "https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1975421663&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250",
-                    "keywords": ["flower", "dress", "red", "summer", "womens"],
-                    "nlpResults":
-                      {
-                        "badReviews": ["small", "dirty", "smelly"],
-                        "goodReviews": ["reasonable", "pretty", "cute"],
-                      },
-                    "price": 300000,
-                    "productUrl": "https://www.amazon.com/dp/1975421663",
-                    "starRating": 5,
-                    "title": "women's flower sundress",
-                  },
-                ],
-              "productsNum": 3,
-=======
               "products": [
                 {
                   "asin": "0764443682",
@@ -467,7 +401,6 @@ responses:
                 }
               ],
               "productsNum": 20
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
             }
   400:
     description: user가 5번 미만으로 게임했을때
@@ -476,14 +409,7 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            {
-              "errorCode": "no_result",
-              "msg": "There's no recommendation for user at all",
-            }
-=======
             {'errorCode': 'play_too_little','msg': 'This user played game less than 5 times'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 security:
   - ApiKeyAuth: []
 definitions:

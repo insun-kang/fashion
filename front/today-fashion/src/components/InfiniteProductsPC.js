@@ -3,18 +3,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
-import animationData from '../lotties/58790-favourite-animation.json';
-import Lottie from 'react-lottie';
 import { Grid } from '@material-ui/core';
-
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationData,
-  rendererSettings: {
-    preserveAspectRatio: 'xMidYMid slice',
-  },
-};
 
 const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -27,7 +16,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const loading = useTrait(false);
 
   const requestHistory = useRef([0]);
-  const dataSizeRef = useRef(24);
+  const dataSizeRef = useRef(36);
   const setDataSizeRef = (cur) => {
     dataSizeRef.current = cur;
   };
@@ -80,16 +69,17 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getSearchResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
+      let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-search', {
           pageNum: num,
-          dataSize: dataSizeRef.current,
+          dataSize: dataSize,
           requestHistory: requestHistory.current,
           existingKeywords: searchKeywords,
         });
         console.log(res);
         let history = [...requestHistory.current];
-        history.push(dataSizeRef.current);
+        history.push(dataSize);
         requestHistory.current = history;
 
         if (res.data.cards.length === 0) {
@@ -109,7 +99,14 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         console.log(error);
       }
     },
-    [mainProducts, pageNum, dataSizeRef, searchKeywords]
+    [
+      mainProducts,
+      dataSizeRef,
+      requestHistory,
+      pageNum,
+      loading,
+      searchKeywords,
+    ]
   );
 
   const infiniteScroll = () => {
@@ -117,7 +114,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
 
-    if (scrollTop + clientHeight * 3 >= scrollHeight) {
+    if (scrollTop + clientHeight * 5 >= scrollHeight) {
       //완전히 스크롤 끝에 다다르기 전에 isBottom 선언
       //모든 디바이스에서 되는지는 확인 필요
       setIsBottom(true);
@@ -156,12 +153,12 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const handleScrollSpeed = () => {
     const speed = checkScrollSpeed();
     const curDataSize = dataSizeRef.current;
-    if (speed <= 100 && curDataSize !== 24) {
-      setDataSizeRef(24);
-    } else if (speed <= 200 && curDataSize !== 36) {
+    if (speed <= 100 && curDataSize !== 36) {
       setDataSizeRef(36);
-    } else if (speed > 400 && curDataSize !== 48) {
+    } else if (speed <= 200 && curDataSize !== 48) {
       setDataSizeRef(48);
+    } else if (speed > 400 && curDataSize !== 60) {
+      setDataSizeRef(60);
     }
   };
 
@@ -179,8 +176,9 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
     if (!loading.get()) {
       loading.set(true);
       pageNum.set(0);
+      setIsMore(true);
       requestHistory.current = [0];
-      setDataSizeRef(24);
+      setDataSizeRef(36);
       if (searchKeywords.length === 0) {
         // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
         // -> 캐싱 안되나? 나중에 기능 추가
@@ -259,22 +257,24 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   SetProduct();
 
   return (
-    <div className="products-container">
-      <Grid item xs={12} container spacing={7}>
-        <Grid item xs={3}>
-          {productRow1}
+    <>
+      <div className="products-container">
+        <Grid item xs={12} container spacing={7}>
+          <Grid item xs={3}>
+            {productRow1}
+          </Grid>
+          <Grid item xs={3}>
+            {productRow2}
+          </Grid>
+          <Grid item xs={3}>
+            {productRow3}
+          </Grid>
+          <Grid item xs={3}>
+            {productRow4}
+          </Grid>
         </Grid>
-        <Grid item xs={3}>
-          {productRow2}
-        </Grid>
-        <Grid item xs={3}>
-          {productRow3}
-        </Grid>
-        <Grid item xs={3}>
-          {productRow4}
-        </Grid>
-      </Grid>
-    </div>
+      </div>
+    </>
   );
 };
 

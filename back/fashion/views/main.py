@@ -108,49 +108,53 @@ def result_search():
         .limit(limit_num)\
         .all()
 
+        reported = [i.asin_id for i in models.Report.query.all()] + [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+                                                                         66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+                                                                         7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
+
         for i in asin_ids:
+            if i.asin_id not in reported:
+                asin_id=i.asin_id
+                card={}
+                keywords=[]
+                #card['keywords']
+                keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
+                # keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
 
-            asin_id=i.asin_id
-            card={}
-            keywords=[]
-            #card['keywords']
-            keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
-            # keywords_by_asin=models.db.session.query(models.ProductKeyword.product_keyword).filter_by(asin_id=asin_id).all()
+                #card['price'],card['title']
+                product=models.Product.query.filter_by(id=asin_id).first()
+                #card['bookmark']
+                bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin_id=asin_id).first()
 
-            #card['price'],card['title']
-            product=models.Product.query.filter_by(id=asin_id).first()
-            #card['bookmark']
-            bookmark = models.Bookmark.query.filter_by(user_id=user_id, asin_id=asin_id).first()
+                #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
+                review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
 
-            #card['nlpResults'], card['posReveiwRate'], card['negReviewRate']
-            review = models.ProductReview.query.filter_by(asin_id=asin_id).first()
+                card['keywords']=(keywords if len(keywords) <=6 else keywords[:6])
+                # card['keywords']=literal_eval(str(keywords_by_asin))
+                card['asin']=product.id
+                card['price']=product.price
+                if not bookmark:
+                    card['bookmark']=False
+                else:
+                    card['bookmark']=True
+                if not review:
+                    card['nlpResults']={
+                                    'posReviewSummary': 'Oh no....there is no positive review at all...;(',
+                                    'negReviewSummary': 'OMG! There is no negative review at all!;)'
+                    }
+                    card['posReveiwRate']= 0
+                else:
+                    card['nlpResults']={
+                                    'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
+                                    'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
+                    }
+                    card['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)
+                card['starRating']=round(product.rating,2)
+                card['image']=address_format.img(product.asin)
+                card['productUrl']=address_format.product(product.asin)
+                card['title']=product.title
 
-            card['keywords']=(keywords if len(keywords) <=6 else keywords[:6])
-            # card['keywords']=literal_eval(str(keywords_by_asin))
-            card['asin']=product.id
-            card['price']=product.price
-            if not bookmark:
-                card['bookmark']=False
-            else:
-                card['bookmark']=True
-            if not review:
-                card['nlpResults']={
-                                'posReviewSummary': 'Oh no....there is no positive review at all...;(',
-                                'negReviewSummary': 'OMG! There is no negative review at all!;)'
-                }
-                card['posReveiwRate']= 0
-            else:
-                card['nlpResults']={
-                                'posReviewSummary': review.positive_review_summary if review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
-                                'negReviewSummary': review.negative_review_summary if review.negative_review_summary else 'OMG! There is no negative review at all!;)'
-                }
-                card['posReveiwRate'] = round(review.positive_review_number/(review.positive_review_number+review.negative_review_number),2)
-            card['starRating']=round(product.rating,2)
-            card['image']=address_format.img(product.asin)
-            card['productUrl']=address_format.product(product.asin)
-            card['title']=product.title
-
-            cards.append(card)
+                cards.append(card)
 
         return {'cards':cards}, 200
 

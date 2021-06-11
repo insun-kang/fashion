@@ -5,25 +5,6 @@ tags:
 produces:
   - "application/json"
 requestBody:
-<<<<<<< HEAD
-  description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:1, 싫어요: 0)"
-  required: true
-  content:
-    application/json:
-      schema:
-        $ref: "#/definitions/Maincard"
-      examples:
-        case1:
-          summary: 강인선
-          value:
-            asin: "1234567"
-            loveOrHate: 1
-        case2:
-          summary: 김다인
-          value:
-            asin: "1023658"
-            loveOrHate: 0
-=======
         description: "유저아이디, 상품 아이디, 유저가 상품 좋아했는지 여부(좋아요:5, 싫어요: 1)"
         required: true
         content:
@@ -86,7 +67,6 @@ requestBody:
                 value:
                   asin: 11
                   loveOrHate: 5
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 responses:
   200:
     description: OK
@@ -96,16 +76,11 @@ responses:
           type: object
           example:
             {
-<<<<<<< HEAD
-              "result":
-                { "loveOrHate": 1, "productAsin": "B00007GDFV", "userId": "1" },
-=======
               "result": {
                 "loveOrHate": 5,
                 "asin": 1,
                 "userId": "1"
               }
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
             }
   400:
     description: Missing JSON in request
@@ -114,11 +89,7 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
-=======
             {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 definitions:
   Maincard:
     type: object
@@ -132,10 +103,6 @@ definitions:
       asin:
         type: integer
       loveOrHate:
-<<<<<<< HEAD
-        type: boolean
-=======
         type: integer
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 security:
   - ApiKeyAuth: []

@@ -18,18 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TagsInput = ({ ...props }) => {
   const classes = useStyles();
-  const {
-    selectedTags,
-    placeholder,
-    tags,
-    // inputValue,
-    // setInputValue,
-    // selectedItem,
-    // setSelectedItem,
-    // autoCompleteItems,
-    // setAutoCompleteItems,
-    ...other
-  } = props;
+  const { selectedTags, placeholder, tags, ...other } = props;
   const [inputValue, setInputValue] = useState('');
   const [selectedItems, setSelectedItems] = useState([]);
   const [autoCompleteItems, setAutoCompleteItems] = useState([]);
@@ -160,7 +149,14 @@ const TagsInput = ({ ...props }) => {
             placeholder,
           });
           return (
-            <div style={{ width: responseWidth, margin: '0 Auto' }}>
+            <div
+              style={{
+                width: responseWidth,
+                margin: '0 Auto',
+                position: 'relative',
+                display: 'inline-block',
+              }}
+            >
               <TextField
                 style={{ border: '0px solid' }}
                 fullWidth
@@ -190,7 +186,16 @@ const TagsInput = ({ ...props }) => {
                 {...other}
                 {...inputProps}
               />
-              <div {...getMenuProps()}>
+              <div
+                {...getMenuProps()}
+                style={{
+                  position: 'absolute',
+                  zIndex: 100,
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                }}
+              >
                 {isOpen && autoCompleteItems.length ? (
                   autoCompleteItems.map((item, index) => (
                     <div

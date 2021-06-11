@@ -31,12 +31,8 @@ responses:
       application/json:
         schema:
           type: object
-<<<<<<< HEAD
-          example: { "nickname": admin.nickname }
-=======
           example:
               {'nickname': admin.nickname}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400.1:
     description: Missing JSON in request
     content:
@@ -44,11 +40,7 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
-=======
             {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400.2:
     description: 회원정보 변경 실패
     content:
@@ -56,14 +48,7 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            {
-              "errorCode": "failed_change_info",
-              "msg": "Failed to change member info",
-            }
-=======
             {'errorCode': 'failed_change_info', 'msg': 'Failed to change member info'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 definitions:
   Modified:
     type: object

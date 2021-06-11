@@ -116,10 +116,6 @@ def register():
         nickname = body['nickname']
         birth = body['birth']
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
         emailcheck = models.User.query.filter_by(email=email).first()
         nicknamecheck = models.User.query.filter_by(nickname=nickname).first()
 

@@ -83,7 +83,28 @@ def maincard():
             if products_list_num == 10:
                 break
 
+        if user_play_num >= 50:
+            bg_sentence = '50번 이상 플레이한 당신이 패션의 그랜드마스터!'
+        elif user_play_num >= 40:
+            bg_sentence = '40번 이상 플레이하다니....패션(passion)황이신가요?'
+        elif user_play_num >= 30:
+            bg_sentence = '30번 이상 플레이한 사람은 당신이 처음이야! 반해버렸어요!'
+        elif user_play_num >= 20:
+            bg_sentence = '20번 이상 플레이하셨군요! 아주 칭찬해!'
+        elif user_play_num >= 10:
+            bg_sentence = '팁: 15번 이상 플레이하면 더 좋은 결과를 받을 수 있어요! 5번 남았답니다!'
+        elif user_play_num >= 5:
+            bg_sentence = '흠! 아직은 잘 모르겠어요. 그래도 결과는 보실 수 있어요!'
+        elif user_play_num >= 3:
+            bg_sentence = '스타일 평가를 많이 할 수록 추천이 정확해져요!'
+        elif user_play_num == 2:
+            bg_sentence = '이런 스타일은 어떠세요?'
+        else:
+            bg_sentence = '당신의 스타일이면 좋아요를 눌러주세요!'
+
+
         return {
+            'bgSentence': bg_sentence,
             'firstPlay': True if user_play_num == 0 else False,
             'userPlayNum': user_play_num,
             'products': products_list
@@ -115,14 +136,15 @@ def maincard():
 
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
-
-            # if not user_play_num % 30: # user가 55회 플레이할 때마다
-                # ai_model_game(user_id,ai_model(user_id))
+        
+            if not user_play_num % 30: # user가 55회 플레이할 때마다
+                ai_model_game(user_id,ai_model(user_id))
 
             if not user_play_num % 15: # user가 15회 플레이할 때마다
                 # ai_model_result(user_id,ai_model(user_id))
                 ai_model(user_id)
 
+            # print(reported)
             result = {
                 'userPlayNum': user_play_num,
                 'userId': user_id,
@@ -181,11 +203,16 @@ def result_cards():
                     }, 200
 
 def ai_model(user_id):
+    user_id = str(user_id)
     # 리뷰파일 불러오기
     start = time.time()
     print(f'시작 {user_id}')
     review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
+<<<<<<< HEAD
     # review_df.reset_index(inplace=True)
+=======
+    review_df.reset_index(inplace=True)
+>>>>>>> 63c1a72e22d4c052a2046811509b45b18363c87f
     products_user_played = models.ProductUserPlayed.query.all()
 
     # 새로운 사용자 기록 추가하기
@@ -207,6 +234,7 @@ def ai_model(user_id):
     # 중복되지 않은 어신 리스트
     item_ids = list(set(review_df['asin'])) # 추천 대상 제품들
 
+<<<<<<< HEAD
     actual_rating=0
 
     # 추천 결과 저장
@@ -215,10 +243,18 @@ def ai_model(user_id):
         review_pred.append(model.predict(user_id, item_id, actual_rating))
 
     print(review_pred[:10])
+=======
+    # 추천 결과 저장
+    review_pred = []
+    for item_id in item_ids :
+        review_pred.append(model.predict(user_id, item_id, 0))
+    
+>>>>>>> 63c1a72e22d4c052a2046811509b45b18363c87f
     # 추천결과에서 어신과 예상 별점만 추출
     filter_review_pred = {}
     for i in review_pred:
         filter_review_pred[i[1]] = i[3]
+<<<<<<< HEAD
 
     # 예상 별점이 큰 순서대로 정렬
     sorted_review = sorted(filter_review_pred.items(), key=lambda x: x[1], reverse=True)
@@ -233,21 +269,35 @@ def ai_model(user_id):
     asin_id_list = filter_review[:10000]
     print(asin_id_list[:10])
     # return asin_id_list
+=======
+
+    # 예상 별점이 큰 순서대로 정렬
+    sorted_review = sorted(filter_review_pred.items(), key=lambda x: x[1], reverse=True)
+
+    # 예상 별점이 3.65 이상인 제품의 어신만 추출
+    filter_review = []
+    for i in sorted_review:
+        if i[1] >= 3.65:
+            filter_review.append(i[0])
+
+    # 리뷰 만개로 컷
+    asin_id_list = filter_review[:10000]
+    return asin_id_list
+>>>>>>> 63c1a72e22d4c052a2046811509b45b18363c87f
 
 # def ai_model_game(user_id,asin_id_list):
     start = time.time()
-
-    filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
-        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
-        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
+    reported = [i.asin_id for i in models.Report.query.all()] + [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+                                                                         66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+                                                                         7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
     products_list = {}
     products_list['products'] = []
 
     for asin_id in asin_id_list:
-        if asin_id not in filtered:
+        if asin_id not in reported:
             try:
                 keywords = list(set([product_keyword.product_keyword for product_keyword in models.ProductKeyword.query.filter_by(asin_id=asin_id).all()]))
-                product= models.Product.query.filter_by(id=asin_id).first()
+                product = models.Product.query.filter_by(id=asin_id).first()
                 image = address_format.img(product.asin)
                 title = product.title
             except:
@@ -269,13 +319,11 @@ def ai_model(user_id):
 
 # def ai_model_result(user_id,asin_id_list):
     start = time.time()
-
-    filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
-        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
-        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
-
+    reported = [i.asin_id for i in models.Report.query.all()] + [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+                                                                         66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+                                                                         7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
     products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
-    asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate] + filtered
+    asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate] + reported
 
     products_result_list = {}
     products_result_list['products'] = []

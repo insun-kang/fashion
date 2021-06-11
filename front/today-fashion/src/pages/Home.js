@@ -63,7 +63,7 @@ const Home = ({ location, history }) => {
         history.push('/game');
         //회원가입이 되면 바로 로그인 + 게임 화면으로 이동
       } catch (error) {
-        switch (error.response.data.errorCode) {
+        switch (error.response?.data?.errorCode) {
           case 'alr_signed_email':
             setCatchError({ state: true, msg: error.response.data.msg });
             setOpenSignUp(false);
@@ -89,7 +89,7 @@ const Home = ({ location, history }) => {
         setOpenSignIn(false);
         history.push('/main');
       } catch (error) {
-        switch (error.response.data.errorCode) {
+        switch (error.response?.data?.errorCode) {
           case 'not_exists':
             // alert(error.response.data.msg);
             setCatchError({ state: true, msg: error.response.data.msg });
@@ -141,19 +141,24 @@ const Home = ({ location, history }) => {
     };
   }, []);
 
+  useEffect(() => {
+    return errorClear();
+  }, [openSignIn]);
+
   if (token) {
     return <Redirect to={from} />;
     //로그인 된 상태라면 직전에 있었던 페이지 혹은 main으로 redirect된다.
   }
 
   // const KakaoLoginButton = <PCButton style={{ backgroundColor: '#fee500' }} />;
-
+  console.log(openSignIn);
+  console.log(catchError.state);
   return (
     <div className="App" height={window.innderHeight}>
       {openSignIn && (
         <Dialog
           open={openSignIn}
-          TransitionComponent={catchError.state ? undefined : Transition}
+          // TransitionComponent={catchError.state ? undefined : Transition}
           keepMounted
           fullWidth
           onClose={handleClose}
@@ -183,7 +188,7 @@ const Home = ({ location, history }) => {
       {openSignUp && (
         <Dialog
           open={openSignUp}
-          TransitionComponent={Transition}
+          // TransitionComponent={Transition}
           keepMounted
           fullWidth
           onClose={openSignUp}
@@ -209,7 +214,13 @@ const Home = ({ location, history }) => {
           </DialogContent>
         </Dialog>
       )}
-      <Grid height={window.innerHeight * 0.67}></Grid>
+      <Grid height={window.innerHeight * 0.67}>
+        <div
+          style={{ justifyContent: 'center', display: 'flex', padding: '20vh' }}
+        >
+          <img src="./image/logo2.png" width="500px" />
+        </div>
+      </Grid>
       <Grid>
         <KakaoButton
           color="kakao"

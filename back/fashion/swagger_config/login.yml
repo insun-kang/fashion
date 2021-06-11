@@ -31,15 +31,11 @@ responses:
       application/json:
         schema:
           type: object
-<<<<<<< HEAD
-          example: { "accessToken": "액세스 토큰 내용", "nickname": "강인성" }
-=======
           example:
             {
               "accessToken": "액세스 토큰 내용",
               "nickname": "강인성"
             }
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400:
     description: Missing JSON in request
     content:
@@ -47,11 +43,7 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
-=======
             {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400.1:
     description: 존재하지 않는 회원
     content:
@@ -59,11 +51,7 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            { "errorCode": "not_exists", "msg": "This member does not exist" }
-=======
             {'errorCode': 'not_exists', 'msg': 'This member does not exist'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400.2:
     description: 이메일 입력 안함
     content:
@@ -71,11 +59,7 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            { "errorCode": "missing_email", "msg": "Missing email in request" }
-=======
             {'errorCode': 'missing_email', 'msg': 'Missing email in request'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400.3:
     description: 비밀번호 입력 안함
     content:
@@ -83,23 +67,15 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            { "errorCode": "missing_pw", "msg": "Missing password in request" }
-=======
             {'errorCode': 'missing_pw', 'msg': 'Missing password in request'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400.4:
     description: 틀린 비밀번호
     content:
       application/json:
         schema:
           type: object
-<<<<<<< HEAD
-          example: { "errorCode": "incorrect_pw", "msg": "Incorrect Password" }
-=======
           example:
             {'errorCode': 'incorrect_pw', 'msg': 'Incorrect Password'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 definitions:
   Login:
     type: object
