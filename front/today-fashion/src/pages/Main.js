@@ -29,16 +29,9 @@ const Main = (props) => {
 
   return (
     <>
-      <SpeedDial />
       <Container>
-        <Grid width={window.innderWidth}>
-          <Grid
-            item
-            xs={12}
-            container
-            spacing={1}
-            style={{ marginTop: '10px' }}
-          >
+        <Grid>
+          <Grid item xs={12} container style={{ marginTop: '10px' }}>
             <Grid item xs={5}>
               <img
                 src="/image/onot.png"
@@ -72,6 +65,7 @@ const Main = (props) => {
           <InfiniteProductsMobile {...props} searchKeywords={searchKeywords} />
         )}
       </div>
+      <SpeedDial />
     </>
   );
 };

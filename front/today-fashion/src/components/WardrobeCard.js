@@ -1,5 +1,7 @@
 import { memo } from 'react';
 import { useDrag } from 'react-dnd';
+import { Grid } from '@material-ui/core';
+
 const ItemTypes = {
   CARD: 'card',
 };
@@ -26,20 +28,17 @@ const WardrobeCard = memo(({ idx, asin, image, title, setIsPending }) => {
 
   const opacity = isDragging ? 0 : 1;
   return (
-    <>
-      <div ref={drag} style={{ ...style, opacity }}>
-        <img
-          style={{ width: '100%', height: '100%' }}
-          src={image}
-          alt={title}
-          onLoad={() => {
-            if (idx === 0) {
-              setIsPending(false);
-            }
-          }}
-        />
-      </div>
-    </>
+    <div ref={drag} style={{ ...style, opacity }}>
+      <img
+        src={image}
+        alt={title}
+        onLoad={() => {
+          if (idx === 0) {
+            setIsPending(false);
+          }
+        }}
+      />
+    </div>
   );
 });
 

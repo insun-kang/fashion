@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { Grid } from '@material-ui/core';
 
 const ItemTypes = {
   CARD: 'card',
@@ -58,9 +59,14 @@ const CoordinateCard = memo((props) => {
   );
   const opacity = isDragging ? 0 : 1;
   return (
-    <div ref={(node) => drag(drop(node))} style={{ ...style, opacity }}>
-      <img style={{ width: '100%', height: '100%' }} src={image} alt={title} />
-    </div>
+    <Grid
+      item
+      xs={4}
+      ref={(node) => drag(drop(node))}
+      style={{ ...style, opacity }}
+    >
+      <img src={image} alt={title} />
+    </Grid>
   );
 });
 
