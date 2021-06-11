@@ -194,7 +194,6 @@ const Wardrobe = () => {
     const data = sharedData.map((item) => item.asin);
     try {
       await axios.post('/shared-page', { asins: data });
-      console.log('send');
     } catch (error) {}
     //공유된 상품 백엔드에 알려주기
   };
