@@ -211,8 +211,7 @@ def ai_model(user_id):
         if result[3] >= 3.65:
             asin_id_list.append(result[1])
 
-    asin_id_list = asin_id_list[:5]
-    print(asin_id_list)
+    asin_id_list = asin_id_list[:10000]
     return asin_id_list
 
 def ai_model_game(user_id,asin_id_list):

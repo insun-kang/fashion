@@ -5,19 +5,6 @@ tags:
 produces:
   - "application/json"
 requestBody:
-<<<<<<< HEAD
-  description: 배경으로 원하는 제품의 숫자
-  required: true
-  content:
-    application/json:
-      schema:
-        type: object
-        property:
-          limitNum:
-            type: integer
-        example:
-          limitNum: 5
-=======
         description: 배경으로 원하는 제품의 숫자
         required: true
         content:
@@ -29,7 +16,6 @@ requestBody:
                     type: integer
               example:
                 limitNum: 20
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 responses:
   200:
     description: limitNum 만큼의 제품이 반환된 경우
@@ -37,9 +23,6 @@ responses:
       application/json:
         schema:
           type: object
-<<<<<<< HEAD
-          example: { "requestNum": 5, "totalNum": 0, "ProductsList": {} }
-=======
           example:
             {
               "firstPlay": false,
@@ -129,7 +112,6 @@ responses:
               "totalNum": 20,
               "userPlayNum": 2
             }
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
   400:
     description: Missing JSON in request
     content:
@@ -137,10 +119,6 @@ responses:
         schema:
           type: object
           example:
-<<<<<<< HEAD
-            { "errorCode": "missing_json", "msg": "Missing JSON in request" }
-=======
             {'errorCode': 'missing_json', 'msg': 'Missing JSON in request'}
->>>>>>> 2b643f11e405d68fc144084c2f546981825ab2b6
 security:
   - ApiKeyAuth: []

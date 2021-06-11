@@ -15,6 +15,8 @@ const KakaoShareButton = ({
   useEffect(() => {
     if (!window.Kakao?.isInitialized()) {
       window.Kakao.init(KAKAO_KEY);
+      console.log(window.Kakao);
+      console.log(window.Kakao.Link);
     }
   }, []);
 
