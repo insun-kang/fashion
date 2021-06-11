@@ -25,10 +25,6 @@ from surprise import Reader, Dataset # SVD model의 dataset
 
 bp = Blueprint('cardgame', __name__, url_prefix='/')
 
-filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
-        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
-        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
-
 # front-end에서 limit_num 보내주면 그 수만큼 products 반환하는 api
 @bp.route('/back-card', methods=['POST'])
 @jwt_required()
@@ -120,12 +116,12 @@ def maincard():
             user_play_num = models.ProductUserPlayed.query.filter_by(user_id=user_id).count() # user 게임 플레이 횟수
 
 
-            if not user_play_num % 55: # user가 55회 플레이할 때마다
+            if not user_play_num % 30: # user가 55회 플레이할 때마다
                 ai_model_game(user_id,ai_model(user_id))
 
             if not user_play_num % 15: # user가 15회 플레이할 때마다
                 ai_model_result(user_id,ai_model(user_id))
-
+            print(user_play_num)
             result = {
                 'userPlayNum': user_play_num,
                 'userId': user_id,
@@ -146,8 +142,8 @@ def result_cards():
     else:
         body=request.get_json()
 
-        request_history=body['requestHistory']  #array
-        data_size=body['dataSize']
+        request_history=body['requestHistory']  #array[0, ]
+        data_size=body['dataSize'] #30
         offset_num = sum(request_history)
 
 
@@ -184,9 +180,11 @@ def result_cards():
                     }, 200
 
 def ai_model(user_id):
+    user_id = str(user_id)
     # 리뷰파일 불러오기
-    # start = time.time()
+    start = time.time()
     review_df = pd.read_csv('fashion/user_recommendations/review_df.csv', encoding='cp949', index_col=0)
+    review_df.reset_index(inplace=True)
     products_user_played = models.ProductUserPlayed.query.all()
 
     # 새로운 사용자 기록 추가하기
@@ -208,19 +206,35 @@ def ai_model(user_id):
     # 중복되지 않은 어신 리스트
     item_ids = list(set(review_df['asin'])) # 추천 대상 제품들
 
-    # 추천결과에서 어신과 예상 별점만 추출
-    asin_id_list = []
+    # 추천 결과 저장
+    review_pred = []
     for item_id in item_ids :
-        result = model.predict(user_id, item_id, 0)
-        if result[3] >= 3.65:
-            asin_id_list.append(result[1])
+        review_pred.append(model.predict(user_id, item_id, 0))
 
-    asin_id_list = asin_id_list[:5]
-    print(asin_id_list)
+    # 추천결과에서 어신과 예상 별점만 추출
+    filter_review_pred = {}
+    for i in review_pred:
+        filter_review_pred[i[1]] = i[3]
+
+    # 예상 별점이 큰 순서대로 정렬
+    sorted_review = sorted(filter_review_pred.items(), key=lambda x: x[1], reverse=True)
+
+    # 예상 별점이 3.65 이상인 제품의 어신만 추출
+    filter_review = []
+    for i in sorted_review:
+        if i[1] >= 3.65:
+            filter_review.append(i[0])
+
+    # 리뷰 만개로 컷
+    asin_id_list = filter_review[:10000]
     return asin_id_list
 
 def ai_model_game(user_id,asin_id_list):
-    global filtered
+    start = time.time()
+
+    filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
     products_list = {}
     products_list['products'] = []
 
@@ -246,8 +260,16 @@ def ai_model_game(user_id,asin_id_list):
         json.dump(products_list, outfile)
 
     print('게임')
+    print('게임 time:', time.time() - start)
+
 
 def ai_model_result(user_id,asin_id_list):
+    start = time.time()
+
+    filtered = [1,8,32768,65620,65633,65674,65841,65920,33241,66027,33316,66110,33349,
+        66175,33497,33557,33566,33694,2304,3072,611,1479,2426,2839,3235,3660,3661,3662,914,3454,
+        7392,5554,999,2302,2123,6896,2258,2259,2433,4121,4609,6092,6296,6415,6419]
+
     products_user_played_hate = models.ProductUserPlayed.query.filter_by(user_id=user_id, love_or_hate=1).all()
     asin_ids_user_played = [product_user_played.asin_id for product_user_played in products_user_played_hate] + filtered
 
@@ -287,5 +309,4 @@ def ai_model_result(user_id,asin_id_list):
     with open(file_path_result, 'w') as file:
         json.dump(products_result_list, file)
 
-    print('추천')
-    # print('time:', time.time() - start)
+    print('결과time:', time.time() - start)
