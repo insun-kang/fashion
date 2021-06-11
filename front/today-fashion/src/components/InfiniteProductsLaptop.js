@@ -3,18 +3,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
-import animationData from '../lotties/58790-favourite-animation.json';
-import Lottie from 'react-lottie';
 import { Grid } from '@material-ui/core';
-
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationData,
-  rendererSettings: {
-    preserveAspectRatio: 'xMidYMid slice',
-  },
-};
 
 const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -189,7 +178,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
       pageNum.set(0);
       setIsMore(true);
       requestHistory.current = [0];
-      setDataSizeRef(24);
+      setDataSizeRef(36);
       if (searchKeywords.length === 0) {
         // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
         // -> 캐싱 안되나? 나중에 기능 추가
@@ -258,19 +247,21 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   SetProduct();
 
   return (
-    <div className="products-container">
-      <Grid item xs={12} container spacing={7}>
-        <Grid item xs={4}>
-          {productRow1}
+    <>
+      <div className="products-container">
+        <Grid item xs={12} container spacing={7}>
+          <Grid item xs={4}>
+            {productRow1}
+          </Grid>
+          <Grid item xs={4}>
+            {productRow2}
+          </Grid>
+          <Grid item xs={4}>
+            {productRow3}
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          {productRow2}
-        </Grid>
-        <Grid item xs={4}>
-          {productRow3}
-        </Grid>
-      </Grid>
-    </div>
+      </div>
+    </>
   );
 };
 

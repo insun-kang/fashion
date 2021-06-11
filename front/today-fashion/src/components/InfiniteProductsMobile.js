@@ -3,17 +3,6 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard';
 import { SERVER_URL } from '../config';
 import useTrait from '../customHooks/useTrait';
-import animationData from '../lotties/58790-favourite-animation.json';
-import Lottie from 'react-lottie';
-
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationData,
-  rendererSettings: {
-    preserveAspectRatio: 'xMidYMid slice',
-  },
-};
 
 const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;
@@ -37,8 +26,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   const getRecommendationResults = useCallback(
     async (num) => {
       num = typeof num !== 'undefined' ? num : pageNum.get();
-      console.log(typeof num);
-      console.log(num);
       let dataSize = dataSizeRef.current;
       try {
         const res = await axios.post('/result-cards', {
@@ -50,10 +37,9 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         history.push(dataSize);
         requestHistory.current = history;
         console.log(res);
-
+        loading.set(false);
         if (res.data.products.length === 0) {
           setIsMore(false);
-          loading.set(false);
           return;
         }
         if (num === 0) {
@@ -63,7 +49,6 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
         }
         pageNum.set(num + 1);
         console.log(pageNum.get());
-        loading.set(false);
         setIsBottom(false);
       } catch (error) {
         if (error.response?.data?.errorCode === 'play_too_little') {
@@ -188,7 +173,7 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
       pageNum.set(0);
       setIsMore(true);
       requestHistory.current = [0];
-      setDataSizeRef(24);
+      setDataSizeRef(36);
       if (searchKeywords.length === 0) {
         // 키워드 없어지면 추천결과 다시 보여주기, 첫 페이지부터.
         // -> 캐싱 안되나? 나중에 기능 추가
@@ -212,37 +197,25 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
       }
     }
   }, [isBottom]);
+
   if (!mainProducts || mainProducts.length === 0) {
     return null;
   }
   console.log(requestHistory);
   console.log(isBottom, isMore, loading.get());
   return (
-    <div className="products-container">
-      {loading.get() && (
-        <div
-          style={{
-            left: '50%',
-            top: '30%',
-          }}
-        >
-          <Lottie
-            options={defaultOptions}
-            width={'100px'}
-            height={'100px'}
-            isClickToPauseDisabled
-          />
-        </div>
-      )}
-      {mainProducts.map((product, index) => (
-        <div key={index}>
-          <ProductCard
-            productData={product}
-            isSelected={match.params.asin === product.asin}
-          />
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="products-container">
+        {mainProducts.map((product, index) => (
+          <div key={index}>
+            <ProductCard
+              productData={product}
+              isSelected={match.params.asin === product.asin}
+            />
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 

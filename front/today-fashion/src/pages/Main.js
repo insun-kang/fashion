@@ -18,14 +18,11 @@ const Main = (props) => {
   const [searchKeywords, setSearchKeywords] = useState([]);
   const [screenSize, getScreenSize] = useState();
 
-  // useEffect(() => {
-  //   getScreenSize(window.innerWidth);
-  // }, []);
-
   const handleSelectedTags = (items) => {
     setSearchKeywords(items);
     //items 목록에 따라 키워드 검색 결과 재호출해서 보여주기
   };
+  console.log(false);
 
   return (
     <>
@@ -61,6 +58,7 @@ const Main = (props) => {
         name="tags"
         placeholder="Search Item by Keyword"
       />
+
       <div style={{ justifyContent: 'center', display: 'flex' }}>
         {isPC ? (
           <InfiniteProductsPC {...props} searchKeywords={searchKeywords} />
