@@ -31,6 +31,7 @@ const Game = () => {
   const [background, setBackground] = useRecoilState(gameBackGroundImgs); //배경 이미지
   const [questions, setQuestions] = useRecoilState(gameQuestionsData); //배경문구 , 게임문항
   const [totalPlayNum, setTotalPlayNum] = useRecoilState(gameCount);
+  const [bgText, setBgText] = useState();
   const [initPlayNum, setInitPlayNum] = useState(0);
   const [questionIdx, setQuestionIdx] = useState(0);
   // 현재 요청한 게임중에서 몇번째 게임 진행중인지 (0-9)
@@ -59,6 +60,7 @@ const Game = () => {
       }
       setQuestions(res.data.products);
       setInitPlayNum(res.data.userPlayNum);
+      setBgText(res.data.bgSentense);
       console.log(res);
     } catch (error) {
       console.log(error);
@@ -115,6 +117,7 @@ const Game = () => {
           }}
         ></div>
       )}
+
       {totalPlayNum > 5 && (
         <Snackbar anchorOrigin={{ vertical, horizontal }} open="open">
           <Alert severity="success" style={{ textAlign: 'left' }}>
@@ -174,16 +177,19 @@ const Game = () => {
                 style={{
                   position: 'absolute',
                   zIndex: zIndex - 1,
-                  width: window.innerWidth,
-                  height: window.innerHeight,
-                  objectFit: 'cover',
+                  width: '3840px',
+                  minHeight: '100%',
+                  objectFit: 'contain',
+                  verticalAlign: 'middle',
                 }}
               />
               <Paper
-                width={window.innerWidth}
-                heigth={window.innerHeight}
                 style={{
                   position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
                   zIndex: zIndex - 2,
                 }}
               ></Paper>

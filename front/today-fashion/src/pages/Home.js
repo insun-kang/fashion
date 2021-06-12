@@ -214,7 +214,13 @@ const Home = ({ location, history }) => {
           </DialogContent>
         </Dialog>
       )}
-      <Grid height={window.innerHeight * 0.67}></Grid>
+      <Grid height={window.innerHeight * 0.67}>
+        <div
+          style={{ justifyContent: 'center', display: 'flex', padding: '20vh' }}
+        >
+          <img src="./image/logo2.png" width="400px" />
+        </div>
+      </Grid>
       <Grid>
         <KakaoButton
           color="kakao"

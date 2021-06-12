@@ -1,12 +1,7 @@
-import { Paper, Tab, Tabs } from '@material-ui/core';
+import { Tab } from '@material-ui/core';
+import { TabContext, TabList } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
-import React, { useState } from 'react';
-
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-  },
-});
+import React from 'react';
 
 const WardrobeNav = ({
   categories,
@@ -14,27 +9,19 @@ const WardrobeNav = ({
   setSelectedCategory,
   setIsPending,
 }) => {
-  const classes = useStyles();
-
   const handleTabChange = (event, newValue) => {
     setSelectedCategory(newValue);
     setIsPending(true);
   };
 
   return (
-    <Paper className={classes.root}>
-      <Tabs
-        value={selectedCategory}
-        onChange={handleTabChange}
-        indicatorColor="primary"
-        textColor="primary"
-        centered
-      >
+    <TabContext value={selectedCategory}>
+      <TabList onChange={handleTabChange}>
         {categories.map((category) => (
           <Tab key={category} label={category} />
         ))}
-      </Tabs>
-    </Paper>
+      </TabList>
+    </TabContext>
   );
 };
 

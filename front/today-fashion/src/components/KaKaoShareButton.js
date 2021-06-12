@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { KAKAO_KEY } from '../config';
+import ShareIcon from '@material-ui/icons/Share';
+import { Button } from '@material-ui/core';
+
 const KakaoShareButton = ({
   handleShareKakaoButton,
   coordinateItems,
@@ -19,6 +22,7 @@ const KakaoShareButton = ({
       console.log(window.Kakao.Link);
     }
   }, []);
+  console.log(window.Kakao?.isInitialized());
 
   const doKakaoShare = () => {
     kakao.Link.sendDefault({
@@ -46,15 +50,19 @@ const KakaoShareButton = ({
         },
       ],
     });
+    console.log('공유');
     handleShareKakaoButton();
   };
 
   return (
-    <div className="kakao-share-button">
-      <button id="kakao-link-btn" onClick={doKakaoShare}>
-        <img src="/icons/kakao.png" alt="kakao-share-icon" />
-      </button>
-    </div>
+    <Button
+      variant="contained"
+      color="kakao"
+      style={{ margin: '5px' }}
+      onClick={doKakaoShare}
+    >
+      <ShareIcon />
+    </Button>
   );
 };
 export default KakaoShareButton;

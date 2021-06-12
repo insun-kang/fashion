@@ -22,6 +22,7 @@ import Wardrobe from './pages/Wardrobe';
 import SharedWardrobe from './pages/SharedWardrobe';
 import Page404 from './pages/Page404';
 import Page500 from './pages/Page500';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   // const AuthStr = `Bearer ${localStorage.getItem('access_token')}`;

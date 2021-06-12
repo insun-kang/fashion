@@ -8,8 +8,14 @@ import { SERVER_URL } from '../config';
 import KakaoShareButton from '../components/KaKaoShareButton';
 import WardrobeNav from '../components/WardrobeNav';
 import animationData from '../lotties/58790-favourite-animation.json';
-import Lottie from 'react-lottie';
 import Preview, { usePreview } from 'react-dnd-preview';
+import { Grid, Paper, Button, Tab, Container } from '@material-ui/core';
+import LogoutButton from '../components/LogoutButton';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { Link } from 'react-router-dom';
+import { PCButton } from '../ui-components/@material-extend';
+import { SpeedDial2 } from '../ui-components/@material-extend';
 
 const defaultOptions = {
   loop: true,
@@ -23,11 +29,7 @@ const defaultOptions = {
 const ItemTypes = {
   CARD: 'card',
 };
-const style = {
-  width: '400px',
-  height: '400px',
-  border: '1px solid black',
-};
+
 const generatePreview = ({ itemType, item, style }) => {
   console.log(item);
 
@@ -198,7 +200,6 @@ const Wardrobe = () => {
     const data = sharedData.map((item) => item.asin);
     try {
       await axios.post('/shared-page', { asins: data });
-      console.log('send');
     } catch (error) {}
     //공유된 상품 백엔드에 알려주기
   };
@@ -232,73 +233,135 @@ const Wardrobe = () => {
   const isActive = canDrop && isOver;
 
   let backgroundColor;
+
   if (isActive) {
     backgroundColor = '#F1F6FA';
   }
   return (
     <>
-      {isPending && (
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '80%',
-          }}
-        >
-          {/* <Lottie
-            options={defaultOptions}
-            width={'100px'}
-            height={'100px'}
-            isClickToPauseDisabled
-          /> */}
-        </div>
-      )}
-      <div ref={drop} style={{ ...style, backgroundColor }}>
-        {coordinateItems.map((card) =>
-          card ? (
-            <CoordinateCard
-              key={card.asin}
-              asin={card.asin}
-              image={card.image}
-              title={card.title}
-              moveCard={moveCard}
-              findCard={findCard}
-              addCard={addCard}
-            />
-          ) : null
-        )}
-      </div>
-      {isMobile && <Preview generator={generatePreview} />}
-      <div className="coordinate-button-group">
-        <input type="button" value="clear" onClick={handleClearButton} />
-        <input type="button" value="save" onClick={handleSaveButton} />
-        {
-          <KakaoShareButton
-            handleShareKakaoButton={handleShareKakaoButton}
-            coordinateItems={coordinateItems}
-            social={social}
-          />
-        }
-      </div>
-      <div style={style} position="absolute">
-        {bookmarkItems &&
-          bookmarkItems.map((card, idx) => (
-            <WardrobeCard
-              idx={idx}
-              key={card.asin}
-              asin={card.asin}
-              image={card.image}
-              setIsPending={setIsPending}
-            />
-          ))}
-        <div position="relative" style={{ top: '350px' }}>
-          <WardrobeNav
-            categories={categories}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            setIsPending={setIsPending}
-          />
-        </div>
+      <SpeedDial2 />
+      <Container>
+        <Grid>
+          <Grid
+            item
+            xs={12}
+            container
+            spacing={1}
+            style={{ marginTop: '10px' }}
+          >
+            <Grid item xs={5}>
+              <img
+                src="/image/onot.png"
+                style={{ height: '30%', marginTop: '10px' }}
+              />
+            </Grid>
+            <Grid item xs={7} style={{ textAlign: 'right' }}>
+              <LogoutButton />
+              <Link to="/mypage" style={{ textDecoration: 'none' }}>
+                <PCButton>My Page</PCButton>
+              </Link>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Container>
+      <hr style={{ border: `1px solid lightgrey` }} />
+      <div
+        style={{ marginTop: '5vh', marginLeft: '10vw', marginRight: '10vw' }}
+      >
+        <Grid container spacing={5} item xs={12}>
+          <Grid item xs={6}>
+            <Paper
+              ref={drop}
+              style={{
+                padding: '20px',
+                width: '100%',
+                height: '70vh',
+                overflowY: 'scroll',
+              }}
+            >
+              <Grid container spacing={2}>
+                {coordinateItems.map((card) =>
+                  card ? (
+                    <CoordinateCard
+                      key={card.asin}
+                      asin={card.asin}
+                      image={card.image}
+                      title={card.title}
+                      moveCard={moveCard}
+                      findCard={findCard}
+                      addCard={addCard}
+                      style={{
+                        display: 'flex',
+                        maxHeight: '100%',
+                      }}
+                    />
+                  ) : null
+                )}
+              </Grid>
+              {isMobile && <Preview generator={generatePreview} />}
+            </Paper>
+            <div
+              style={{
+                maxHeight: '40px',
+                position: 'relative',
+                textAlign: 'center',
+              }}
+            >
+              <Button
+                variant="contained"
+                style={{ margin: '5px' }}
+                onClick={handleClearButton}
+              >
+                <DeleteIcon />
+              </Button>
+              <Button
+                variant="contained"
+                style={{ margin: '5px' }}
+                onClick={handleSaveButton}
+              >
+                <SaveAltIcon />
+              </Button>
+              <KakaoShareButton
+                handleShareKakaoButton={handleShareKakaoButton}
+                coordinateItems={coordinateItems}
+                social={social}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper
+              style={{
+                padding: '20px',
+                width: '100%',
+                height: '70vh',
+                overFlowY: 'scroll',
+                display: 'flex',
+                position: 'relative',
+              }}
+            >
+              <Grid container spacing={2}>
+                {bookmarkItems &&
+                  bookmarkItems.map((card, idx) => (
+                    <WardrobeCard
+                      idx={idx}
+                      key={card.asin}
+                      asin={card.asin}
+                      image={card.image}
+                      setIsPending={setIsPending}
+                    />
+                  ))}
+              </Grid>
+            </Paper>
+            <div style={{}}>
+              <WardrobeNav
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                setIsPending={setIsPending}
+              />
+            </div>
+          </Grid>
+        </Grid>
       </div>
     </>
   );

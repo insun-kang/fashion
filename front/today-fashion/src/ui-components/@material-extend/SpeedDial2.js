@@ -14,7 +14,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import PrintIcon from '@material-ui/icons/Print';
 import ShareIcon from '@material-ui/icons/Share';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import HomeIcon from '@material-ui/icons/Home';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 
 const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
@@ -29,9 +29,17 @@ const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
   },
 }));
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+    /* you can also use 'auto' behaviour
+       in place of 'smooth' */
+  });
+};
+
 const actions = [
-  { icon: <ArrowUpwardIcon />, name: 'Top', act: 'scrollToTop' },
-  { icon: <FavoriteIcon />, name: 'wardobe', link: '/wardrobe' },
+  { icon: <HomeIcon />, name: 'home', link: '/main' },
   { icon: <SportsEsportsIcon />, name: 'Game', link: '/game' },
 ];
 
@@ -41,15 +49,6 @@ export default function PlaygroundSpeedDial() {
 
   const handleHiddenChange = (event) => {
     setHidden(event.target.checked);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-      /* you can also use 'auto' behaviour
-         in place of 'smooth' */
-    });
   };
 
   return (
@@ -75,7 +74,6 @@ export default function PlaygroundSpeedDial() {
             icon={action.icon}
             tooltipTitle={action.name}
             href={action.link}
-            onClick={action.act}
           />
         ))}
       </StyledSpeedDial>

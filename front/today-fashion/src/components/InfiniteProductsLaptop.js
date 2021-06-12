@@ -247,21 +247,19 @@ const InfiniteProducts = ({ match, history, searchKeywords }) => {
   SetProduct();
 
   return (
-    <>
-      <div className="products-container">
-        <Grid item xs={12} container spacing={7}>
-          <Grid item xs={4}>
-            {productRow1}
-          </Grid>
-          <Grid item xs={4}>
-            {productRow2}
-          </Grid>
-          <Grid item xs={4}>
-            {productRow3}
-          </Grid>
+    <div className="products-container">
+      <Grid item xs={12} container spacing={5}>
+        <Grid item xs={4}>
+          {productRow1}
         </Grid>
-      </div>
-    </>
+        <Grid item xs={4}>
+          {productRow2}
+        </Grid>
+        <Grid item xs={4}>
+          {productRow3}
+        </Grid>
+      </Grid>
+    </div>
   );
 };
 
