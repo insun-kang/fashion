@@ -32,7 +32,7 @@ import alertAnimationData from '../lotties/surprised-emoji.json';
 import Lottie from 'react-lottie';
 import { ChartColumn } from '../ui-components/chart';
 import { PCButton, PCChip, LCheckbox } from '../ui-components/@material-extend';
-import { axios } from 'axios';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -153,6 +153,75 @@ const ProductCard = memo(
                       handleBookMark({ asin: productData.asin });
                     }}
                   />
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      getReport();
+                    }}
+                    style={{
+                      background: 'inherit',
+                      border: 'none',
+                      boxShadow: 'none',
+                    }}
+                  >
+                    <SentimentDissatisfiedRoundedIcon
+                      style={{
+                        width: 50,
+                        height: 50,
+                        fontSize: '10px',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </Button>
+
+                  <Dialog
+                    open={isAlertOpen}
+                    onClose={() => {
+                      setIsAlertOpen(false);
+                    }}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {'Do you want to report this product?'}
+                    </DialogTitle>
+                    <DialogContent>
+                      <Lottie
+                        options={alertDefaultOptions}
+                        isClickToPauseDisabled
+                        width={'50px'}
+                        height={'50px'}
+                      />
+                      <DialogContentText id="alert-dialog-description">
+                        This product is currently reported {countReport.current}
+                        &nbsp;times. If a product is frequently reported, it can
+                        be deleted according to our inspection guide. once when
+                        you report a product, you cannot undo it. will you
+                        proceed?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={() => {
+                          handleReport();
+                          setIsAlertOpen(false);
+                          setIsReported(true);
+                        }}
+                        color="primary"
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setIsAlertOpen(false);
+                        }}
+                        color="primary"
+                        autoFocus
+                      >
+                        No
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </div>
                 <div
                   style={{
@@ -271,76 +340,6 @@ const ProductCard = memo(
                       <div style={{ margin: '0 auto' }}>
                         <ExpandMoreIcon fontWeight={600} />
                       </div>
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          getReport();
-                        }}
-                        style={{
-                          background: 'inherit',
-                          border: 'none',
-                          boxShadow: 'none',
-                        }}
-                      >
-                        <SentimentDissatisfiedRoundedIcon
-                          style={{
-                            width: 50,
-                            height: 50,
-                            fontSize: '10px',
-                            cursor: 'pointer',
-                          }}
-                        />
-                      </Button>
-
-                      <Dialog
-                        open={isAlertOpen}
-                        onClose={() => {
-                          setIsAlertOpen(false);
-                        }}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">
-                          {'Do you want to report this product?'}
-                        </DialogTitle>
-                        <DialogContent>
-                          <Lottie
-                            options={alertDefaultOptions}
-                            isClickToPauseDisabled
-                            width={'50px'}
-                            height={'50px'}
-                          />
-                          <DialogContentText id="alert-dialog-description">
-                            This product is currently reported{' '}
-                            {countReport.current}
-                            &nbsp;times. If a product is frequently reported, it
-                            can be deleted according to our inspection guide.
-                            once when you report a product, you cannot undo it.
-                            will you proceed?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button
-                            onClick={() => {
-                              handleReport();
-                              setIsAlertOpen(false);
-                              setIsReported(true);
-                            }}
-                            color="primary"
-                          >
-                            Yes
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              setIsAlertOpen(false);
-                            }}
-                            color="primary"
-                            autoFocus
-                          >
-                            No
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
                     </AccordionSummary>
                     <AccordionDetails
                       style={{

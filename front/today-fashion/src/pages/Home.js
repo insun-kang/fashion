@@ -121,8 +121,8 @@ const Home = ({ location, history }) => {
       const res = await axios.post('/oauth', { code });
       console.log(res);
       setToken(res.data.accessToken);
-      setOpenSignIn(false);
       history.push('/main');
+      setOpenSignIn(false);
     } catch (error) {}
   }, []);
 

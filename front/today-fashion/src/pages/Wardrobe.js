@@ -9,7 +9,15 @@ import KakaoShareButton from '../components/KaKaoShareButton';
 import WardrobeNav from '../components/WardrobeNav';
 import animationData from '../lotties/58790-favourite-animation.json';
 import Preview, { usePreview } from 'react-dnd-preview';
-import { Grid, Paper, Button, Tab, Container } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  Button,
+  Tab,
+  Container,
+  Snackbar,
+  Alert,
+} from '@material-ui/core';
 import LogoutButton from '../components/LogoutButton';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -62,7 +70,7 @@ const Wardrobe = () => {
   const [shareUrl, setShareUrl] = useState();
   const [isPending, setIsPending] = useState(true);
   const [isMobile, setIsMobile] = useState();
-
+  const [isSaved, setIsSaved] = useState(false);
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.headers.common['Authorization'] = AuthStr;
 
@@ -185,6 +193,7 @@ const Wardrobe = () => {
         totalBookmark: res.data.totalBookmark,
         totalShared: res.data.totalShared,
       });
+      setIsSaved(true);
     } catch (error) {}
   };
 
@@ -203,6 +212,14 @@ const Wardrobe = () => {
     } catch (error) {}
     //공유된 상품 백엔드에 알려주기
   };
+
+  const vertical = 'top';
+  const horizontal = 'center';
+
+  useEffect(() => {
+    setTimeout(1000);
+    setIsSaved(false);
+  }, [isSaved]);
 
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
@@ -240,6 +257,23 @@ const Wardrobe = () => {
   return (
     <>
       <SpeedDial2 />
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={isSaved}
+        autoHideDuration={1000}
+      >
+        <Alert severity="success" style={{ textAlign: 'left' }}>
+          <p
+            style={{
+              fontSize: '15px',
+              fontWeight: 700,
+              marginLeft: '50px',
+            }}
+          >
+            Saved
+          </p>
+        </Alert>
+      </Snackbar>
       <Container>
         <Grid>
           <Grid
@@ -334,12 +368,10 @@ const Wardrobe = () => {
                 padding: '20px',
                 width: '100%',
                 height: '70vh',
-                overFlowY: 'scroll',
-                display: 'flex',
-                position: 'relative',
+                overflow: 'scroll',
               }}
             >
-              <Grid container spacing={2}>
+              <Grid item xs={12} container spacing={2}>
                 {bookmarkItems &&
                   bookmarkItems.map((card, idx) => (
                     <WardrobeCard

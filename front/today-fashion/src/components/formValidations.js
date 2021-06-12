@@ -23,7 +23,7 @@ export const validatePassword = (passwordValue) => {
   } else if (
     !/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,20}$/.test(passwordValue)
   ) {
-    passwordValue =
+    passwordError =
       'Valid Password consists of at least 8 characters and a combination of numbers + English + special characters.';
   }
   return passwordError;

@@ -28,6 +28,7 @@ const MyPageIntro = () => {
           break;
         case 'kakao_user':
           alert(error.response.data.msg);
+          history.push('/main');
           break;
         default:
           alert(error);

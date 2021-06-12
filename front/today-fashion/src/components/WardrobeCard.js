@@ -28,17 +28,17 @@ const WardrobeCard = memo(({ idx, asin, image, title, setIsPending }) => {
 
   const opacity = isDragging ? 0 : 1;
   return (
-    <div ref={drag} style={{ ...style, opacity }}>
-      <img
-        src={image}
-        alt={title}
-        onLoad={() => {
-          if (idx === 0) {
-            setIsPending(false);
-          }
-        }}
-      />
-    </div>
+    <img
+      ref={drag}
+      style={{ ...style, opacity }}
+      src={image}
+      alt={title}
+      onLoad={() => {
+        if (idx === 0) {
+          setIsPending(false);
+        }
+      }}
+    />
   );
 });
 
