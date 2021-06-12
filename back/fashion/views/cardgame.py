@@ -197,7 +197,7 @@ def result_cards():
                     break
             # 싫어요 횟수/전체 플레이 횟수 => 정확도가 낮아요 추가
             return {
-                    'accuracy': round(len(asin_ids_user_played)/user_play_num, 2),
+                    'accuracy': '%.2f' % round(len(asin_ids_user_played)/user_play_num, 2),
                     'productsNum': len(products_list),
                     'products': products_list
                     }, 200
@@ -349,8 +349,8 @@ def ai_model(user_id):
                                 'posReviewSummary': product_review.positive_review_summary if product_review.positive_review_summary else 'Oh no....there is no positive review at all...;(',
                                 'negReviewSummary': product_review.negative_review_summary if product_review.negative_review_summary else 'OMG! There is no negative review at all!;)'
                             },
-                'starRating': round(product.rating, 2),
-                'posReveiwRate': round(pos_review_rate, 2),
+                'starRating': '%.2f' % round(product.rating, 2),
+                'posReveiwRate': '%.2f' % round(pos_review_rate, 2),
                 'image': image,
                 'productUrl': product_url,
                 'title': title
